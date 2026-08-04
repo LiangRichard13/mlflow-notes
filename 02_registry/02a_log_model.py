@@ -10,7 +10,7 @@
 
 运行：
   conda activate mlflow
-  python 03_registry/02a_log_model.py
+  python 02_registry/02a_log_model.py
 """
 
 import mlflow
