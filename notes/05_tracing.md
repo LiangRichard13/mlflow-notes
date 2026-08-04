@@ -1,5 +1,7 @@
 # 阶段 5 学习笔记：GenAI 入门与追踪
 
+> 对应脚本：`05_tracing/env_bootstrap.py`、`05a_env_test.py`、`05b_basic_tracing.py`、`05c_custom_decorator.py`、`05d_metadata_search.py`
+
 ## 一、一行开启追踪
 
 ```python

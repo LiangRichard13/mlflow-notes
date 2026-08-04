@@ -1,5 +1,7 @@
 # 阶段 1 学习笔记：MLflow 核心概念
 
+> 对应脚本：`01_basics/01_hello_mlflow.py`、`01_basics/01b_sklearn_basics.py`
+
 ## 一、4 个核心对象
 
 ```

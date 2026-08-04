@@ -1,5 +1,7 @@
 # 阶段 6 学习笔记：Prompt Registry 与框架 Flavors
 
+> 对应脚本：`06_prompts/06a_register_prompt.py`、`06b_alias_lifecycle.py`、`06c_langchain.py`
+
 ## 一、注册提示词
 
 ```python

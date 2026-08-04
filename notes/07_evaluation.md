@@ -1,5 +1,7 @@
 # 阶段 7 学习笔记：GenAI 评估与自定义 Scorer
 
+> 对应脚本：`07_evaluation/07a_basic_evaluate.py`、`07b_custom_scorer.py`、`07c_prompt_comparison.py`
+
 ## 一、`mlflow.genai.evaluate()` 基础
 
 ```python

@@ -1,5 +1,7 @@
 # 阶段 3 学习笔记：追踪服务器与数据集血缘
 
+> 对应脚本：`03_tracking/03a_start_server.sh`、`03b_dataset_lineage.py`、`03c_search_logged_models.py`
+
 ## 一、MLflow 后端架构
 
 ```

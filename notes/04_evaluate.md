@@ -1,5 +1,7 @@
 # 阶段 4 学习笔记：评估、服务与经典 ML 验证
 
+> 对应脚本：`04_evaluate/04a_evaluate_basics.py`、`04b_evaluate_custom.py`、`04c_models_serve.sh`
+
 ## 一、`mlflow.models.evaluate()` 内置评估
 
 ```python

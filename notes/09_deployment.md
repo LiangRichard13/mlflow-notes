@@ -1,5 +1,7 @@
 # 阶段 9 学习笔记：部署到云与生产可观测性
 
+> 对应脚本：`09_deployment/09a_sampling_redaction.py`、`09b_prod_infra.sh`
+
 ## 一、生产环境三层架构
 
 ```

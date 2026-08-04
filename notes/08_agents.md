@@ -1,5 +1,7 @@
 # 阶段 8 学习笔记：版本追踪、提示词优化与 ResponsesAgent
 
+> 对应脚本：`08_agents/08a_active_model.py`、`08b_prompt_optimize.py`、`08c_responses_agent.py`、`simple_qa_agent.py`
+
 ## 一、`set_active_model` - 版本化追踪
 
 ```python
