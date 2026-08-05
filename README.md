@@ -19,6 +19,7 @@ MLFlowLearning/
 │   ├── 07_evaluation.md      ↔ 07_evaluation/    （Phase 7）
 │   ├── 08_agents.md          ↔ 08_agents/        （Phase 8）
 │   ├── 09_deployment.md      ↔ 09_deployment/    （Phase 9）
+│   ├── 10_vision_classification.md  ↔ 10_vision_classification/  （Phase 10：图像分类）
 │   ├── capstone.md           ↔ capstone/         （毕业项目）
 │   └── appendix/             不直接对应脚本的参考文档
 │       ├── roadmap.md              9 阶段路线图
@@ -33,6 +34,7 @@ MLFlowLearning/
 ├── 07_evaluation/            Phase 7 脚本：GenAI 评估
 ├── 08_agents/                Phase 8 脚本：版本追踪 + ResponsesAgent
 ├── 09_deployment/            Phase 9 脚本：部署与生产可观测性
+├── 10_vision_classification/  Phase 10 脚本：图像分类深度学习对比（9 个 timm CNN）
 └── capstone/                 毕业项目 SupportPilot
 ```
 
@@ -52,6 +54,7 @@ MLFlowLearning/
 | 7 | GenAI 评估 + 自定义 Scorer | `mlflow.genai.evaluate` + `@scorer` + `make_judge` | `07_evaluation/` | [07_evaluation](notes/07_evaluation.md) | ✅ |
 | 8 | 版本追踪 + 提示词优化 + ResponsesAgent | `set_active_model` + GepaOptimizer + ResponsesAgent | `08_agents/` | [08_agents](notes/08_agents.md) | ✅ |
 | 9 | 部署 + 生产可观测性 | trace 采样 + PII 脱敏 + 生产部署参考 | `09_deployment/` | [09_deployment](notes/09_deployment.md) | ✅ |
+| 10 | **图像分类深度学习对比**（新增） | timm 9 个 CNN + CIFAR-10 + 失败案例分析 | `10_vision_classification/` | [10_vision_classification](notes/10_vision_classification.md) | ❌（但需 torch/timm） |
 | 🎓 | **SupportPilot** 毕业项目 | sklearn gate + LangChain RAG + Prompt Registry + GenAI eval | `capstone/` | [capstone](notes/capstone.md) | ✅ |
 
 **设计理念**：先用 scikit-learn（无需 API key）跑通 MLflow 核心概念 → 再用同一套概念套到 LLM/Agent → 毕业项目串联全能力。
@@ -84,6 +87,10 @@ mlflow --version  # mlflow, version 3.15.1
 | gepa | 0.1.4 | Prompt Optimization（Phase 8 用）|
 | pandas / numpy / scikit-learn | latest | 传统 ML 示例 |
 | jupyter | latest | Notebook 体验 |
+| **Phase 10 额外需要** | | |
+| torch (CPU) | 2.13+ | 深度学习（9 个 CNN） |
+| torchvision | 0.28+ | 数据集和 transforms |
+| timm | 1.0+ | ResNet/EfficientNet/DenseNet 预训练模型 |
 
 ## API Key 配置
 
@@ -97,6 +104,16 @@ cp .env.example .env
 支持：DeepSeek（推荐）、智谱 GLM、阿里云百炼、Moonshot、零一万物（国内 OpenAI 兼容），或 OpenAI/Anthropic 官方。详见 `.env.example`。
 
 `05_tracing/env_bootstrap.py` 会自动把国内服务商的 key 桥接到 `OPENAI_API_KEY` / `OPENAI_API_BASE`，让 `mlflow.openai.autolog()` 直接可用。
+
+### Phase 10 额外依赖（图像分类用）
+
+```bash
+conda run -n mlflow pip install \
+    torch torchvision --index-url https://download.pytorch.org/whl/cpu
+conda run -n mlflow pip install timm
+# 国内加速下载预训练权重
+export HF_ENDPOINT=https://hf-mirror.com
+```
 
 ## 常用命令速查
 
