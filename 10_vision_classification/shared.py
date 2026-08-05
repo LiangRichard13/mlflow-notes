@@ -65,7 +65,10 @@ def get_transforms(image_size: int = 224, train: bool = True):
 
 
 def load_cifar10(data_dir: str = "~/data/cifar10", image_size: int = 224):
-    """返回 (train_dataset, test_dataset, class_names)。首次自动下载 ~170MB。"""
+    """返回 (train_dataset, test_dataset, class_names)。首次自动下载 ~170MB。
+    image_size 可用环境变量 VISION_IMAGE_SIZE 覆盖（显存不足时调小）。"""
+    if os.environ.get("VISION_IMAGE_SIZE"):
+        image_size = int(os.environ["VISION_IMAGE_SIZE"])
     data_dir = os.path.expanduser(data_dir)
     os.makedirs(data_dir, exist_ok=True)
     train = torchvision.datasets.CIFAR10(
@@ -187,7 +190,7 @@ def compute_metrics(y_true, y_pred):
 
 
 def train_and_evaluate(model_name, train_ds, test_ds, class_names,
-                        epochs=3, batch_size=128,
+                        epochs=3, batch_size=64,
                         lr_backbone=1e-4, lr_head=1e-3,
                         num_workers=2, max_train_batches=None,
                         max_test_batches=None):
@@ -196,11 +199,38 @@ def train_and_evaluate(model_name, train_ds, test_ds, class_names,
     max_train_batches/max_test_batches 用于快速 smoke test。
     返回 (model, metrics_dict, predictions_dict, state_dict_bytes)。
     """
-    device = torch.device("cpu")
+    # 自动用 GPU（如果可用）
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"  [device] {device}")
+    if device.type == "cuda":
+        print(f"  [device] {torch.cuda.get_device_name(0)}")
+
+    # 显存不足时自动缩小 batch（检测可用显存）
+    if device.type == "cuda":
+        import subprocess
+        try:
+            out = subprocess.check_output(
+                ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"]
+            ).decode().strip()
+            free_mb = int(out.split("\n")[0])
+            print(f"  [gpu] free memory: {free_mb} MiB")
+            if free_mb < 12000:
+                batch_size = min(batch_size, 32)
+                print(f"  [gpu] low memory, batch_size -> {batch_size}")
+            elif free_mb < 20000:
+                batch_size = min(batch_size, 64)
+                print(f"  [gpu] moderate memory, batch_size -> {batch_size}")
+        except Exception:
+            pass
+
+    # GPU 上可以大 batch（CPU 4 workers 是瓶颈；GPU 一般用 2 workers + pin_memory）
+    pin_memory = (device.type == "cuda")
     train_loader = DataLoader(train_ds, batch_size=batch_size,
-                               shuffle=True, num_workers=num_workers)
+                               shuffle=True, num_workers=num_workers,
+                               pin_memory=pin_memory)
     test_loader  = DataLoader(test_ds,  batch_size=batch_size,
-                               shuffle=False, num_workers=num_workers)
+                               shuffle=False, num_workers=num_workers,
+                               pin_memory=pin_memory)
 
     model = create_model(model_name, num_classes=len(class_names), pretrained=True)
     model = model.to(device)
@@ -242,6 +272,9 @@ def train_and_evaluate(model_name, train_ds, test_ds, class_names,
     train_time = time.perf_counter() - t_train_start
 
     # 推理
+    # 先清空显存，避免训练后 OOM
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
     y_true, y_pred, y_proba, latencies = predict_full(model, test_loader, device)
     if max_test_batches is not None:
         # 限制测试 batch 数（smoke test）

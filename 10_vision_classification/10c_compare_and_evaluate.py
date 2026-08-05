@@ -39,11 +39,11 @@ def main():
         experiment_ids=[exp.experiment_id],
         filter_string="tags.step = 'data_overview'",   # 排除
     )
-    # 排除 data_overview Run
+    # 找 9 个训练 Run（有 model_name tag 的）
     train_runs = mlflow.search_runs(
         experiment_ids=[exp.experiment_id],
-        filter_string="tags.model_name != '' AND tags.step != 'data_overview'",
-        max_results=20,
+        filter_string="tags.model_name != ''",
+        max_results=30,
     )
 
     if len(train_runs) == 0:

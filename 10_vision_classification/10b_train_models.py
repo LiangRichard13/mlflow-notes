@@ -58,19 +58,27 @@ def train_and_log_one(model_name, train_ds, test_ds, class_names,
     y_pred = preds["y_pred"]
     y_proba = preds["y_proba"]
 
-    # 选失败样本和成功样本（从全集而非仅 128 张里选）
+    # grid 只看前 128 张的预测（与 sample_uint8 对齐）
+    n_sample = len(sample_y)
+    y_true_s = y_true[:n_sample]
+    y_pred_s = y_pred[:n_sample]
+    y_proba_s = y_proba[:n_sample]
+
     # 失败 grid
     fail_grid = make_failure_grid(
-        sample_uint8, sample_y[:len(y_true)], y_pred, y_proba,
+        sample_uint8, sample_y, y_pred_s, y_proba_s,
         class_names, n=64, n_cols=8,
     )
     success_grid = make_success_grid(
-        sample_uint8, sample_y[:len(y_true)], y_pred, y_proba,
+        sample_uint8, sample_y, y_pred_s, y_proba_s,
         class_names, n=64, n_cols=8,
     )
+    # 混淆矩阵用全集（更准）
     cm_img = make_confusion_matrix(y_true, y_pred, class_names, normalize=True)
 
     # MLflow Run
+    # 防御：mlflow 3 拒绝在已激活 Run 时开新 Run（旧孤儿 Run 也要清理）
+    mlflow.end_run()
     with mlflow.start_run(run_name=f"cifar10_{model_name}") as run:
         # Tags
         mlflow.set_tag("phase", "10")
@@ -112,6 +120,7 @@ def main():
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("10_vision_classification")
     mlflow.set_tags({"phase": "10", "dataset": "cifar10"})
+    exp = mlflow.get_experiment_by_name("10_vision_classification")
 
     # 加载数据（如果还没下，10a 已经下了）
     print("加载 CIFAR-10...")
@@ -120,11 +129,36 @@ def main():
 
     # 全局参数
     epochs = 3
-    batch_size = 128
+    batch_size = 64   # 224×224 + GPU 上 64 更稳（多个模型连续训练不 OOM）
+    import os
+    if os.environ.get("VISION_IMAGE_SIZE"):
+        print(f"  [config] 使用自定义 image_size={os.environ['VISION_IMAGE_SIZE']}")
 
-    # 依次训练 9 个模型
+    # 依次训练 9 个模型（跳过已完成的，支持断点续跑）
     summary = []
     for model_name in MODEL_NAMES:
+        # 查这个模型是否已有完成的 Run
+        existing = mlflow.search_runs(
+            experiment_ids=[exp.experiment_id],
+            filter_string=f"tags.model_name = '{model_name}' AND tags.model_family != ''",
+            max_results=1,
+        )
+        already_done = False
+        if len(existing) > 0:
+            end = existing.iloc[0]['end_time']
+            if end is not None and str(end) != 'NaT':
+                already_done = True
+                acc = existing.iloc[0].get('metrics.accuracy_score', None)
+                print(f"  ⏭️ 跳过 {model_name}（已有完成 Run, acc={acc}）")
+                # 把已有 Run 加入 summary
+                summary.append({
+                    "model": model_name,
+                    "run_id": existing.iloc[0]['run_id'][:8],
+                    "accuracy_score": float(acc) if acc is not None else 0,
+                })
+        if already_done:
+            continue
+
         run_id, metrics = train_and_log_one(
             model_name, train_ds, test_ds, class_names,
             epochs=epochs, batch_size=batch_size,
@@ -141,11 +175,15 @@ def main():
     print("=" * 60)
     print(f"{'model':<22} {'acc':<8} {'f1_macro':<10} {'train(s)':<10} {'size(MB)':<10}")
     print("-" * 60)
-    summary_sorted = sorted(summary, key=lambda x: -x["accuracy_score"])
+    summary_sorted = sorted(summary, key=lambda x: -x.get("accuracy_score", 0))
     for s in summary_sorted:
-        print(f"{s['model']:<22} {s['accuracy_score']:<8.4f} "
-              f"{s['f1_macro']:<10.4f} {s['train_time_seconds']:<10.1f} "
-              f"{s['model_size_bytes']/1024/1024:<10.2f}")
+        acc = s.get("accuracy_score", float("nan"))
+        f1 = s.get("f1_macro", float("nan"))
+        train = s.get("train_time_seconds", float("nan"))
+        size = s.get("model_size_bytes", 0)
+        print(f"{s['model']:<22} {acc:<8.4f} "
+              f"{f1:<10.4f} {train:<10.1f} "
+              f"{size/1024/1024:<10.2f}")
 
     print("\n" + "=" * 60)
     print("下一步:")

@@ -21,6 +21,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import mlflow
+import os
+import glob
 import pandas as pd
 import numpy as np
 import torch
@@ -43,23 +45,32 @@ def load_all_predictions_from_artifacts(exp, model_names):
     train_ds, test_ds, class_names = load_cifar10()
     test_loader = DataLoader(test_ds, batch_size=128, shuffle=False,
                                num_workers=0)
-    device = torch.device("cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"  [device] {device}")
 
     preds_per_model = {}
+    y_true = None
     for name in model_names:
         run = find_run_for_model(exp, name)
         if run is None:
             print(f"  ⚠️ 找不到 {name} 的 Run，跳过")
             continue
 
-        # 下载 state_dict
-        state_path = mlflow.artifacts.download_artifacts(
-            run_id=run.run_id, artifact_path="model/model.pt"
+        # 下载 state_dict（文件名可能是临时名，先下目录再找 .pt）
+        model_dir = mlflow.artifacts.download_artifacts(
+            run_id=run.run_id, artifact_path="model"
         )
+        import glob
+        pt_files = glob.glob(os.path.join(model_dir, "*.pt"))
+        if not pt_files:
+            print(f"  ⚠️ {name}: model/ 下没有 .pt 文件，跳过")
+            continue
+        state_path = pt_files[0]
         state = torch.load(state_path, map_location="cpu")
 
         model = create_model(name, num_classes=10, pretrained=False)
         model.load_state_dict(state)
+        model = model.to(device)
         model.eval()
 
         y_true, y_pred, y_proba, latencies = predict_full(model, test_loader, device)
@@ -70,6 +81,9 @@ def load_all_predictions_from_artifacts(exp, model_names):
         }
         print(f"  ✓ {name}: 加载完成 (run {run.run_id[:8]})")
 
+    if y_true is None:
+        print("  ⚠️ 没有任何模型加载成功，检查模型 Run 是否存在")
+        return {}, test_ds, class_names
     preds_per_model["y_true"] = y_true
     return preds_per_model, test_ds, class_names
 
@@ -77,7 +91,7 @@ def load_all_predictions_from_artifacts(exp, model_names):
 def find_run_for_model(exp, model_name):
     runs = mlflow.search_runs(
         experiment_ids=[exp.experiment_id],
-        filter_string=f"tags.model_name = '{model_name}' AND tags.step != 'data_overview'",
+        filter_string=f"tags.model_name = '{model_name}'",
         max_results=1,
     )
     if len(runs) == 0:
@@ -100,11 +114,17 @@ def find_hard_examples(preds_per_model, y_true, min_wrong=5):
 def make_hard_examples_grid(images_uint8, n_wrong, n_models, y_true,
                             preds_per_model, class_names, n=16):
     """画 n 张"n_models 全错"的最难样本 + 每个模型的预测。"""
+    # images_uint8 可能只有前 N 张图（sample），但 n_wrong 是全集的
+    n_imgs = len(images_uint8)
     # 选全错的（n_wrong == n_models），如果不够就选错误最多的
     all_wrong_idx = np.where(n_wrong == n_models)[0]
+    # 只保留在前 n_imgs 张内的索引
+    all_wrong_idx = all_wrong_idx[all_wrong_idx < n_imgs]
     if len(all_wrong_idx) < n:
-        # 降级：选 n_wrong 最大的 n 张
-        all_wrong_idx = np.argsort(-n_wrong)[:n]
+        # 降级：选 n_wrong 最大的 n 张（也要在 sample 范围内）
+        candidates = np.argsort(-n_wrong)
+        candidates = candidates[candidates < n_imgs]
+        all_wrong_idx = candidates[:n]
     all_wrong_idx = all_wrong_idx[:n]
 
     n_cols = 4
