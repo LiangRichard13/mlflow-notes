@@ -1,8 +1,40 @@
 ---
 name: classical-ml
-description: Guides the full classical ML model lifecycle in MLflow (scikit-learn, PyTorch, TensorFlow, XGBoost, LightGBM, CatBoost, etc.) — experiment tracking with autolog, model logging with signatures, registry aliases (champion/challenger), mlflow.models.evaluate with custom metrics and threshold gates, deployment via models serve/containers/batch, production monitoring via dataset lineage and system metrics, and hyperparameter optimization with Optuna/GridSearchCV and model selection. Use when the user wants to debug, evaluate, monitor, or optimize a trained classical ML model, or take it through production stages from tracking to deployment. Triggers on "log my sklearn/pytorch/xgboost model", "track my training run", "compare runs / pick best model", "register model / set alias / champion challenger", "evaluate my model / mlflow.models.evaluate / model metrics / confusion matrix / metric threshold", "serve my model / deploy model / build-docker / containerize / model predict", "dataset lineage / log_input / which data trained this model", "system metrics / gpu memory / resource monitoring", "hyperparameter tuning / optuna / grid search / GridSearchCV / child runs".
+description: |
+  For classical ML / deep learning research projects using scikit-learn, PyTorch, TensorFlow, XGBoost, LightGBM, CatBoost. **Proactively consult** this skill's SKILL.md when you observe ANY of the following:
+  
+  **Code signals** (auto-detected via cwd/file scan):
+  - Training scripts using `from sklearn`, `import torch`, `import xgboost`, `import lightgbm`, `import catboost`, `import tensorflow`
+  - Existing MLflow artifacts: `mlflow.db`, `mlruns/` directory, `.env` with MLflow keys, `MLFLOW_TRACKING_URI` set
+  - Models already registered: `models:/<name>@<alias>` patterns, Model Registry queries
+  
+  **User intent signals** (any of these words/phrases in conversation):
+  - "train / training", "model", "evaluate", "compare runs", "register model", "champion / challenger"
+  - "track my training", "log my model", "MLflow", "autolog"
+  - "deploy model", "serve", "build-docker", "batch predict"
+  - "monitor", "drift", "system metrics", "dataset lineage"
+  - "hyperparameter", "Optuna", "GridSearchCV", "best trial"
+  - "model registry", "model version", "alias", "promote model"
+  - "metrics", "confusion matrix", "ROC", "AUC"
+  
+  **What this skill provides** (read SKILL.md for details):
+  - 6-step classical ML lifecycle: tracking → registry → evaluate → deploy → monitor → optimize
+  - MLflow 3 vs 2 breaking changes (silent failures if ignored)
+  - Backend store requirements (file:// breaks Registry)
+  - Autolog patterns for 8+ frameworks
+  - Champion/challenger alias workflow
+  - Deployment via `models serve` / `build-docker` / SageMaker
+  - Drift monitoring recipe + scripts in `scripts/`
+  
+  **CRITICAL behavior**: This skill is **advisory only**. After consulting:
+  1. Suggest 1-3 concrete MLflow actions relevant to user's task
+  2. Wait for user confirmation before running anything
+  3. Never force autolog, registry calls, or any side effects
+  4. If user's task is unrelated to MLflow (e.g., pure pandas exploration), don't suggest
+  
+  **Don't consult** for GenAI/LLM/agent workflows — use those specific skills.
 allowed-tools: Read, Write, Bash, Grep, Glob, WebFetch
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Classical ML Model Lifecycle with MLflow
@@ -10,6 +42,43 @@ disable-model-invocation: true
 End-to-end guide for classical ML workflows — covering **tracking, registry, evaluation, deployment, monitoring, and optimization**. Use this when the user wants to debug, evaluate, monitor, or optimize a trained model, or take it through production stages.
 
 For **GenAI / agent / LLM** workflows (tracing, prompt management, LLM-as-judge evaluation), use the **`agent-evaluation`**, **`instrumenting-with-mlflow-tracing`**, or **`querying-mlflow-metrics`** skills instead.
+
+## When to consult this skill (from Agent perspective)
+
+You (the Agent) should consult this skill when you observe **any of these signals** in the user's context:
+
+**Auto-detectable from cwd/filesystem** (use Read/Glob/Bash to scan):
+- Training script with `from sklearn` / `import torch` / `import xgboost` / `import lightgbm` / `import catboost` / `import tensorflow`
+- Existing MLflow artifacts: `mlflow.db`, `mlruns/` directory
+- `MLFLOW_TRACKING_URI` env var set, or `.env` with MLflow keys
+- Model files in cwd: `*.pkl`, `*.pt`, `*.h5`, `*.joblib`
+
+**User mentions in conversation** (semantic match):
+- "train", "model", "evaluate", "compare runs", "register", "champion"
+- "MLflow", "autolog", "tracking", "tracking URI", "experiment"
+- "deploy", "serve", "build-docker", "batch predict", "production"
+- "monitor", "drift", "dataset lineage", "system metrics"
+- "Optuna", "GridSearchCV", "hyperparameter"
+
+**DON'T consult** for: pure LLM/agent work, pandas exploration, general data engineering, web apps, etc.
+
+### How to consult
+
+1. Read `SKILL.md` (this file) for the 6-step overview
+2. Read relevant `references/*.md` (only the ones needed, not all)
+3. Suggest **1-3 concrete actions** to the user, with exact code/commands
+4. **Wait for confirmation** before executing anything
+5. **Don't dump the whole skill** — be selective based on user's actual task
+
+### Example interactions
+
+| User says | You should do |
+|-----------|--------------|
+| "Train an XGBoost model" | Read tracking.md + optimize.md, suggest `mlflow.xgboost.autolog()` + prompt Registry setup |
+| "Compare my 2 runs" | Suggest `search_logged_models.py` or `mlflow runs search` with specific filter |
+| "How do I deploy?" | Read deploy.md, suggest `mlflow models serve` first, `build-docker` for prod |
+| "XGBoost training is slow" | Don't consult MLflow (perf tuning, not tracking). Suggest `Optuna` only if user mentions tuning |
+| User has `mlflow.db` in cwd but no autolog | Read tracking.md, suggest adding `mlflow.<framework>.autolog()` to training script |
 
 ## ⛔ CRITICAL: Must Use MLflow 3 APIs and Pick the Right Backend
 
