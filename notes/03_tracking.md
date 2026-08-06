@@ -75,10 +75,85 @@ Tracking Server 自己不存数据，它把数据分两家：
 
 - **source**（来源）：数据来自哪个文件 / URL / 库。复现靠它。
 - **name**（名字）：你给数据集起的名，比如 `"wine_dataset"`。
-- **digest**（摘要）：**数据集内容的哈希**。一模一样的数据 → 同一个 digest；只要改一个字节 → digest 全变。这是"防偷偷换数据"的关键。
+- **digest**（摘要）：**数据集内容的哈希**。一模一样的数据 → 同一个 digest；只要改一个字节 → digest 全变。详见下方 ⭐ digest 详解。
 - **schema**（模式）：列名 + 类型。部署时能校验线上输入是否符合训练时的格式。
 
 `mlflow.log_input(dataset, context="training")` 把这个"身份证"挂在 Run 上，从此 Run 知道自己吃了什么数据长大。
+
+#### ⭐ digest 详解：数据集的"防伪码"
+
+**一句话**：digest 是 MLflow 对**数据集内容**自动算出来的**唯一哈希字符串**（通常 32 位 hex，类似 `a3f5e8d2c9b1...`）。**数据变 → digest 必变**。
+
+**它由什么算出来**：
+
+| 字段 | 影响 | 说明 |
+|---|---|---|
+| 数据值 | ✅ 改 1 个字节就变 | 178 行 × 13 列 × 8 字节 = 一整块数据 hash |
+| schema | ✅ 改列名/类型/加减列就变 | 列名 + dtype 都参与 |
+| source | ✅ 路径/URI 不同就变 | 同一份数据换个文件名，digest 可能变（取决于实现） |
+
+**类比**：
+
+| 现实世界 | MLflow |
+|---|---|
+| 身份证号 | digest |
+| 身份证照片 | 数据本身 |
+| 户籍地址 | source |
+
+**或者用 Git 类比**：`digest` 就是 MLflow 数据的「commit hash」——内容变了，hash 必变。
+
+**digest 的三大用途**：
+
+1. **审计追溯**：3 个月后老板问"那个 0.95 模型用的是什么数据"，不用翻日志——直接 `client.get_run(run_id).inputs.dataset_inputs` 拿到 digest 和 source，对一下就知道。
+2. **数据变更告警**：在 Notebook 里偷偷改了预处理（加一列、删一行、改一个浮点）→ digest 自动变 → 下次跑出来的 Run 用**不同的 digest**，UI 对比一眼能看出来。
+3. **复现保证**：digest + source 一起存 → 任何机器、任何代码版本都能重新生成**同一份数据集**（前提是 source 文件本身没变）。
+
+**手动验证 digest 会变**：
+
+```python
+import pandas as pd
+from sklearn.datasets import load_wine
+
+wine = load_wine()
+df = pd.DataFrame(wine.data, columns=wine.feature_names)
+
+# 第一次
+ds1 = mlflow.data.from_pandas(df, source="wine.csv", name="wine")
+print(ds1.digest)  # 比如 a3f5e8d2c9b1...
+
+# 偷偷改一列
+df["alcohol"] = df["alcohol"] + 0.0001
+
+# 第二次
+ds2 = mlflow.data.from_pandas(df, source="wine.csv", name="wine")
+print(ds2.digest)  # 不一样了——这是数据被改的硬证据
+```
+
+**实战技巧**——把 digest 当 snapshot 存到 tag：
+
+```python
+with mlflow.start_run(run_name="train-v1"):
+    mlflow.log_input(dataset, context="training")
+    mlflow.set_tag("data_snapshot", dataset.digest)  # ← 关键
+
+# 3 个月后：
+run = client.get_run(run_id)
+historical_digest = run.data.tags["data_snapshot"]
+current_digest = dataset.digest
+if historical_digest != current_digest:
+    print("⚠️ 数据变了！")
+```
+
+**digest 跟其他字段的区别**：
+
+| | param | metric | digest |
+|---|---|---|---|
+| 是什么 | 字符串配置 | 数值效果 | 数据指纹 |
+| 例子 | `learning_rate=0.01` | `accuracy=0.95` | `a3f5e8d2c9b1...` |
+| 谁算的 | 用户 | 用户 | **MLflow 自动** |
+| 变了会怎样 | 警告 | 新值（允许） | 必然变化（说明数据变了） |
+
+**UI 里看 digest**：跑完 `03b_dataset_lineage.py` 后打开 MLflow UI → experiment `03_dataset_lineage` → Run `rf-with-dataset` → **Datasets** 标签，能看到 `wine_dataset (training)` 和 `wine_test_split (testing)` 两行，每行带 digest hash。
 
 ### 4. LoggedModel：MLflow 3 把"模型"独立成一等公民
 

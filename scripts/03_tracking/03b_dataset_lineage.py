@@ -50,10 +50,29 @@ def main():
     print(f"数据集已保存: {data_path} ({df.shape})")
 
     # ============ 2. 注册数据集到 MLflow ============
-    # mlflow.data.from_pandas() 创建一个 Dataset 对象
-    # source: 数据来源（路径/URL/库名），记录在元数据里
-    # name: 数据集名字（自己起）
-    # targets: 目标列名（用于评估时知道哪列是 label）
+    # mlflow.data.from_pandas() 创建一个 Dataset 对象，里面带 4 个核心字段：
+    #
+    #   name:      数据集名字（自己起，方便 UI 里筛选）
+    #   source:    数据来源（路径/URL/库名），记录在元数据里
+    #   digest:    ⭐ 数据集内容的哈希指纹（详见下方注释）
+    #   schema:    列名 + 数据类型（部署时能校验线上输入格式）
+    #
+    # digest 是什么？由什么算出来？
+    # ----------------------------------
+    # digest 是 MLflow 对「数据值 + schema + source」计算出的唯一哈希字符串
+    # （通常是 32 位 hex，类似 "a3f5e8d2c9b1..."）。
+    #
+    #   - 数据值变了（哪怕一个浮点数的最后一位）→ digest 全变
+    #   - schema 变了（改列名、改类型、加减列）   → digest 全变
+    #   - source 变了（同一份数据换个文件名）     → digest 可能变
+    #
+    # digest 跟 Git commit hash 类似——是数据的「防伪码」。
+    # 一模一样的数据 → 同一个 digest；改了任何一个字节 → digest 全变。
+    #
+    # digest 的核心用途：
+    #   1. 审计追溯：3 个月后想查「那个 0.95 模型用的是什么数据」，看 digest 就知道
+    #   2. 数据变更告警：数据被偷偷改了，下次跑出来的 Run 用不同的 digest，UI 对比一眼看出
+    #   3. 复现保证：digest + source 一起存 = 任何机器都能重新生成同一份数据集
     dataset = mlflow.data.from_pandas(
         df,
         source=data_path,
@@ -63,7 +82,7 @@ def main():
     print(f"\n数据集元数据:")
     print(f"  name: {dataset.name}")
     print(f"  source: {dataset.source}")
-    print(f"  digest: {dataset.digest}")   # 哈希，用于检测数据集是否变了
+    print(f"  digest: {dataset.digest}")   # 哈希指纹——任何数据变化都会让 digest 变
     print(f"  schema: {dataset.schema}")
 
     # ============ 3. 训练 + 记录 Run + 关联数据集 ============
@@ -96,7 +115,10 @@ def main():
         mlflow.log_input(test_dataset, context="testing")
 
         # ⚠️ 演示数据集变更检测
-        # 如果后面有人改了数据集，digest 会变，MLflow 会提醒
+        # 如果后面有人改了数据集（哪怕 1 个浮点数），
+        # 下次跑出来的 digest 会跟这里 set_tag 留的快照不一样——
+        # 对比一下就能立刻发现「数据被偷偷改了」。
+        # 这就是 digest 的硬证据价值：审计、合规、复现都靠它。
         mlflow.set_tag("data_snapshot", dataset.digest)
 
         print(f"\n✓ Run 已记录: {run.info.run_id[:8]}")
@@ -111,6 +133,10 @@ def main():
 
     # MLflow 3: 数据集信息存储在 runs 的 datasets 字段里
     # 通过 client.get_run(run_id) 可以拿到
+    # ⭐ 这里拿到的 digest 就是数据当时的「指纹」——跟 set_tag 留的快照
+    # 对比就知道数据有没有被改过：
+    #   - digest 一致 → 数据没变
+    #   - digest 不一致 → 数据被改过（哪怕改了 1 个浮点）
     runs = mlflow.search_runs(
         experiment_names=["03_dataset_lineage"],
         order_by=["start_time DESC"],
@@ -131,7 +157,7 @@ def main():
                 if t.key == "mlflow.dataset_context":
                     ctx = t.value
             print(f"  - name: {ds.name}")
-            print(f"    digest: {ds.digest}")
+            print(f"    digest: {ds.digest}    ← 数据指纹，反向追溯的关键")
             print(f"    source: {ds.source}")
             print(f"    context: {ctx}")
 
