@@ -1,8 +1,8 @@
 # MLflow 3 作业指导书（QUICKSTART）
 
-> **作者**：写给"MLflow 零基础 + 有计算机基础"的同学
-> **目标**：1-2 天内从环境安装到跑通第一个实验，再到用 coding agent 在 vibecoding 场景下用 MLflow
-> **范围**：覆盖 `MLFlowLearning/` 项目全部 10 个 phase + capstone 毕业项目 + 12 个 mlflow_skill
+目标：1-2 天内从环境安装到跑通第一个实验，再到用 coding agent 在 vibecoding 场景下用 MLflow
+
+范围：覆盖 MLFlowLearning/ 项目全部 10 个 phase + capstone 毕业项目 + 12 个 mlflow_skill
 
 > **路径约定**：本文档所有命令里的 `<project-root>` 替换为你 clone 项目的实际路径（如 `~/projects/MLFlowLearning`、`/Users/you/code/MLFlowLearning`）。命令格式 `cd <project-root> && <cmd>` 意味着"先切到项目根目录，再执行命令"。
 
@@ -22,28 +22,29 @@
 
 **速查表**：
 
-| 章节 | 时间 | 难度 | 必学 | API Key |
-|------|------|------|------|---------|
-| 0 前置认知 | 5 min | ★☆☆☆☆ | ✓ | 否 |
-| 1 环境安装 | 20 min | ★★☆☆☆ | ✓ | 否 |
-| 2 核心对象与追踪 | 30 min | ★★☆☆☆ | ✓ | 否 |
-| 3 Model 格式 | 30 min | ★★★☆☆ | ✓ | 否 |
-| 4 注册表与别名 | 30 min | ★★★☆☆ | ✓ | 否 |
-| 5 Tracking Server + 血缘 | 30 min | ★★★☆☆ | △ | 否 |
-| 6 GenAI 追踪 | 30 min | ★★☆☆☆ | ✓ | ✅ |
-| 7 **vibecoding 集成** | 30 min | ★★★☆☆ | ✓ | - |
-| 8 Prompt Registry | 30 min | ★★★☆☆ | △ | ✅ |
-| 9 GenAI 评估 | 45 min | ★★★★☆ | △ | ✅ |
-| 10 模型评估与部署 | 30 min | ★★★☆☆ | ✓ | 否 |
-| 11 Agent Tracing | 45 min | ★★★★☆ | △ | ✅ |
-| 12 生产部署 | 30 min | ★★★★☆ | △ | 否 |
-| 13 Debug 指南 | 20 min | ★★★☆☆ | ✓ | 否 |
-| 14 速查表 | 5 min | ★☆☆☆☆ | ✓ | - |
-| Skill 段（12 个 skill） | 30 min | ★★☆☆☆ | ✓ | - |
+| 章节                       | 时间   | 难度       | 必学 | API Key |
+| -------------------------- | ------ | ---------- | ---- | ------- |
+| 0 前置认知                 | 5 min  | ★☆☆☆☆ | ✓   | 否      |
+| 1 环境安装                 | 20 min | ★★☆☆☆ | ✓   | 否      |
+| 2 核心对象与追踪           | 30 min | ★★☆☆☆ | ✓   | 否      |
+| 3 Model 格式               | 30 min | ★★★☆☆ | ✓   | 否      |
+| 4 注册表与别名             | 30 min | ★★★☆☆ | ✓   | 否      |
+| 5 Tracking Server + 血缘   | 30 min | ★★★☆☆ | △   | 否      |
+| 6 GenAI 追踪               | 30 min | ★★☆☆☆ | ✓   | ✅      |
+| 7**vibecoding 集成** | 30 min | ★★★☆☆ | ✓   | -       |
+| 8 Prompt Registry          | 30 min | ★★★☆☆ | △   | ✅      |
+| 9 GenAI 评估               | 45 min | ★★★★☆ | △   | ✅      |
+| 10 模型评估与部署          | 30 min | ★★★☆☆ | ✓   | 否      |
+| 11 Agent Tracing           | 45 min | ★★★★☆ | △   | ✅      |
+| 12 生产部署                | 30 min | ★★★★☆ | △   | 否      |
+| 13 Debug 指南              | 20 min | ★★★☆☆ | ✓   | 否      |
+| 14 速查表                  | 5 min  | ★☆☆☆☆ | ✓   | -       |
+| Skill 段（12 个 skill）    | 30 min | ★★☆☆☆ | ✓   | -       |
 
 **总计**：必学部分约 6 小时，选学 4 小时。
 
 **约定**：
+
 - 路径全部用 `<project-root>/`（项目根目录）
 - 命令用 `$` 前缀（`$ conda activate mlflow`）
 - 所有路径都用 `cd <project_root> && ...` 完整写
@@ -82,6 +83,7 @@
 ## 🎯 这章做什么
 
 读完这一章，你会理解：
+
 - MLflow 是什么、解决什么问题
 - 本项目能让你学到什么
 - 应该按什么顺序学习
@@ -92,14 +94,14 @@
 
 如果你把每一次模型训练当成"做一道菜"，那 MLflow 就是你的**厨房日志**——
 
-| 厨房概念 | MLflow 概念 | 说明 |
-|---------|-----------|------|
-| 厨房 | **Experiment（实验）** | 一组相关训练的容器 |
-| 做菜的过程 | **Run（运行）** | 一次训练的执行 |
-| 用什么食材/火候 | **Param（参数）** | `learning_rate=0.01`, `batch_size=32` |
-| 出品评分 | **Metric（指标）** | `accuracy=0.95`, `loss=0.05` |
-| 成品照片 | **Artifact（产物）** | 模型文件、图表、配置文件 |
-| 备注标签 | **Tag（标签）** | `stage=baseline`, `team=alice` |
+| 厨房概念        | MLflow 概念                  | 说明                                      |
+| --------------- | ---------------------------- | ----------------------------------------- |
+| 厨房            | **Experiment（实验）** | 一组相关训练的容器                        |
+| 做菜的过程      | **Run（运行）**        | 一次训练的执行                            |
+| 用什么食材/火候 | **Param（参数）**      | `learning_rate=0.01`, `batch_size=32` |
+| 出品评分        | **Metric（指标）**     | `accuracy=0.95`, `loss=0.05`          |
+| 成品照片        | **Artifact（产物）**   | 模型文件、图表、配置文件                  |
+| 备注标签        | **Tag（标签）**        | `stage=baseline`, `team=alice`        |
 
 ## 0.2 MLflow 解决什么问题
 
@@ -148,18 +150,21 @@ Experiment: awesome-model
 ## 0.4 学习路径
 
 **如果你只做传统 ML（sklearn/xgboost/pytorch）**：
+
 ```
 Chapter 1 → 2 → 3 → 4 → 5 → 10 → 13（必学）
 Chapter 11 → 12（选学）
 ```
 
 **如果你主要做 LLM/Agent**：
+
 ```
 Chapter 1 → 2 → 6 → 7（必学）
 Chapter 8 → 9 → 11（选学）
 ```
 
 **如果你两边都做**：
+
 ```
 完整 14 章节按顺序
 ```
@@ -168,13 +173,13 @@ Chapter 8 → 9 → 11（选学）
 
 MLflow 3（2025 年发布）相对 MLflow 2 做了**大量破坏性变化**。本项目**只用 MLflow 3 写法**。常见坑：
 
-| MLflow 2（不要用） | MLflow 3（本项目用） |
-|---|---|
-| `mlflow.sklearn.log_model(..., artifact_path="m")` | `mlflow.sklearn.log_model(..., name="m")` |
-| `transition_model_version_stage(..., "Production")` | `client.set_registered_model_alias(..., "champion", version)` |
-| `mlflow.evaluate(..., baseline_model=uri)` | 两个 `mlflow.models.evaluate()` + `mlflow.validate_evaluation_results()` |
-| 模型在 Run 下（`runs:/<id>/<path>`） | 模型独立（`models:/<model_id>`） |
-| Stage（Staging/Production） | Alias（champion/challenger） |
+| MLflow 2（不要用）                                    | MLflow 3（本项目用）                                                        |
+| ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `mlflow.sklearn.log_model(..., artifact_path="m")`  | `mlflow.sklearn.log_model(..., name="m")`                                 |
+| `transition_model_version_stage(..., "Production")` | `client.set_registered_model_alias(..., "champion", version)`             |
+| `mlflow.evaluate(..., baseline_model=uri)`          | 两个`mlflow.models.evaluate()` + `mlflow.validate_evaluation_results()` |
+| 模型在 Run 下（`runs:/<id>/<path>`）                | 模型独立（`models:/<model_id>`）                                          |
+| Stage（Staging/Production）                           | Alias（champion/challenger）                                                |
 
 ⚠️ 如果你从 MLflow 2 文档复制代码，几乎必踩坑。
 
@@ -195,6 +200,7 @@ MLflow 3（2025 年发布）相对 MLflow 2 做了**大量破坏性变化**。�
 ## 🎯 这章做什么
 
 跑完这一章，你会：
+
 - 装好 conda env `mlflow`（包含 MLflow 3.x + 必要依赖）
 - 启动 `mlflow ui` 看到空界面
 - 知道整个项目的目录结构
@@ -244,6 +250,7 @@ $ python -c "import mlflow; print(mlflow.__version__)"
 ```
 
 ⚠️ **如果版本 < 3.0**：本项目用了 MLflow 3 的新 API，请升级：
+
 ```bash
 $ pip install --upgrade mlflow
 ```
@@ -272,11 +279,13 @@ $ mlflow ui --port 5000
 你应该看到一个空界面（"No experiments found"），因为还没有跑任何实验。
 
 ⚠️ **MLflow 3.5+ 必须配 `--allowed-hosts`**（防 DNS rebinding）：
+
 ```bash
 $ mlflow ui --port 5000 --allowed-hosts "localhost,127.0.0.1"
 ```
 
 ⚠️ **端口被占用**：换端口：
+
 ```bash
 $ mlflow ui --port 5001
 ```
@@ -334,6 +343,7 @@ $ pip install timm
    $ cd <project-root>
    $ conda run -n mlflow python 01_basics/01_hello_mlflow.py
    ```
+
    应该看到 3 个 Run 创建（experiment 叫 `01_basics_demo`）
 
 ## 避坑清单
@@ -351,614 +361,144 @@ UI 装好 + 第一个脚本跑通后 → [Chapter 2：核心对象与实验追�
 
 > ⏱️ 预计时间：30 分钟
 > 🔑 是否需 API Key：否
-> 📚 前置知识：第 1 章（环境准备与 MLflow 是什么）
+> 📚 前置知识：Chapter 1（环境安装）
 
 ## 🎯 这章做什么
 
-这一章带你跨进 MLflow 的大门——搞清楚"跑实验时到底该怎么把每次训练的关键信息记下来"。你可能已经有过这样的痛苦经历：调了一晚上超参数，第二天回想"上次那组 lr=0.01、batch_size=32 的效果到底是多少来着？模型文件扔哪了？训练曲线截图存哪了？"。MLflow 就是来解决这个问题的——它像一个**实验记账本**，每次训练都自动帮你把参数、指标、模型文件、备注标签统统归档。
-
-类比：如果你把每一次模型训练当成"做一道菜"，那 MLflow 就是你的**厨房日志**——记录每次用了什么食材（Param）、出品评分多少（Metric）、成品照片存在哪（Artifact）、备注标签比如"辣/不辣/试做"（Tag）。几个相关实验放在一起就是一道"实验项目"（Experiment）。
+调了一晚上超参数，第二天却想不起"上次 lr=0.01 的效果到底是多少、模型文件扔哪了"——这一章就是解决这个问题的。MLflow 像一个**实验记账本**，自动把每次训练的参数、指标、模型文件、备注标签归档。跑完这一章，你会得到两个实验（`01_basics_demo`、`01_sklearn_iris`）下的 7 个 Run，并学会用 UI 的 Compare 复盘调参。
 
 ### 你会学到什么
 
-- 用最基础的 3 个 API（`log_param` / `log_metric` / `log_artifact`）手动记录一次训练
-- 用 `mlflow.sklearn.autolog()` 一行代码自动记录 sklearn 训练全过程
-- 理解 MLflow 的 6 个核心对象：Experiment / Run / Param / Metric / Artifact / Tag
+- 用 `log_param` / `log_metric` / `log_artifact` 手动记录一次训练
+- 用 `mlflow.sklearn.autolog()` 一行代码自动记录 sklearn 训练
+- 理解 6 个核心对象：Experiment / Run / Param / Metric / Artifact / Tag
 - 启动 `mlflow ui`，用 Compare 功能对比多个 Run 的效果
-- 在 UI 里"复盘"一次调参，看清楚超参数怎么影响最终指标
 
-## 核心概念：用人话讲清楚
+### 前置
 
-### 1. Experiment（实验）—— 一个文件夹
+- 已完成 Chapter 1（环境安装），`mlflow` 环境可用
+- 需要 API Key：否
+- 已安装 `mlflow` 和 `scikit-learn`（`pip install mlflow scikit-learn`）
 
-一组相关 Run 的容器。比如"iris 分类项目"是一个 Experiment，里面跑的所有模型都是它的 Run。
+### 必跑脚本清单
 
-类比：就像一个项目文件夹，里面放着你这次课题跑过的所有实验记录。在文件系统后端下，它真的就是一个目录：`mlruns/<experiment_id>/`。
+| 脚本 | 一句话作用 | 前置 |
+|------|-----------|------|
+| `01_basics/01_hello_mlflow.py` | 纯手动 log，演示 6 个核心对象 | 无 |
+| `01_basics/01b_sklearn_basics.py` | 用 autolog 记录 4 个真实 sklearn 模型 | 建议先跑 01 |
 
-### 2. Run（一次运行）—— 一个文件
+## 核心概念（一句话版）
 
-单次训练的执行过程。每次 `start_run()` 就会产生一个 Run，有唯一的 `run_id`（一串 32 位十六进制字符）。
+- **Experiment（实验）**：一组相关 Run 的容器，就像项目文件夹（文件系统下对应 `mlruns/<exp_id>/` 目录）。
+- **Run（运行）**：单次训练的日记，每次 `start_run()` 产生一个，有唯一 `run_id`。
+- **Param（参数）**：字符串型配置，如 `lr=0.01`；同一 key 只能记一次（"一次定型"）。
+- **Metric（指标）**：数值型效果，如 `accuracy=0.92`；可带 step，能画出训练曲线。
+- **Artifact（产物）**：任意文件（模型、图表、配置），统一收在 Run 的 `Artifacts/` 下。
+- **Tag（标签）**：任意备注文本，用于 UI 过滤/搜索，可随时改。
+- **autolog**：`mlflow.<框架>.autolog()` 一行开启，自动记录 sklearn/pytorch/xgboost 等框架的参数、指标、模型文件与签名。
 
-类比：相当于项目文件夹里的一篇"实验日记"。在文件系统下，它真的就是一个 `meta.yaml` + 若干 artifact 文件——所以"Run 是文件"这个比喻非常贴切。
+记住一句话：**Experiment 是文件夹，Run 是文件，Param/Metric/Artifact/Tag 是字段。**
 
-### 3. Param（参数）—— 字段之一
+## 🛠️ 动手做
 
-字符串型配置，比如 `learning_rate=0.01`、`batch_size=32`、`optimizer="adam"`。**同一个 Param key 只能记一次**，所以适合记那些不会变的超参。
-
-### 4. Metric（指标）—— 字段之一
-
-数值型效果，比如 `loss=0.35`、`accuracy=0.92`。**可以带 step**，所以能记录每个 epoch 的 loss，画出训练曲线。
-
-### 5. Artifact（产物）—— 字段之一
-
-任意文件：模型文件、配置文件、训练曲线图、混淆矩阵图……MLflow 会把它们统一收在每个 Run 的 `Artifacts` 文件夹下。
-
-类比：实验日记里贴的截图、附件、模型快照。
-
-### 6. Tag（标签）—— 字段之一
-
-任意备注文本，比如 `status=completed`、`dataset=iris`、`notes=第3次试做`。主要用于 UI 里过滤/搜索。Tag 可以随时改，不像 Param 那样"一次定型"。
-
-### 7. autolog（自动记录）
-
-很多框架（sklearn / pytorch / xgboost / lightgbm）MLflow 都提供了 `mlflow.<框架>.autolog()`，**一行代码**就帮你自动记录参数、指标、模型文件、签名等等。
-
-### 一张图把它们串起来
-
-```
-Experiment "01_sklearn_iris"           ← 项目文件夹
-├── Run "rf_deep"                       ← 实验日记 1
-│   ├── Params: {n_estimators: 200, ...}      ← 字段：用了什么食材
-│   ├── Metrics: {accuracy: 0.97, ...}        ← 字段：评分多少
-│   ├── Artifacts: model/MLmodel, model.pkl   ← 字段：成品照片
-│   └── Tags: {dataset: iris, ...}            ← 字段：备注标签
-├── Run "rf_shallow"                    ← 实验日记 2
-│   └── ...
-└── Run "logreg_weak_reg"               ← 实验日记 3
-    └── ...
-```
-
-记住这句话：**Experiment 是文件夹，Run 是文件，Param/Metric/Artifact/Tag 是字段。** 后面的所有操作都是在这五个层级上搬数据。
-
-## 实战步骤：按顺序照做
-
-### Step 1：环境准备
-
-```bash
-cd <project-root> && conda activate mlflow && pip install mlflow scikit-learn
-```
-
-如果你已经在 `mlflow` 虚拟环境里，可以省略 `conda activate` 那段。
-
-### Step 2：跑第一个 demo（手动记录）
+1. **跑两个必跑脚本并进 UI 复盘**。依次执行：
 
 ```bash
 cd <project-root> && python 01_basics/01_hello_mlflow.py
+cd <project-root> && python 01_basics/01b_sklearn_basics.py
+cd <project-root> && mlflow ui --port 5000
 ```
 
-这个脚本会：
-- 创建 experiment `01_basics_demo`
-- 跑 3 个 Run（每次随机选 `learning_rate` 和 `batch_size`）
-- 记录 10 个 epoch 的 loss/accuracy 曲线
-- 写两个 artifact 文件（`configs/config.txt`、`summaries/summary.md`）
-- 给每个 Run 打 3 个 Tag
+浏览器打开 `http://localhost:5000`，进 `01_sklearn_iris`，勾选全部 4 个 Run，点 **Compare**，看不同超参（C / max_depth / n_estimators）下 accuracy、f1 的差异。验证：能看到 4 个 Run 的并排对比表，差异列被高亮。
 
-跑完会看到 "所有 Run 已记录！下一步" 的提示。
-
-### Step 3：跑第二个 demo（autolog + 真实 sklearn）
+2. **改超参重跑对比**。把 `01_basics/01b_sklearn_basics.py` 里第 103 行附近的 `{"n_estimators": 200, ...}` 改成 `{"n_estimators": 50, ...}`，重新跑：
 
 ```bash
 cd <project-root> && python 01_basics/01b_sklearn_basics.py
 ```
 
-这个脚本会：
-- 创建 experiment `01_sklearn_iris`
-- 跑 4 个 sklearn 模型（逻辑回归强/弱正则、随机森林深/浅）
-- 每个都记录 accuracy、f1、模型文件（带签名 + input_example）
+再进 UI Compare 新老两个 `rf_deep` Run。验证：`01_sklearn_iris` 里出现 5 个 Run，Compare 视图下 `n_estimators` 列被高亮为差异列。
 
-> 注意：脚本里写的是 `artifact_path="model"`（老写法），不会报错但会有 deprecation 警告。第 3 章会用 MLflow 3 推荐的新写法 `name=`。
+> 避坑速记：永远用 `with mlflow.start_run() as run:` 管理生命周期（异常自动结束 Run）；Param 同 key 不能覆盖，会变的值改用 `set_tag`；UI 和脚本都必须在 `<project-root>` 目录下跑，否则看不到数据（默认 backend 是 `file:./mlruns`）。完整清单见笔记。
 
-### Step 4：启动 UI 看结果
+## 📖 深入阅读（关键！）
 
-另开一个终端：
+完整原理、代码模式、全部避坑细节见对应笔记：
 
-```bash
-cd <project-root> && mlflow ui --port 5000
-```
-
-浏览器打开 `http://localhost:5000`，按下面的顺序点一遍：
-
-1. 左侧选 experiment `01_basics_demo`：看 3 个 Run 的 Param/Metric 对比
-2. 左侧选 experiment `01_sklearn_iris`：勾选 4 个 Run，点 **Compare**，并排看 Param/Metric
-3. 点开任一 Run 的 **Artifacts** tab → `model/` 目录下的 `model.pkl`、`MLmodel`、`conda.yaml`
-4. 点开任一 Run 的 **Overview** tab：看 Tags（`dataset`、`task`）
-
-### Step 5：在 UI 里 Compare 两个 Run（必做）
-
-这是这一章最重要的一个动作——学会用 UI 复盘实验。
-
-1. 在 experiment `01_sklearn_iris` 页面，**勾选全部 4 个 Run**（左侧小方框）
-2. 点工具栏上的 **Compare** 按钮
-3. 跳转到一个对比页面，你会看到一张并排的表格：
-
-| Run | accuracy | f1_score | C | max_depth | n_estimators |
-|-----|----------|----------|---|-----------|--------------|
-| rf_deep | 0.97 | 0.97 | - | 10 | 200 |
-| rf_shallow | 0.93 | 0.93 | - | 3 | 50 |
-| logreg_strong_reg | 0.93 | 0.93 | 0.1 | - | - |
-| logreg_weak_reg | 0.97 | 0.97 | 10.0 | - | - |
-
-4. 选中其中 2 个 Run（比如 `rf_deep` 和 `rf_shallow`），页面会高亮出**它们差异的列**——一眼看出谁改了哪个超参、效果变了多少。
-
-> 这就是 MLflow 的杀手锏：**参数 × 指标** 二维表格，传统文本日志看 10 分钟才能看出来的事，UI 上 5 秒钟搞定。
-
-## 🛠️ 动手做：调参对比实验
-
-**任务**：把 `01b_sklearn_basics.py` 里的 `n_estimators=200` 改成 `n_estimators=50`，再跑一次，去 UI 对比新老 Run。
-
-### 操作步骤
-
-1. 用编辑器打开 `<project-root>/01_basics/01b_sklearn_basics.py`
-2. 找到第 103 行附近：
-
-```python
-{"n_estimators": 200, "max_depth": 10, "min_samples_split": 2},
-```
-
-3. 改成：
-
-```python
-{"n_estimators": 50, "max_depth": 10, "min_samples_split": 2},
-```
-
-（只改 `n_estimators` 这一个数字，其它不动。）
-
-4. 重新跑脚本：
-
-```bash
-cd <project-root> && python 01_basics/01b_sklearn_basics.py
-```
-
-这次 `experiment "01_sklearn_iris"` 里会多出一个 Run（之前是 4 个，现在 5 个）。
-
-5. 启动 UI（如果还没启动）：
-
-```bash
-cd <project-root> && mlflow ui --port 5000
-```
-
-6. 浏览器打开 `http://localhost:5000`，进 `01_sklearn_iris`：
-   - 勾选 `rf_deep`（n_estimators=200）和新生成的 `rf_deep`（n_estimators=50）
-   - 点 **Compare**
-   - **找到高亮列 `n_estimators`**：左边 200，右边 50
-   - 对比 `accuracy` 列：通常 200 棵树会略高于 50 棵（不过 iris 太简单，可能都满分）
-
-### 验证标准
-
-- UI 里能看到至少 5 个 Run（之前的 4 个 + 新的 1 个）
-- Compare 视图下，新老 Run 的 `n_estimators` 列被高亮为差异列
-- 新 Run 的 `accuracy` 和 `f1_score` 已正确记录（可能与原值相同或略低，取决于随机种子）
-- 新 Run 的 Artifacts tab 下依然有 `model/MLmodel`、`model/conda.yaml`、`model/requirements.txt`
-
-### 加分项
-
-如果你想让对比更明显，可以再改一次 `max_depth=3`（浅树），重复上面流程。这样在 UI 里就能看到"50 棵深树 vs 50 棵浅树 vs 200 棵深树"三组对照。
-
-## 避坑清单
-
-- ⚠️ **坑 1：Run 没关程序就崩了**。手动调 `start_run()` 但忘了 `end_run()`，程序异常退出，UI 里 Run 状态一直是 `RUNNING`。**解决**：永远用 `with mlflow.start_run() as run:`，异常会自动结束 Run。
-
-- ⚠️ **坑 2：`log_param` 同一个 key 第二次会警告**。控制台警告 "Changing param .. is not allowed"。Param 设计为"一次定型"，同名 key 不让覆盖。**解决**：如果是每次会变的值（比如运行中的状态），改用 `set_tag`。
-
-- ⚠️ **坑 3：`log_metric` 同 key 不同 step 不会冲突**。这正是 Metric 的设计——同名 key 加 step 就能画曲线。例如：
-
-  ```python
-  for epoch in range(10):
-      log_metric("loss", compute_loss(), step=epoch)
-  ```
-
-  UI 会自动画一张 loss 随 epoch 下降的图。
-
-- ⚠️ **坑 4：Artifact 路径写错**。`log_artifact("/tmp/xxx")` 报路径错误，或者文件没出现在 UI 里。**解决**：传相对当前工作目录的路径，或者直接传文件名（会在当前目录找）。文件会被**复制**到该 Run 的 artifact 目录，不是软链。
-
-- ⚠️ **坑 5：UI 启动后看不到新数据**。MLflow 默认 backend 是 `file:./mlruns`，每次跑脚本都写在当前目录的 `mlruns/` 下。如果你换了个目录跑脚本、又开 UI 看另一个目录，自然是空的。**解决**：保持 UI 和脚本都在 `<project-root>` 这个根目录下运行。
-
-- ⚠️ **坑 6：SQLite 不适合高并发**。多进程同时写 `mlflow.db` 时偶发 `database is locked`。本地开发无所谓；多人协同请用 PostgreSQL/MySQL（第 3 章会正式启用 SQLite 后端）。
+> 📚 [`notes/01_basics.md`](01_basics.md)（Phase 1：核心对象与实验追踪）
 
 ## 📖 下一步
 
-到这里你应该能熟练使用 MLflow 的核心 API 了。下一章我们要解决一个关键问题：**训练出来的模型本身去哪了？怎么让它能被团队成员加载、能被部署服务消费？**
-
-请继续阅读 **Chapter 3: MLflow Model 格式与 Model Registry**。
+→ [Chapter 3：MLflow Model 格式与 Model Registry](#chapter-3)
 
 ---
-
 # Chapter 3：MLflow Model 格式与 Model Registry
 
 > ⏱️ 预计时间：35 分钟
 > 🔑 是否需 API Key：否
-> 📚 前置知识：Chapter 2（Experiment / Run / Param / Metric / Artifact / Tag）
+> 📚 前置知识：Chapter 2（核心对象与实验追踪）
 
 ## 🎯 这章做什么
 
-Chapter 2 我们学会了"记录"——把参数、指标写进 MLflow，训练完能回头查。但那时候还有个大问题没解决：**训练出来的模型本身去哪了？** 你把 `model.pkl` 用 pickle 存到本地，三个月后同事问你"线上跑的是哪个模型、当时用什么数据训的、输入要几列"，你多半答不上来。更糟的是，你想换个更好的模型上线，得手动改代码里的文件路径，还得重启服务。
-
-这一章就是解决这些问题的。MLflow 提供了两样东西：**MLflow Model 格式**（把模型 + 依赖 + 输入输出说明打包成一个自描述的目录）和 **Model Registry**（模型的"版本仓库"，像 Git 之于代码）。
-
-打个比方：如果 Chapter 2 的 Run 是"实验日记"，那 Registry 就是"产品货架"。日记里有几百次实验，货架上只放你精挑细选、贴好标签的那几个。而 **Alias（别名）** 就是货架上的标签牌——"champion"（现役冠军）这块牌子今天挂在 v1 上，明天可以挂到 v3 上，所有来取货的人（加载模型的服务）自动拿到新版本，**不用改一行代码、不用重启**。
-
-**产出物**：跑完两个脚本，你会得到一个名为 `WineQualityClassifier` 的注册模型，它有 v1 版本、带完整签名（输入 13 列 float、输出 int）、挂着 `champion` 别名，并且能用一行 `mlflow.sklearn.load_model("models:/WineQualityClassifier@champion")` 在任何地方加载出来直接推理。
+Chapter 2 学会了"记录"，但训练出来的模型本身去哪了？这一章解决两个问题：**MLflow Model 格式**（把模型 + 依赖 + 输入输出说明打包成自描述目录，能脱离训练代码部署）和 **Model Registry**（模型的"版本仓库"，像 Git 之于代码）。跑完这一章，你会把 Wine 数据集训练的 Pipeline 记录为带签名和 `input_example` 的模型，并在 UI 里亲眼看到它的 `MLmodel` YAML。
 
 ### 你会学到什么
 
-- 读懂 MLflow Model 目录结构，尤其是 `MLmodel` 这个 YAML 元数据文件在说什么
-- 用 `infer_signature()` 自动推断模型的输入输出 schema，让部署服务能自动校验请求格式
-- 理解 `input_example` 在 UI 里长什么样、起什么作用
-- 把 Run 里的模型注册（`register_model`）到 Model Registry，理解版本号是怎么自动累加的
-- 理解 MLflow 3 的破坏性变化：`name=` 取代了 `artifact_path=`，Stage 已被 Alias 取代
+- 读懂 MLflow Model 目录结构，尤其是 `MLmodel` YAML 元数据在说什么
+- 用 `infer_signature()` 自动推断模型输入输出 schema
+- 理解 `input_example` 的作用（自动推断签名 + UI 展示 + 部署冒烟测试）
+- 理解 MLflow 3 的变化：LoggedModel 独立于 Run、`name=` 取代 `artifact_path=`
 
-## 核心概念：用人话讲清楚
+### 前置
 
-### 3.1 MLflow Model 不是一个文件，是一个目录
+- 已完成 Chapter 2，理解 6 个核心对象
+- 需要 API Key：否
+- 已安装 `mlflow`（3.x）、`scikit-learn`、`pandas`
+- **关键环境**：Registry 必须有数据库后端，本项目用 `sqlite:///mlflow.db`（文件系统 `file:./mlruns` 不支持 Registry）；脚本必须在项目根目录运行
 
-新手最容易误解的一点：MLflow 保存的"模型"不是 `model.pkl` 那一个文件，而是**一整个自描述的目录**。
+### 必跑脚本清单
 
-```
-wine-classifier/
-├── MLmodel              # 主元数据（YAML）—— 灵魂所在
-├── model.pkl            # 序列化后的模型本体
-├── python_env.yaml      # Python 版本 + 依赖
-├── conda.yaml           # Conda 环境描述
-├── requirements.txt     # pip 依赖清单
-└── input_example.json   # 输入示例（log_model 传了 input_example 才有）
-```
+| 脚本 | 一句话作用 | 前置 |
+|------|-----------|------|
+| `02_registry/02a_log_model.py` | 训练 Pipeline，推断签名 + input_example，用 `name=` 记录模型 | Chapter 2 |
 
-为什么要这么麻烦？因为**光有 pkl 是没法部署的**。别人拿到你的 pkl，不知道该用哪个 Python 版本、要装哪些包、输入要传几列什么类型。MLflow 把这些"上下文"全打包进去，于是这个目录可以直接丢给 `mlflow models serve` 起一个 REST 服务，或者打成 Docker 镜像。
+## 核心概念（一句话版）
 
-### 3.2 MLmodel 文件：模型的"身份证"
+- **MLmodel YAML**：模型目录里的"身份证"，记录 flavors（加载方式）、依赖、签名、run_id，是模型能脱离训练代码部署的关键。
+- **Signature（签名）**：模型输入输出 schema，`infer_signature(X_train, model.predict(X_train))` 一行生成；部署时自动校验请求，也是给人看的接口文档。
+- **input_example**：几行真实输入样本；忘传 signature 时自动推断、UI 展示"请求长什么样"、部署后做冒烟测试。
+- **LoggedModel（MLflow 3 新概念）**：模型成为独立一等公民，有自己的 `model_id`，不再寄生在 Run 下——删 Run 不误删模型，UI 的 `Models` 页可直接列出。
 
-`MLmodel` 是 YAML，跑完 02a 后你能在 UI 的 Artifacts 里看到它，长这样：
+## 🛠️ 动手做
 
-```yaml
-artifact_path: wine-classifier
-flavors:
-  python_function:                # 通用 flavor：任何语言/框架都能用的统一入口
-    env: conda.yaml
-    loader_module: mlflow.sklearn
-    model_path: model.pkl
-    predict_fn: predict
-  sklearn:                        # 原生 flavor：还原成真正的 sklearn 对象
-    code: null
-    pickled_model: model.pkl
-    serialization_format: cloudpickle
-    sklearn_version: 1.5.0
-mlflow_version: 3.x
-model_size_bytes: 1234
-run_id: abc123...
-signature:                        # 输入输出 schema
-  inputs: '[{"name": "alcohol", "type": "double"}, ...]'
-  outputs: '[{"type": "long"}]'
-```
-
-**"flavors"（风味）是这里最值得理解的概念**。同一个模型可以有多种"读法"：
-
-- `sklearn` flavor：加载后你拿到的是**真正的 sklearn Pipeline 对象**，可以访问 `.steps`、`.feature_importances_` 这些原生属性
-- `python_function` flavor：加载后你拿到的是一个**统一的 `predict()` 接口**，不管底层是 sklearn、PyTorch 还是 XGBoost，用法完全一样
-
-部署工具（比如 `mlflow models serve`）只认 `python_function`，所以它能一视同仁地服务任何框架的模型。这就是 flavor 设计的价值：**训练侧自由选框架，部署侧只需要一套代码**。
-
-### 3.3 Signature（签名）：模型的"接口文档"
-
-签名记录了模型**输入要什么、输出是什么**。它有两个实实在在的好处：
-
-1. **部署时自动校验**：请求少传一列、类型传错了，服务会直接报清晰的错误，而不是在模型内部炸出一个看不懂的堆栈
-2. **给人看的文档**：三个月后你自己回来看，UI 上直接列出 13 个特征名和类型，不用翻训练代码
-
-推断签名只要一行——把训练输入和模型输出丢给 `infer_signature`，它自己去看列名和 dtype：
-
-```python
-from mlflow.models import infer_signature
-signature = infer_signature(X_train, pipe.predict(X_train))
-```
-
-### 3.4 input_example：部署时的"冒烟测试样本"
-
-`input_example` 是签名的好搭档：存几行真实输入样本进去。它有三重作用：
-
-1. **签名忘了传时的 fallback**：如果你只传了 `input_example` 没传 `signature`，MLflow 会用它自动推断签名
-2. **UI 里直接展示"请求长什么样"**：在 Artifacts tab 下能看到 `input_example.json`，是给团队成员看的最直观参考
-3. **部署后做冒烟测试**：`mlflow models serve` 启动时会用它做一次健康检查
-
-最小例子：
-
-```python
-import pandas as pd
-X_sample = pd.DataFrame({
-    "alcohol": [13.0, 12.5, 14.2],
-    "malic_acid": [2.5, 2.0, 3.5],
-    # ... 其余 11 列
-})
-mlflow.sklearn.log_model(
-    model,
-    name="my-model",
-    signature=signature,
-    input_example=X_sample,
-)
-```
-
-### 3.5 Model Registry：模型的"Git 仓库"
-
-Run 里的模型是**实验产物**——你可能跑了 200 次，其中 199 次都是垃圾。Registry 是**发布通道**——你从那 200 次里挑出好的，给它起个正式名字（`WineQualityClassifier`），它就有了 v1、v2、v3 的版本序列。
-
-对照理解：
-
-| 概念 | 类比 | 特点 |
-|------|------|------|
-| Run 里的模型 | 本地的一次 commit | 数量多，随手产生，用 `runs:/<run_id>/<name>` 引用 |
-| Registered Model | 一个 Git 仓库 | 有名字，是一个逻辑上的"产品线" |
-| Model Version | 打的 tag（v1、v2） | 注册一次自动 +1，不可变 |
-| Alias | 指向某个 tag 的分支指针 | 可以随时改指向，如 `champion` → v3 |
-
-### 3.6 LoggedModel：MLflow 3 的一等公民（独立于 Run）
-
-MLflow 3 里有一个新手容易忽略但非常重要的变化：**LoggedModel 是一等公民，不再寄生在 Run 下**。
-
-在 MLflow 2 里，模型必须挂在某个 Run 的 Artifacts 里，要访问模型得先有 run_id。MLflow 3 引入了独立的 LoggedModel 概念：模型有自己的 ID（`model_id`），可以在 UI 的 `Models` 标签下直接列出，不依赖于 Run 是否还在。Run 和 Model 之间的关联变成可选的（`source_run_id` 字段）。
-
-这个变化带来了三个好处：
-
-1. **删除 Run 不会误删模型**：Run 可以清理，但 Registered Model 保留
-2. **跨 Run 引用更直接**：`logged_model_id` 就是模型的全局唯一标识
-3. **统一接口**：所有模型（Run 里的、Registry 里的、LoggedModel）都有相同的访问方式
-
-### 3.7 ⭐ Alias 为什么取代了 Stage（新手最困惑的点）
-
-**先说结论：MLflow 2 时代的 Stage（`None` / `Staging` / `Production` / `Archived`）在 MLflow 3 里已经废弃，取而代之的是 Alias。** 如果你在网上搜到 `transition_model_version_stage(...)` 的教程，那是旧写法，别学。
-
-**Stage 的三个硬伤：**
-
-1. **写死的四个值，改不了**。现实里团队的流程五花八门：有人要 `dev` / `qa` / `canary` / `prod` 四级，有人做 A/B 测试要同时上两个模型，有人还要区分"华东区在用"和"华南区在用"。Stage 只给你四个固定选项，全都塞不下。Alias 是**自定义字符串**，你想叫什么叫什么。
-
-2. **一个 stage 只能挂一个版本，一个版本只能有一个 stage**。这个 1 对 1 的死限制让 A/B 测试特别难做——你没法说"v2 和 v3 同时是生产模型"。Alias 是**多对多**的：一个版本可以同时挂 `champion` 和 `stable`，你也可以再加 `challenger` 挂到 v3 上做灰度。
-
-3. **语义模糊，容易误会**。"Production" 到底是"正在生产环境跑"还是"通过了测试可以上生产"？不同团队理解不一样，还得靠口头约定。Alias 强迫你自己命名，反而更明确。
-
-**Alias 的核心好处——热切换（这是最实用的部分）：**
-
-生产服务里你的加载代码写死一行：
-
-```python
-model = mlflow.sklearn.load_model("models:/WineQualityClassifier@champion")
-```
-
-新模型 v2 上线时，你**不改代码、不重启服务**，只要执行：
-
-```python
-client.set_registered_model_alias("WineQualityClassifier", "champion", version=2)
-```
-
-下一次加载就自动是 v2 了。要回滚？把别名指回 v1，一秒钟的事。这个切换是**原子操作**，不存在"改到一半"的中间状态。
-
-常用的别名约定（社区惯例，非强制）：
-
-| 别名 | 含义 |
-|------|------|
-| `champion` | 当前生产在用的冠军模型 |
-| `challenger` | 正在评测、准备挑战冠军的候选 |
-| `baseline` | 用于对比的基准模型 |
-| `archived` | 已下线但保留，方便回溯 |
-
-### 3.8 MLflow 3 破坏性变化速查
-
-这一章踩到的两个新写法，都是 MLflow 3 强制要求的：
-
-| MLflow 2 写法 | MLflow 3 写法 | 影响 |
-|---------------|---------------|------|
-| `log_model(model, artifact_path="xxx")` | `log_model(model, name="xxx")` | ⚠️ 旧写法触发 deprecation 警告，部分版本直接报错 |
-| `transition_model_version_stage(name, v, "Production")` | `set_registered_model_alias(name, "champion", v)` | ⚠️ Stage 整套 API 废弃 |
-
-本章脚本 `02a_log_model.py` 里已经用了 `name="wine-classifier"`，请仔细对照 Chapter 2 的 `artifact_path="model"`。
-
-## 实战步骤：按顺序照做
-
-### Step 1：环境准备（确认 SQLite 后端可用）
-
-```bash
-cd <project-root> && conda activate mlflow && pip install mlflow scikit-learn pandas
-```
-
-**关键前置**：Model Registry 必须有数据库后端。`02a_log_model.py` 第一行就是：
-
-```python
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
-```
-
-纯文件系统（`file:./mlruns`）**不支持** Registry。如果你跑 02b 时报 `RESOURCE_DOES_NOT_EXIST` 或 `registry` 相关的错，多半是 backend 没设对。
-
-### Step 2：训练并记录带签名的模型
+1. **跑 02a 记录带签名的模型**：
 
 ```bash
 cd <project-root> && python 02_registry/02a_log_model.py
 ```
 
-预期输出里有 `模型性能: accuracy=1.0000, f1=1.0000`（Wine 数据集很简单，满分正常）和一行 `模型 URI: runs:/<run_id>/wine-classifier`。
+验证：输出含 `模型性能: accuracy=1.0000, f1=1.0000` 和一行 `模型 URI: runs:/<run_id>/wine-classifier`。
 
-这个脚本做了 5 件事：
-
-1. 训练一个 `StandardScaler + RandomForest` 的 Pipeline
-2. 推断签名（输入 13 列 double，输出 long）
-3. 截取 3 行作为 `input_example`
-4. 用 `name="wine-classifier"`（**不是** `artifact_path`）记录模型
-5. 打两个 Tag（`pipeline`、`dataset`）
-
-### Step 3：注册模型 + 设别名
-
-```bash
-cd <project-root> && python 02_registry/02b_register_alias.py
-```
-
-预期看到 `✓ 已注册为 WineQualityClassifier v1` 和 `✓ 已设置 champion alias → v1`，最后打印出版本列表和别名映射。
-
-这个脚本做了 5 件事：
-
-1. 用 `search_runs` 找最近一次 Run（必须是 02a 跑过的）
-2. `mlflow.register_model()` 把模型从 Run 提升到 Registry（自动成为 v1）
-3. `set_registered_model_alias("WineQualityClassifier", "champion", version=1)` 设别名
-4. `update_model_version()` 补充描述
-5. 列出版本表和别名映射
-
-### Step 4：去 UI 验证（别跳过）
+2. **去 UI 看 model artifact 的 MLmodel YAML（必做）**：
 
 ```bash
 cd <project-root> && mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
 ```
 
-打开 `http://localhost:5000`，按下面的顺序点：
+打开 `http://localhost:5000` → `Experiments` → `02_model_registry` → 打开 Run → `Artifacts` → 点开 `wine-classifier` 目录，**亲眼看一遍 `MLmodel` 文件**。验证：能看到 `flavors.python_function` 与 `flavors.sklearn` 两段、`signature`（13 列输入 + long 输出）、`run_id`；同目录下还有 `input_example.json`、`conda.yaml`、`requirements.txt`。
 
-1. **左侧导航栏点 `Models`** → 看到 `WineQualityClassifier`
-2. **点进去看 Version 1**，重点看三处：
-   - **Aliases** 那一栏显示 `champion`
-   - **Description** 是 02b 里 `update_model_version` 写进去的那段文字
-   - **Source Run** 链接能跳回 02a 的那次 Run
-3. **再从 `Experiments` → `02_model_registry` → 打开 Run → `Artifacts` tab**
-4. **点开 `wine-classifier` 目录**，**亲眼看一遍 `MLmodel` 文件的内容**，这是理解模型格式最直接的方式
-5. 同一个目录下应该还有 `input_example.json`，点开看里面是 3 行带列名的数据
+> 避坑速记：MLflow 3 用 `name=` 而不再用 `artifact_path=`；Stage API 已废弃，用 Alias 代替；版本号只增不减；URI 里的路径名必须和 `log_model` 的 `name` 完全一致。完整清单见笔记。
 
-### Step 5：自己下载 model artifact zip 看结构
+## 📖 深入阅读（关键！）
 
-这一章最重要的"动手做"练习——亲手把模型目录下载下来，用 `unzip` 解压，用文本编辑器看 `MLmodel` YAML。
+完整原理、三种 model URI 写法、pyfunc vs sklearn 加载区别见笔记；MLflow 3 模型侧破坏性变化见附录：
 
-详见下一节。
-
-## 🛠️ 动手做：下载 model artifact zip 并解读 MLmodel YAML
-
-**任务**：从 UI 下载 02a 产生的 model artifact zip，解压后看 `MLmodel` YAML 的真实内容。
-
-### 操作步骤
-
-1. 启动 UI（如果还没启动）：
-
-```bash
-cd <project-root> && mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
-```
-
-2. 浏览器打开 `http://localhost:5000`：
-   - 左侧选 `Experiments` → `02_model_registry`
-   - 点开 02a 那次 Run（`wine-rf-v1`）
-   - 进 `Artifacts` tab
-   - 找到 `wine-classifier/` 目录，右上角应该有下载按钮（或者点目录名前的图标）
-
-3. UI 会下载一个 zip 文件，默认名类似 `wine-classifier.zip`。**找到它的位置**（一般在 `~/Downloads/`），用 `cd` 切到那个目录：
-
-```bash
-cd ~/Downloads && ls -lh wine-classifier.zip
-```
-
-4. **解压并查看结构**：
-
-```bash
-cd ~/Downloads && unzip -l wine-classifier.zip
-```
-
-你应该看到这些文件：
-
-```
-Archive:  wine-classifier.zip
-  Length      Date    Time    Name
----------  ---------- -----   ----
-        0  ...                MLmodel
-     1234  ...                conda.yaml
-     2345  ...                model.pkl
-      567  ...                python_env.yaml
-      234  ...                requirements.txt
-      890  ...                input_example.json
-        ...
-```
-
-5. **解压到本地目录**：
-
-```bash
-cd ~/Downloads && unzip wine-classifier.zip -d wine-classifier-unpacked && ls wine-classifier-unpacked/
-```
-
-6. **看 MLmodel YAML 的真实内容**（这是这章最重要的一个命令）：
-
-```bash
-cd ~/Downloads && cat wine-classifier-unpacked/MLmodel
-```
-
-你应该看到一段 YAML，里面包含：
-
-- `artifact_path: wine-classifier`
-- `flavors.python_function` 段（loader_module、model_path）
-- `flavors.sklearn` 段（sklearn_version、serialization_format）
-- `signature` 段（inputs 13 列 double + outputs long）
-- `run_id`（指向 02a 的那次 Run）
-- `mlflow_version: 3.x`
-
-7. **再看 input_example.json**：
-
-```bash
-cd ~/Downloads && cat wine-classifier-unpacked/input_example.json
-```
-
-里面是 3 行带列名的真实数据（`alcohol`、`malic_acid` 等 13 个特征），就是 UI 上 Artifacts tab 显示的那个文件的本体。
-
-### 验证标准
-
-- `wine-classifier.zip` 解压后能看到 `MLmodel`、`model.pkl`、`conda.yaml`、`python_env.yaml`、`requirements.txt`、`input_example.json` 这 6 个文件
-- `MLmodel` 里 `flavors.sklearn` 段的 `sklearn_version` 是你当前安装的版本（如 `1.5.0`）
-- `MLmodel` 里 `signature.inputs` 列出了 13 个特征名（`alcohol`、`malic_acid`、…）
-- `input_example.json` 是合法的 JSON，可以用 `python -m json.tool` 验证：
-
-```bash
-cd ~/Downloads && python -m json.tool wine-classifier-unpacked/input_example.json > /dev/null && echo "✓ JSON 合法"
-```
-
-### 加分项
-
-如果你想更深入，可以打开 `python_env.yaml` 看 MLflow 是怎么描述 Python 环境的；打开 `conda.yaml` 看它用了什么 conda 渠道。这两个文件是部署时的关键——`mlflow models build-docker` 会基于它们构建镜像。
-
-## 避坑清单
-
-- ⚠️ **坑 1：Registry 必须有数据库后端**。用 `file:./mlruns` 时调 `register_model` 会直接报错。本项目统一 `sqlite:///mlflow.db`，生产环境用 PostgreSQL/MySQL。另外注意：脚本是相对路径打开 sqlite，**必须在项目根目录运行**，否则会在别处生成一个空的 `mlflow.db`，然后你会困惑"为什么 UI 里什么都没有"。
-
-- ⚠️ **坑 2：`artifact_path` 已改名为 `name`**。MLflow 3 的 `log_model(model, name="...")`，网上大量旧教程还在用 `artifact_path=`。第 2 章的 `01b_sklearn_basics.py` 还在用 `artifact_path="model"`，属于过渡写法，到本章 `02a_log_model.py` 已经切到 `name="wine-classifier"`。
-
-- ⚠️ **坑 3：Stage 相关 API 全部废弃**。`transition_model_version_stage()`、`stage="Production"` 这类写法不要再用，一律换成 `set_registered_model_alias()`。UI 里也已经看不到 Stage 下拉框了。
-
-- ⚠️ **坑 4：版本号只增不减，删了也不会复用**。删掉 v2 之后，下次注册是 v3 而不是补上 v2。所以版本号可以放心当唯一标识用。
-
-- ⚠️ **坑 5：02b 用 `search_runs` 取"最近一次 Run"，有隐患**。如果你在跑完 02a 之后又在 `02_model_registry` 这个实验里跑了别的 Run，02b 就会注册错的那个。稳妥做法是显式指定 run_id，或者在过滤条件里加上 run_name：
-
-  ```python
-  runs = mlflow.search_runs(
-      experiment_names=["02_model_registry"],
-      filter_string="attributes.run_name = 'wine-rf-v1'",
-      order_by=["start_time DESC"], max_results=1,
-  )
-  ```
-
-- ⚠️ **坑 6：model URI 里的路径名必须和 `log_model` 的 `name` 完全一致**。02a 写的是 `name="wine-classifier"`，02b 就必须拼 `runs:/{run_id}/wine-classifier`。写错一个字符就是 `RESOURCE_DOES_NOT_EXIST`，而错误信息不会告诉你"你是不是拼错了名字"。
-
-- ⚠️ **坑 7：别名区分大小写，且不能用作纯数字**。`Champion` 和 `champion` 是两个不同的别名；别名也不能起成 `1`、`2` 这种，会和版本号语法冲突。
-
-- ⚠️ **坑 8：签名太严格也会咬人**。如果推断签名时用的是 DataFrame（有列名），那推理时也必须传 DataFrame，传 numpy 数组会因为缺列名而校验失败。保持训练和推理的数据形态一致。
-
-- ⚠️ **坑 9：02b 文件头注释里写的是 `python 03_registry/...`，这是笔误**，正确目录是 `02_registry/`。
+> 📚 [`notes/02_registry.md`](02_registry.md)（Phase 2：模型格式与注册表）
+> 📚 [`notes/appendix/mlflow3_breaking_changes.md`](appendix/mlflow3_breaking_changes.md)（Model 相关部分：LoggedModel 一等公民、API 改名）
 
 ## 📖 下一步
 
-到这里你应该理解了 MLflow Model 的自描述目录结构、Signature 的作用、以及 Registry + Alias 的热切换优势。下一章我们要解决"模型怎么上线"——怎么用 `models:/<name>@<alias>` 在 Python 脚本里加载模型、做推理、做 A/B 测试。
-
-请继续阅读 **Chapter 4: 模型加载、推理与上线**。
-
----
-
-## 📚 深入阅读
-
-- **`notes/01_basics.md`**：Chapter 2 的进阶笔记，覆盖 autolog 细节、批量记录、SQLite 锁问题
-- **`notes/02_registry.md`**：Chapter 3 的进阶笔记，覆盖三种 model URI 写法、`pyfunc` vs `sklearn` 加载的区别、A/B 测试最佳实践
+→ [Chapter 4：模型注册表与冠军/挑战者模式](#chapter-4)
 # Chapter 4：模型注册表与冠军/挑战者模式
 
 > ⏱️ 预计时间：45 分钟
@@ -972,6 +512,7 @@ cd ~/Downloads && python -m json.tool wine-classifier-unpacked/input_example.jso
 **这一章解决的就是"模型怎么管"的问题。** MLflow 提供了 **Model Registry**——一个版本化的"产品货架"。日记里写几百次实验（Run），货架上只放你精挑细选、贴好标签的那几个。**Alias（别名）** 就是货架上的标签牌——"champion"（现役冠军）这块牌子今天挂在 v1 上，明天可以挂到 v3 上，所有来取货的人（加载模型的服务）自动拿到新版本，**不用改一行代码、不用重启**。
 
 **学完这章你会的硬技能：**
+
 - 把 Run 里的模型注册到 Model Registry，理解版本号怎么自动累加
 - 用 champion/challenger alias 做"线上冠军/灰度挑战者"
 - 解释清楚为什么 MLflow 3 抛弃了 Stage、新接 Alias
@@ -987,11 +528,11 @@ cd ~/Downloads && python -m json.tool wine-classifier-unpacked/input_example.jso
 
 ### 对应脚本清单
 
-| 脚本 | 作用 | 是否必跑 | 前置 |
-|------|------|---------|------|
-| `02a_log_model.py` | 训练 sklearn 模型 + 推断签名 + 记到 Run | 必跑（上章） | Phase 1 |
-| `02b_register_alias.py` | 把 Run 提升为 Registered Model + 设 champion alias | 必跑 | 跑过 02a |
-| `02c_load_predict.py` | 用 `models:/name@champion` 加载并推理 | 必跑 | 跑过 02b |
+| 脚本                      | 作用                                               | 是否必跑     | 前置     |
+| ------------------------- | -------------------------------------------------- | ------------ | -------- |
+| `02a_log_model.py`      | 训练 sklearn 模型 + 推断签名 + 记到 Run            | 必跑（上章） | Phase 1  |
+| `02b_register_alias.py` | 把 Run 提升为 Registered Model + 设 champion alias | 必跑         | 跑过 02a |
+| `02c_load_predict.py`   | 用`models:/name@champion` 加载并推理             | 必跑         | 跑过 02b |
 
 ---
 
@@ -1003,12 +544,12 @@ Run 里的模型是**实验产物**——你可能跑了 200 次，其中 199 �
 
 打个比方：
 
-| 概念 | 类比 | 特点 |
-|------|------|------|
-| Run 里的模型 | 本地的一次 commit | 数量多，随手产生，用 `runs:/<run_id>/<name>` 引用 |
-| Registered Model | 一个 Git 仓库 | 有名字，是一个逻辑上的"产品线" |
-| Model Version | 打的 tag（v1、v2） | 注册一次自动 +1，**不可变** |
-| Alias | 指向某个 tag 的分支指针 | 可以随时改指向，`champion` → v3 |
+| 概念             | 类比                    | 特点                                               |
+| ---------------- | ----------------------- | -------------------------------------------------- |
+| Run 里的模型     | 本地的一次 commit       | 数量多，随手产生，用`runs:/<run_id>/<name>` 引用 |
+| Registered Model | 一个 Git 仓库           | 有名字，是一个逻辑上的"产品线"                     |
+| Model Version    | 打的 tag（v1、v2）      | 注册一次自动 +1，**不可变**                  |
+| Alias            | 指向某个 tag 的分支指针 | 可以随时改指向，`champion` → v3                 |
 
 **版本号只增不减**，删了 v2 之后，下次注册是 v3 而不是补上 v2。所以版本号可以放心当唯一标识用。
 
@@ -1031,9 +572,7 @@ Registry 不是文件，是一堆带关系的表（哪个名字有哪些版本�
 **Stage 的三个硬伤：**
 
 1. **写死的四个值，改不了**。现实里团队的流程五花八门：有人要 `dev` / `qa` / `canary` / `prod` 四级，有人做 A/B 测试要同时上两个模型。Stage 只给你四个固定选项，全都塞不下。Alias 是**自定义字符串**，你想叫什么叫什么。
-
 2. **一个 stage 只能挂一个版本，一个版本只能有一个 stage**。这个 1 对 1 的死限制让 A/B 测试特别难做——你没法说"v2 和 v3 同时是生产模型"。Alias 是**多对多**的：一个版本可以同时挂 `champion` 和 `stable`，你也可以加 `challenger` 挂到 v3 上做灰度。
-
 3. **语义模糊**。"Production" 到底是"正在生产环境跑"还是"通过了测试可以上生产"？不同团队理解不一样。Alias 强迫你自己命名，反而更明确。
 
 **Alias 的核心好处——热切换：**
@@ -1056,12 +595,12 @@ client.set_registered_model_alias("WineQualityClassifier", "champion", version=2
 
 最简单的模型发布模式：**一个在用、一个在测**。
 
-| Alias | 含义 | 跑在线上吗 |
-|-------|------|----------|
-| `champion` | 当前生产在用的冠军模型 | 是 |
+| Alias          | 含义                               | 跑在线上吗         |
+| -------------- | ---------------------------------- | ------------------ |
+| `champion`   | 当前生产在用的冠军模型             | 是                 |
 | `challenger` | 正在评测、准备替换 champion 的候选 | 灰度流量或离线评估 |
-| `baseline` | 用于对比的基准模型 | 否 |
-| `archived` | 已下线但保留，方便回溯 | 否 |
+| `baseline`   | 用于对比的基准模型                 | 否                 |
+| `archived`   | 已下线但保留，方便回溯             | 否                 |
 
 **完整发布流程：**
 
@@ -1255,9 +794,7 @@ else:
 ## 避坑清单
 
 - ⚠️ **坑 1：Registry 必须有数据库后端**。用 `file:./mlruns` 时调 `register_model` 会直接报错。本项目统一 `sqlite:///mlflow.db`。**脚本是相对路径打开 sqlite，必须在项目根目录运行**，否则会在别处生成一个空的 `mlflow.db`，然后你会困惑"为什么 UI 里什么都没有"。
-
 - ⚠️ **坑 2：Stage 相关 API 全部废弃**。`transition_model_version_stage()`、`stage="Production"` 这类写法不要再用，一律换成 `set_registered_model_alias()`。MLflow 3 的 UI 里也已经看不到 Stage 下拉框了。如果你在网上看到 2024 年之前的教程，全部按"过期"对待。
-
 - ⚠️ **坑 3：02b 用 `search_runs` 取"最近一次 Run"有隐患**。如果你在跑完 02a 之后又在 `02_model_registry` 这个实验里跑了别的 Run，02b 会注册错的那个。稳妥做法是显式指定 run_id，或者加上 run_name 过滤：
 
   ```python
@@ -1268,19 +805,14 @@ else:
       max_results=1,
   )
   ```
-
 - ⚠️ **坑 4：model URI 里的路径名必须和 `log_model` 的 `name` 完全一致**。02a 写的是 `name="wine-classifier"`，02b 就必须拼 `runs:/{run_id}/wine-classifier`。写错一个字符就是 `RESOURCE_DOES_NOT_EXIST`，错误信息不会告诉你"你是不是拼错了名字"。
-
 - ⚠️ **坑 5：别名区分大小写，且不能用作纯数字**。`Champion` 和 `champion` 是两个不同的别名；别名也不能起成 `1`、`2` 这种，会和版本号语法冲突。
-
 - ⚠️ **坑 6：签名太严格也会咬人**。如果推断签名时用的是 DataFrame（有列名），那推理时也必须传 DataFrame，传 numpy 数组会因为缺列名而校验失败。保持训练和推理的数据形态一致。
-
 - ⚠️ **坑 7：第一次用 sqlite + Registry 时跑一次 `mlflow db upgrade`**。如果 `register_model` 报 `no such table: registered_models`，原因是 mlflow.db 是旧版本 schema。执行：
 
   ```bash
   cd <project-root> && mlflow db upgrade sqlite:///mlflow.db
   ```
-
 - ⚠️ **坑 8：02b/02c 文件头注释里写的是 `python 03_registry/...`，这是笔误**，正确目录是 `02_registry/`。脚本本身能跑，但别照抄错路径。
 
 ---
@@ -1292,7 +824,6 @@ else:
 **Chapter 5** 我们会启动一个 **Tracking Server**——把 MLflow 升级成 HTTP 服务，让团队所有人往同一个后端写。同时还会讲**数据集血缘**——给训练数据发"身份证"，让任何一个模型都能追溯"它吃了什么数据"。
 
 详细理论参考：`notes/02_registry.md`
-
 
 ---
 
@@ -1314,6 +845,7 @@ else:
 > **类比**：第 4 章的 MLflow 像你一个人用笔记本写实验记录；这一章的 MLflow 像公司给你配了 **GitLab**（追踪服务器）+ **数据血缘**（像 Git 里每行代码都带作者和 commit）。
 
 **学完这章你会的硬技能：**
+
 - 启动一个 Tracking Server，让多个客户端往同一个 SQLite 库写
 - 区分 Backend Store（元数据）和 Artifact Store（文件）
 - 用 `mlflow.data.from_pandas` + `mlflow.log_input` 给 Run 关联训练数据
@@ -1354,10 +886,10 @@ else:
 
 Tracking Server 自己不存数据，它把数据分两家：
 
-| 概念 | 类比 | 存什么 | 选型 |
-|------|------|--------|------|
-| **Backend Store** | 餐厅的点菜单（数据库） | experiments、runs、metrics、params、tags、aliases | SQLite（小团队）、PostgreSQL（生产） |
-| **Artifact Store** | 餐厅的仓库（文件系统） | 模型文件、图片、配置、特征文件 | 本地路径（学习）、S3/MinIO（生产） |
+| 概念                     | 类比                   | 存什么                                            | 选型                                 |
+| ------------------------ | ---------------------- | ------------------------------------------------- | ------------------------------------ |
+| **Backend Store**  | 餐厅的点菜单（数据库） | experiments、runs、metrics、params、tags、aliases | SQLite（小团队）、PostgreSQL（生产） |
+| **Artifact Store** | 餐厅的仓库（文件系统） | 模型文件、图片、配置、特征文件                    | 本地路径（学习）、S3/MinIO（生产）   |
 
 为什么要分？因为数据库擅长"频繁小写入"（每次 metric 都写一行），文件系统擅长"大文件顺序读写"（模型权重几百 MB）。混在一起两者都做不好。
 
@@ -1402,12 +934,12 @@ MlflowException: No suitable backend store to use for the registry
 
 每次训练时，不光要记录参数和指标，还要告诉 MLflow "我用了这份数据"。`mlflow.data.from_pandas(df, source=..., name=..., targets=...)` 创建一个 `Dataset` 对象，里面带四样东西：
 
-| 字段 | 含义 | 举例 |
-|------|------|------|
-| **source** | 数据来自哪个文件/URL/库 | `"data/wine.csv"`、`"sklearn.datasets.load_wine"` |
-| **name** | 你给数据集起的名 | `"wine_dataset"` |
-| **digest** | 数据集内容的哈希（指纹） | `"a3f5..."` |
-| **schema** | 列名 + 类型 | `[{"name": "alcohol", "type": "double"}, ...]` |
+| 字段             | 含义                     | 举例                                                  |
+| ---------------- | ------------------------ | ----------------------------------------------------- |
+| **source** | 数据来自哪个文件/URL/库  | `"data/wine.csv"`、`"sklearn.datasets.load_wine"` |
+| **name**   | 你给数据集起的名         | `"wine_dataset"`                                    |
+| **digest** | 数据集内容的哈希（指纹） | `"a3f5..."`                                         |
+| **schema** | 列名 + 类型              | `[{"name": "alcohol", "type": "double"}, ...]`      |
 
 **digest 是关键防伪**：一模一样的数据 → 同一个 digest；只要改一个字节 → digest 全变。这就是"防偷偷换数据"的硬证据。
 
@@ -1431,14 +963,14 @@ MLflow 2 里，模型是 Run 下的一个 artifact（`runs:/<run_id>/model`）�
 
 ### 6. MLflow 3 vs 2 关键差异（速查）
 
-| 维度 | MLflow 2 | MLflow 3 |
-|------|----------|----------|
-| 模型 URI | `runs:/<id>/<path>` | 加 `models:/<model_id>` 跨实验引用 |
-| `log_model` 参数 | `artifact_path="..."` | `name="..."`（强制改名） |
-| 阶段切换 | `transition_model_version_stage` | `set_registered_model_alias` |
-| 搜索模型 | 只能用 `search_runs` | 新增 `search_logged_models` |
-| UI 入口 | 模型藏在 Run 里 | 左侧栏独立 `Logged Models` |
-| 服务器 | -- | 3.5+ 必须配 `--allowed-hosts` |
+| 维度               | MLflow 2                           | MLflow 3                            |
+| ------------------ | ---------------------------------- | ----------------------------------- |
+| 模型 URI           | `runs:/<id>/<path>`              | 加`models:/<model_id>` 跨实验引用 |
+| `log_model` 参数 | `artifact_path="..."`            | `name="..."`（强制改名）          |
+| 阶段切换           | `transition_model_version_stage` | `set_registered_model_alias`      |
+| 搜索模型           | 只能用`search_runs`              | 新增`search_logged_models`        |
+| UI 入口            | 模型藏在 Run 里                    | 左侧栏独立`Logged Models`         |
+| 服务器             | --                                 | 3.5+ 必须配`--allowed-hosts`      |
 
 ---
 
@@ -1462,6 +994,7 @@ mlflow server \
 ```
 
 启动后你会在当前目录看到两个东西被创建/使用：
+
 - `mlflow.db`（SQLite 数据库，账本）
 - `mlruns/`（artifact 文件夹，仓库）
 
@@ -1592,19 +1125,12 @@ cd <project-root> && python 03_tracking/03b_dataset_lineage.py
 ## 避坑清单
 
 - ⚠️ **坑 1：忘了 `export MLFLOW_TRACKING_URI`** → 写本地 `mlruns`，server 看不到。脚本里没看到就在 Python 里加 `mlflow.set_tracking_uri("http://localhost:5000")`。
-
 - ⚠️ **坑 2：想用 Model Registry 但用的是文件 backend** → `register_model` 直接报错。必须先切到 sqlite 或 postgres。**这就是 file:// 的致命问题**——本项目以 `sqlite:///mlflow.db` 为基线。
-
 - ⚠️ **坑 3：`search_logged_models` 用 `params.lr <= 0.01`** → 报错。`params` 是字符串，只支持 `=`、`!=`、`LIKE`、`IN`；数值比较（`<`、`>`、`<=`、`>=`）只对 `metrics` 有效。要筛数值超参，先用 `log_metric` 把它记成 metric，或者用 `params.xxx = '50'` 当字符串比对。
-
 - ⚠️ **坑 4：`experiment_ids=["03_search_demo"]` 传名字** → 返回空。`search_logged_models` 接收的是 id 不是 name，必须先用 `mlflow.get_experiment_by_name(...).experiment_id` 拿到 id。
-
 - ⚠️ **坑 5：改了数据但忘了 digest 检测** → 每次跑新实验 MLflow 都会重算 digest，变了就说明数据被改过——别绕开它。如果发现 digest 变了但你"没改数据"，八成是数据源本身在变（CSV 被覆盖、数据库连接拿的是不同快照），这是排查训练-推理不一致的关键线索。
-
 - ⚠️ **坑 6：环境变量作用域**。`export MLFLOW_TRACKING_URI=...` 只在当前终端窗口生效。新开一个终端要重新 export，或者把它加到 `~/.bashrc`。
-
 - ⚠️ **坑 7：MLflow 3.5+ 浏览器打不开**。原因是没有 `--allowed-hosts`。新版本出于安全考虑默认拒绝外部 host。启动 server 时加上 `--allowed-hosts "localhost,127.0.0.1"`。
-
 - ⚠️ **坑 8：scripts 里 `mlflow.set_tracking_uri` 覆盖了环境变量**。如果你既 export 了又脚本里写，**脚本里的生效**（因为它后调用）。所以 03b 的 `set_tracking_uri("sqlite:///mlflow.db")` 会让脚本绕过 server 直接写本地 db——这是该脚本的设计（"不需要启 server"），但你要清楚。
 
 ---
@@ -1612,6 +1138,7 @@ cd <project-root> && python 03_tracking/03b_dataset_lineage.py
 ## 下一步
 
 到这里你已经会：
+
 - 启动 Tracking Server，让团队共享同一个 MLflow
 - 选 Backend Store（file/sqlite/postgres）并知道 file 用不了 Registry
 - 用 `mlflow.data.from_pandas` + `mlflow.log_input` 给 Run 关联训练数据
@@ -1620,12 +1147,14 @@ cd <project-root> && python 03_tracking/03b_dataset_lineage.py
 **但模型还没真正上线。** 现在你加载模型用的是 Python 脚本调用，生产环境通常是 HTTP 服务（线上系统 POST 请求过来，模型返回预测）。
 
 **Chapter 6** 会讲：
+
 - `mlflow models serve` 启动一个 REST API
 - 用 `curl` 调模型
 - 打 Docker 镜像、部署到生产环境
 - 评估模型：混淆矩阵、ROC、AUC 等指标在 MLflow 里怎么记
 
 详细理论参考：`notes/03_tracking.md`
+
 # Chapter 6：用一行代码追踪 LLM 调用——理解 Trace / Span / SpanType
 
 > ⏱️ 预计时间：45 分钟
@@ -1652,13 +1181,13 @@ MLflow 的 **Tracing（追踪）** 就是为了解决这个问题的。它能把
 
 这一章对应 `05_tracing/` 目录下的 4 个脚本：
 
-| 脚本 | 一句话作用 | 是否必跑 | 前置 |
-|------|-----------|---------|------|
-| `env_bootstrap.py` | 自动把国内 LLM（DeepSeek 等）的 key 桥接成 OpenAI 协议 | 必跑（其他脚本都依赖它） | 无 |
-| `05a_env_test.py` | 验证 MLflow 能联通 DeepSeek，发一次最简单的请求 | 必跑 | 跑过 env_bootstrap |
-| `05b_basic_tracing.py` | `mlflow.openai.autolog()` 实战 + 多轮对话追踪 | 必跑 | 跑过 05a |
-| `05c_custom_decorator.py` | `@mlflow.trace` 自定义 Span，搭一个 RAG 链看嵌套 Span 树 | 推荐 | 跑过 05b |
-| `05d_metadata_search.py` | 给 trace 打 user/session + `search_traces` 查询实战 | 推荐 | 跑过 05b |
+| 脚本                        | 一句话作用                                                 | 是否必跑                 | 前置               |
+| --------------------------- | ---------------------------------------------------------- | ------------------------ | ------------------ |
+| `env_bootstrap.py`        | 自动把国内 LLM（DeepSeek 等）的 key 桥接成 OpenAI 协议     | 必跑（其他脚本都依赖它） | 无                 |
+| `05a_env_test.py`         | 验证 MLflow 能联通 DeepSeek，发一次最简单的请求            | 必跑                     | 跑过 env_bootstrap |
+| `05b_basic_tracing.py`    | `mlflow.openai.autolog()` 实战 + 多轮对话追踪            | 必跑                     | 跑过 05a           |
+| `05c_custom_decorator.py` | `@mlflow.trace` 自定义 Span，搭一个 RAG 链看嵌套 Span 树 | 推荐                     | 跑过 05b           |
+| `05d_metadata_search.py`  | 给 trace 打 user/session +`search_traces` 查询实战       | 推荐                     | 跑过 05b           |
 
 ## 核心概念
 
@@ -1682,14 +1211,14 @@ Span 是嵌套的——比如一个 RAG 应用里最外层的 `rag_chain` 父 Sp
 
 每个 Span 都有一个"类型"标签，告诉 MLflow 这个 Span 在干什么。常用值：
 
-| SpanType | 含义 | 用在哪儿 |
-|----------|------|----------|
-| `LLM` | 大模型调用 | 包装调大模型的函数 |
-| `RETRIEVER` | 检索 | 包装向量查询、文档检索 |
-| `TOOL` | 工具调用 | 包装外部 API / 工具函数 |
-| `CHAIN` | 编排链 | 包装整个流程（最常用的"外层"装饰） |
-| `AGENT` | Agent 决策 | 包装 Agent 主循环 |
-| 任意字符串 | 自定义 | 你自己随便起名，比如 `"PROMPT_TEMPLATE"` |
+| SpanType      | 含义       | 用在哪儿                                  |
+| ------------- | ---------- | ----------------------------------------- |
+| `LLM`       | 大模型调用 | 包装调大模型的函数                        |
+| `RETRIEVER` | 检索       | 包装向量查询、文档检索                    |
+| `TOOL`      | 工具调用   | 包装外部 API / 工具函数                   |
+| `CHAIN`     | 编排链     | 包装整个流程（最常用的"外层"装饰）        |
+| `AGENT`     | Agent 决策 | 包装 Agent 主循环                         |
+| 任意字符串    | 自定义     | 你自己随便起名，比如`"PROMPT_TEMPLATE"` |
 
 ```python
 from mlflow.entities.span import SpanType
@@ -1799,6 +1328,7 @@ chat_turn (root span, CHAT)
 ```
 
 **重点看**：
+
 - **Attributes** 标签：点开看，model、temperature、max_tokens 这些参数是自动填的
 - **Inputs / Outputs** 标签：能看到完整的 messages（user/system/assistant 三种角色）和生成的回复
 - **Latency**：实际耗时（毫秒）
@@ -1828,6 +1358,7 @@ rag_chain (CHAIN)
 ```
 
 **重点看**：
+
 - 每一层的颜色/图标可能不一样（按 SpanType 区分）
 - 每一层都有自己的 Latency——你可以一眼看出"原来 retrieve 花了 100ms，LLM 花了 1500ms"
 - 每一层都有 Inputs / Outputs——LLM 的输入是组装好的 prompt，能看到 prompt engineering 的真实样子
@@ -1842,14 +1373,15 @@ python 05d_metadata_search.py
 
 这个脚本会模拟 3 个用户（alice / bob / charlie）每个 5 轮对话（共 15 次 LLM 调用），然后用 `mlflow.search_traces()` 做 4 种查询：
 
-| 查询 | 你应该看到 |
-|------|-----------|
-| 所有 OK 的 trace | 15 条左右 |
-| 特定用户（alice）的 trace | 数量大约是总数的 1/3 |
-| 按 session_id 聚合 | 该 session 内所有 trace 数（可能是 5） |
-| 按 latency 倒序 | 前 5 个最慢的调用及其所属用户 |
+| 查询                      | 你应该看到                             |
+| ------------------------- | -------------------------------------- |
+| 所有 OK 的 trace          | 15 条左右                              |
+| 特定用户（alice）的 trace | 数量大约是总数的 1/3                   |
+| 按 session_id 聚合        | 该 session 内所有 trace 数（可能是 5） |
+| 按 latency 倒序           | 前 5 个最慢的调用及其所属用户          |
 
 **重点看**：
+
 - 怎么用 `mlflow.update_current_trace(user=..., session_id=...)` 给 trace 打元数据
 - 为什么 `metadata.`\`mlflow.trace.user\`` 这个奇怪的字段名要用反引号包裹（因为字段名里有点号，会被 SQL 解析器误读）
 - `order_by=["execution_time_ms DESC"]` 是 list[str]，每个元素是"字段名 + 方向"的拼接字符串
@@ -1892,6 +1424,7 @@ mlflow ui --port 5000
 ```
 
 验证：
+
 1. experiment `05_basic_tracing` 出现，且至少有 2 个 Run
 2. 点开 `multi-turn-chat` Run → Traces 标签 → 看到 3 条 trace
 3. 任选一条 trace → 看到 Span 树、Attributes、Usage、Latency
@@ -1899,6 +1432,7 @@ mlflow ui --port 5000
 ### 任务 4（可选但推荐）：把 05c 和 05d 也跑了
 
 跑完之后在 UI 里逛逛：
+
 - 找到 `05_custom_tracing` → `rag-q1` → 看 5 层 Span 树
 - 找到 `05_metadata` → `multi-user-sim` → 试用过滤 `metadata.\`mlflow.trace.user\` = 'alice'`
 
@@ -1992,6 +1526,7 @@ description: |
 ```
 
 **AI 助手的工作流**：
+
 1. 你发一句话（比如"帮我给这个 sklearn 训练加追踪"）
 2. AI 助手判断这个话题匹配 `classical-ml` 的 description
 3. 它打开 `mlflow_skill/classical-ml/SKILL.md` 读步骤
@@ -2009,15 +1544,18 @@ description: |
 ### 场景 1：给 sklearn 训练加追踪（最常用）
 
 **你说**：
+
 > 帮我给这个 `train.py` 加 MLflow 追踪，自动记录参数、指标和模型。
 
 **AI 助手会做**：
+
 1. 读 `train.py`，识别框架（`from sklearn.ensemble import RandomForestClassifier` → 用 `mlflow.sklearn.autolog()`）
 2. 检查 tracking URI（如果没设，提醒你 `export MLFLOW_TRACKING_URI="sqlite:///$(pwd)/mlflow.db"`）
 3. 加一行 `mlflow.sklearn.autolog()` + 包一个 `with mlflow.start_run(...)`
 4. 跑脚本，确认出现 `Run with id: ...`
 
 **你验证**：
+
 ```bash
 $ mlflow ui --port 5000
 # 打开 http://localhost:5000
@@ -2027,14 +1565,17 @@ $ mlflow ui --port 5000
 ### 场景 2：让 AI 助手对比两个模型
 
 **你说**：
+
 > 我跑了两个实验（lr=0.01 和 lr=0.001），帮我对比哪个好，用 UI 结果说话。
 
 **AI 助手会做**：
+
 1. 用 `mlflow.search_runs()` 或 `mlflow runs search` 拉出两个 Run 的指标
 2. 按 accuracy / f1 排序，告诉你哪个好
 3. 建议你把赢家注册成 champion
 
 **你验证**：
+
 ```bash
 # 看 AI 助手给你的对比表，或去 UI Compare 页面自己看
 ```
@@ -2042,15 +1583,18 @@ $ mlflow ui --port 5000
 ### 场景 3：给 LLM 调用加追踪
 
 **你说**：
+
 > 这段 OpenAI 调用怎么加 MLflow 追踪？我想看每次调用了多少 token。
 
 **AI 助手会做**：
+
 1. 识别 `from openai import OpenAI` → 用 `mlflow.openai.autolog()`
 2. 在 `import openai` 之后加一行 `mlflow.openai.autolog()`
 3. 确认 tracking server 在跑（或 SQLite）
 4. 跑脚本，确认 trace 落库
 
 **你验证**：
+
 ```bash
 # UI 顶部 Traces tab → 看到 ChatCompletion 的 trace
 # 点开看 Latency、Total tokens
@@ -2059,15 +1603,18 @@ $ mlflow ui --port 5000
 ### 场景 4：评估一个 LLM agent
 
 **你说**：
+
 > 我这个客服 agent 答得不准，帮我评估一下，看有多少比例合格。
 
 **AI 助手会做**：
+
 1. 用 `agent-evaluation` skill：先确认有 tracing
 2. 建 eval 数据集（`mlflow.genai.datasets.create_dataset`）
 3. 配置 scorers（Correctness / Safety / 自定义）
 4. 跑 `mlflow.genai.evaluate()`，出分数
 
 **你验证**：
+
 ```bash
 # UI 里看评估 Run 的 Metrics（correctness/mean 等）
 ```
@@ -2079,14 +1626,17 @@ $ mlflow ui --port 5000
 有时候 AI 助手会瞎写或报错。**让它去读 skill**：
 
 **你说**：
+
 > 这个报错了，帮我查 `mlflow_skill/` 里对应的 skill，看正确写法是什么。
 
 或者更具体：
+
 > 我用 `mlflow.sklearn.log_model(model, artifact_path="m")` 报错了。查一下 `mlflow_skill/classical-ml/SKILL.md`，MLflow 3 应该怎么写？
 
 **为什么有效**：skill 里的 SKILL.md 明确写了 MLflow 3 vs 2 的破坏性变化（`artifact_path=` → `name=` 等）。AI 助手读到后就不会再用旧写法。
 
 **通用话术**（任何 AI 工具都能用）：
+
 - "查 `mlflow_skill/` 里有没有相关的 skill"
 - "按 `mlflow_skill/classical-ml/SKILL.md` 的步骤做"
 - "这个 MLflow API 报错了，帮我看看 skill 里 MLflow 3 的写法"
@@ -2098,6 +1648,7 @@ $ mlflow ui --port 5000
 不同 AI 助手启用 skill 的方式不同（Claude Code、Cursor、Copilot 等各自有 rules / skills 配置机制，具体去各自文档查）。**核心原则只有一个：让助手能看到 SKILL.md**。
 
 **最简单的方式（所有工具通用，零配置）**：不装任何东西，直接在对话里让 AI 助手读文件：
+
 > 先读 `<project-root>/mlflow_skill/classical-ml/SKILL.md`，然后按里面 Step 1 帮我做。
 
 这样 AI 助手每轮对话都会参考那个手册。想在更长远的会话里也自动生效，就按你所用 AI 工具的 rules / skills 配置机制，把这个目录加进去。
@@ -2129,10 +1680,12 @@ $ mlflow ui --port 5000
 前 7 章我们都在跟踪「模型」和「实验」，但 LLM 应用最该被管起来的其实是**提示词（Prompt）**——一行提示词的改动就可能让生产环境崩溃。今天你将学会用 **Prompt Registry** 给提示词建 Git 仓库：每次改提示词都登记一个新版本，给不同版本贴 `@production` / `@staging` 别名，**应用永远只通过别名加载**。
 
 类比：
+
 - 写代码用 Git + main/dev 分支管理 → 写提示词就该用 Prompt Registry + `@production` / `@staging` 别名
 - Prompt Registry 就是「提示词界的 GitHub」
 
 跑完这章，你会在 MLflow UI 里看到：
+
 - 一个叫 `customer-support-qa` 的 prompt，有 3 个版本（v1 简洁版 / v2 详细版 / v3 chat 版）
 - 别名 `production` 指向 v2、`staging` 指向 v3
 - 一次真实 LLM 推理的 Trace，证明 `@production` 真的能用
@@ -2174,6 +1727,7 @@ v2 = mlflow.genai.register_prompt(
 ```
 
 要点：
+
 - 同名注册不会覆盖，而是自动创建新版本（v1 → v2 → v3 …）
 - 模板一旦注册就不可改（要改就注册新版）
 - `commit_message` 写这次改了什么、`tags` 用来打标签（author / style / format 等）
@@ -2196,6 +1750,7 @@ template=[
 ```
 
 Jinja2 用法回顾（不用也不影响跑通）：
+
 - 变量：`{{ question }}`
 - 条件：`{% if tier == 'premium' %}...{% endif %}`
 - 循环：`{% for item in items %}...{% endfor %}`
@@ -2212,6 +1767,7 @@ mlflow.genai.set_prompt_alias("customer-support-qa", "staging", version=3)
 ```
 
 常见别名约定：
+
 - `@production`：线上跑的稳定版
 - `@staging`：测试版，准备晋升 production
 - `@champion` / `@challenger`：A/B 测试用
@@ -2268,11 +1824,13 @@ python 06_prompts/06a_register_prompt.py
 ```
 
 脚本会做三件事：
+
 1. 注册 v1：简洁文本版（`"你是 {{ company }} 的客服助手..."`）
 2. 注册 v2：详细版（带 Jinja2 条件 + 字数约束 + 引用格式）
 3. 注册 v3：chat 消息格式（system + user）
 
 预期输出：
+
 ```
 注册 v1（简洁版）...
   ✓ customer-support-qa v1
@@ -2292,12 +1850,14 @@ python 06_prompts/06b_alias_lifecycle.py
 ```
 
 脚本会做：
+
 1. 把 `production` 别名指向 v2、`staging` 别名指向最新版本
 2. 用 `set_prompt_model_config` 给 v2 绑定 `PromptModelConfig`
 3. 通过 `prompts:/customer-support-qa@production` 加载 prompt，format 后调 LLM
 4. 打印 LLM 真实回复
 
 预期输出（节选）：
+
 ```
 找到 3 个版本，最新 v3
   ✓ production → v2
@@ -2415,15 +1975,10 @@ python /tmp/my_prompt_registry.py
 ## 避坑清单
 
 - ⚠️ **`register_prompt` 同名不会覆盖** → 设计如此（要的就是版本化），别以为是 bug。要「重置」得手动删旧版本或在脚本里加判断。
-
 - ⚠️ **`prompt.variables` 不包含 `{% if %}` / `{% for %}` 里的变量** → 它只识别 `{{ var }}` 形式的变量。如果你的模板里有条件分支，分支里的变量调用 `format()` 时也得传进去（否则会报错）。
-
 - ⚠️ **跑 `06b` 前必须先跑 `06a`** → 否则找不到 `customer-support-qa` 这个 prompt，脚本会 `RuntimeError`。
-
 - ⚠️ **chat 格式和文本格式不能混用 `format()`** → 文本格式 `format()` 返回字符串；chat 格式 `format()` 返回消息列表。喂给 `OpenAI().chat.completions.create(messages=...)` 时一定要是后者。
-
 - ⚠️ **`mlflow.genai.search_prompts()` 不返回版本号** → 它返回 `Prompt` 对象（只有 name）。要查具体版本用 `client.search_prompt_versions(name=...)`，里面有 `version`、`commit_message`、`tags`。
-
 - ⚠️ **改 prompt 时记得同步改 `PromptModelConfig`** → `set_prompt_model_config` 是单独调用的，不会自动跟着 prompt 走。如果你换了模型名，记得重新 bind。
 
 ---
@@ -2434,1973 +1989,271 @@ python /tmp/my_prompt_registry.py
 
 详细学习笔记见：`notes/06_prompts.md`。
 
-
 ---
 
 # Chapter 9：GenAI 评估与 LLM-as-judge —— 给 LLM 应用「打分」
 
-> ⏱️ 预计时间：50 分钟
-> 🔑 是否需 API Key：是（内置 scorer 和 judge 都要调 LLM）
-> 📚 前置知识：第 8 章（Prompt Registry），第 4 章（Tracing）
+> ⏱️ 预计时间：40 分钟
+> 🔑 是否需 API Key：是（DeepSeek，scorer 与 judge 都要调 LLM）
+> 📚 前置知识：Chapter 8（Prompt Registry）、Chapter 4（Tracing）
 
 ## 🎯 这章做什么
 
-写完一个 LLM 应用，怎么知道它「答得好不好」？传统 ML 有 accuracy、RMSE 这些现成指标，但 LLM 的回答是自然语言——既要看「对不对」，也要看「语气是否友好」、「有没有胡编」。这一章教你用 **MLflow GenAI 评估**给 LLM 应用「打分」。
+写完一个 LLM 应用，怎么知道它「答得好不好」？LLM 回答是自然语言，既要看「对不对」，也要看「语气是否友好」「有没有胡编」——传统 accuracy/RMSE 派不上用场。这一章教你用 **MLflow GenAI 评估**给 LLM 应用「打分」。
 
-类比：想象你在教一个实习生回答客户问题。
-- **内置 Scorer** 就像公司统一出的「评分卡」（正确性、安全性、切题度），谁都能用。
-- **`@scorer` 自定义**就像你给这位实习生写的「特殊规矩」（必须加引用、不能超过 100 字）。
-- **`make_judge()`** 就像你雇了个资深主管当裁判，用自然语言写评分标准（「语气要友好专业」），让 LLM 来评判 LLM。
-- **跨版本对比**就像你改了实习生的培训手册，跑同一份题库，对比「旧版」和「新版」哪个更好。
-
-跑完这章，你会在 MLflow UI 里看到：
-- 至少 1 次评估运行（基础评估 + 自定义 scorer）
-- 每次评估都有聚合分数和逐行打分
-- 跨 prompt 版本的对比结果（production vs staging）
+类比：像教实习生答客户题——**内置 Scorer** 是公司统一评分卡（正确性/安全性/切题度），**`@scorer`** 是你写的特殊规矩（必须加引用），**`make_judge()`** 是雇个资深主管用自然语言当裁判，**跨版本对比** 是同一份题库考新旧两版 prompt 看谁分高。跑完产出：`07_evaluate` / `07_custom_scorer` 两个 experiment 下的评估 Run，含聚合分数和逐行打分。
 
 ### 你会学到什么
-
 - 用 `mlflow.genai.evaluate()` 跑一次完整评估（题库 + predict_fn + scorers）
 - 配置内置 Scorer（Correctness / Safety / RelevanceToQuery）并解决 judge 模型问题
-- 写 `@scorer` 装饰器写业务规则
-- 用 `make_judge()` 写 LLM-as-judge 主观评分器
-- 跨 prompt 版本做 A/B 评估并根据结果做切流决策
-- 完成「5 行 eval 数据集 + 1 个自定义 scorer，评估 `@production` prompt」的动手做
+- 用 `@scorer` 装饰器写业务规则，用 `make_judge()` 写 LLM-as-judge 主观评分
+- 显式传 judge_model，绕开国内服务商默认模型坑
+- 跨 prompt 版本做 A/B 评估，按结果用 `set_prompt_alias` 切流
 
----
+### 前置
+- 已完成 Chapter 8（注册过 `customer-support-qa` prompt）、Chapter 4（Tracing）
+- 需 API Key：是，`.env` 配好 `OPENAI_API_KEY` / `OPENAI_API_BASE` / `DEEPSEEK_MODEL`
+- 环境：`conda activate mlflow`；另开终端 `mlflow ui --port 5000`
 
-## 核心概念
+### 必跑脚本清单
+| 脚本 | 一句话作用 | 前置 |
+|------|-----------|------|
+| `07_evaluation/07a_basic_evaluate.py` | 5 行题库 + 3 个内置 scorer 跑基础评估 | Chapter 4-5 |
+| `07_evaluation/07b_custom_scorer.py` | 组合 `@scorer` + `make_judge` 共 6 个 scorer | 跑过 07a |
 
-### 1. 评估数据的重要性：不能只靠「感觉」
+## 核心概念（一句话版）
+- **`mlflow.genai.evaluate()`**：GenAI 的「考试系统」——给题库（`data`）+ 考生（`predict_fn`）+ 评分卡（`scorers`），自动调 LLM 拿答案再打分：
+  ```python
+  result = mlflow.genai.evaluate(data=EVAL_DATA, predict_fn=predict_fn, scorers=[...])
+  # result.metrics → 聚合分；result.tables["eval_results"] → 逐行分
+  ```
+- **内置 Scorer**：开箱即用的通用评分卡——`Correctness()` 对比期望答案（需 `expected_response`/`expected_facts`）、`Safety()` 检测不安全内容、`RelevanceToQuery()` 判是否切题。
+- **`@scorer` 自定义**：一行装饰器写硬性业务规则，参数名必须叫 `inputs/outputs/expectations`：
+  ```python
+  @scorer(name="has_citation")
+  def has_citation(outputs: str) -> bool:
+      return "[source:" in (outputs or "")
+  ```
+- **`make_judge()`**：LLM 当裁判，用自然语言 rubric 打分「语气、合理性」这类写不出代码的项；`instructions` 必须含 `{{ inputs }}`/`{{ outputs }}`/`{{ trace }}` 之一，否则报错。
+- **judge_model 必须显式传（国内服务商坑）**：内置 scorer 和 make_judge 默认用 `gpt-4.1-mini`（OpenAI 直连），DeepSeek 等服务商不认识会报 404；一律传 `model=f"openai:/{os.getenv('DEEPSEEK_MODEL','deepseek-v4-flash')}"`。
+- **`expected_response` vs `expected_facts` 二选一**：前者给完整参考答案、后者给关键事实列表，给 `Correctness()` 当依据；同时给会触发额外 judge 调用（默认模型）又挂掉。
+- **跨版本对比**：同一份题库 + 同一组 scorer，只换 `predict_fn` 里的 prompt 版本（`@production` vs `@staging`）；UI 勾选两个 Run → Compare 看分差，胜者 `set_prompt_alias` 切 production，败者留档回滚。
 
-改完 prompt 之后，你是不是会说「感觉好一点了」？这种主观判断在生产里完全不可靠——不同人感觉不同、同一感觉在不同天不同。
+## 🛠️ 动手做
 
-MLflow 的评估系统给你一个客观框架：
-- **题库**：固定一批问题 + 期望答案（你要让 LLM 答对的题目）
-- **考生**：你的 LLM 应用（接收题库的一行，返回答案）
-- **评分标准**：一组 scorer，每个 scorer 从一个角度打分
-- **聚合指标**：所有题目的平均分（谁都能看懂、能对比）
-
-类比：与其靠老板「感觉这版不错」，不如用一份试卷 + 一张评分卡打分。
-
-### 2. `mlflow.genai.evaluate()` —— GenAI 的「考试系统」
-
-三件套：
-
-```python
-result = mlflow.genai.evaluate(
-    data=EVAL_DATA,          # 题库：DataFrame，每行有 inputs 和可选 expectations
-    predict_fn=predict_fn,   # 考生：你的 LLM 应用
-    scorers=[...],           # 评分标准：内置 + 自定义 scorer 列表
-)
-```
-
-它会自动跑题库、用 `predict_fn` 调 LLM 拿答案、再用每个 scorer 打分，最后产出：
-- `result.metrics`：聚合指标 dict（如 `{"correctness/mean": 0.8, "safety/mean": 1.0}`）
-- `result.tables["eval_results"]`：逐行结果（每题的输入、输出、每个 scorer 的打分）
-
-### 3. 内置 Scorer：`Correctness` / `Safety` / `RelevanceToQuery`
-
-MLflow 自带一组通用评分器，开箱即用：
-
-| Scorer | 打分维度 | 需要 expectations？ |
-|--------|---------|-------------------|
-| `Correctness()` | 答案是否正确 | 需要 `expected_response` 或 `expected_facts` |
-| `Safety()` | 是否包含不安全内容（暴力、歧视、隐私等） | 不需要 |
-| `RelevanceToQuery()` | 回答是否切题 | 不需要 |
-
-完整清单在 `notes/07_evaluation.md` 末尾（`Fluency`、`RetrievalGroundedness`、`ToolCallCorrectness` 等）。
-
-### 4. `@scorer` 装饰器 —— 写业务规则
-
-内置 Scorer 是通用评分卡，但你的业务有「特殊规矩」——「回答必须加引用」、「不能超过 100 字」、「必须提到 MLflow」。这些用 Python 一行搞定：
-
-```python
-from mlflow.genai.scorers import scorer
-
-@scorer(name="has_citation")
-def has_citation(outputs: str) -> bool:
-    """硬性规则：回答必须包含至少一个 [source:xxx] 引用"""
-    if not isinstance(outputs, str):
-        return False
-    return "[source:" in (outputs or "")
-```
-
-**参数约定**（必须按这个命名，不能改名）：
-- `inputs: dict`：原始输入
-- `outputs`：任意（predict_fn 返回值）
-- `expectations: dict`：数据集期望列
-
-**返回类型**：`bool` / `float` / `int` / `str`（MLflow 会自动聚合求 mean）
-
-### 5. `make_judge()` —— LLM-as-judge（让 LLM 给 LLM 打分）
-
-有些判断用代码写不出来——「语气是否友好专业」、「回答是否合理但有歧义」、「是否有同理心」。这时候让 LLM 当裁判最自然：
-
-```python
-brand_tone_judge = mlflow.genai.make_judge(
-    name="brand_tone",
-    instructions=(
-        "评估 {{ outputs }} 的语气是否符合品牌要求：\n"
-        "- 友好但不轻浮\n"
-        "- 专业但不冷漠\n"
-        "- 简洁但不敷衍\n"
-        "打分范围 1-5：1=完全不像品牌，5=非常符合"
-    ),
-    model="openai:/deepseek-v4-flash",
-)
-```
-
-**核心思路**：用一个 LLM（judge model）按你写的 rubric 给另一个 LLM 的输出打分。
-
-`instructions` 必须包含至少一个变量（`{{ inputs }}` / `{{ outputs }}` / `{{ trace }}`），否则 MLflow 会报错。
-
-### 6. judge_model 必须显式传（国内服务商坑）
-
-内置 Scorer 和 `make_judge` 本质都是让 **另一个 LLM** 来评分——这个「裁判 LLM」就叫 **judge model**。
-
-**坑**：MLflow 默认的 judge model 是 `gpt-4.1-mini`（OpenAI 直连）。如果你的 `OPENAI_API_BASE` 指向的是国内代理（DeepSeek、月之暗面等），**它们根本不认识 `gpt-4.1-mini`**，会报 404 或模型不存在错误。
-
-**解决**：显式传 `model=` 参数：
-
-```python
-# URI 格式必须是 <provider>:/<model-name>
-judge_model = f"openai:/{os.getenv('DEEPSEEK_MODEL', 'deepseek-v4-flash')}"
-
-scorers = [
-    Correctness(model=judge_model),
-    Safety(model=judge_model),
-    RelevanceToQuery(model=judge_model),
-]
-```
-
-`openai:/` 表示「用 OpenAI 协议」（兼容 OpenAI API 的服务都能用，包括 DeepSeek、月之暗面、智谱等国内服务商）。
-
-### 7. `expected_response` vs `expected_facts` 不能同时给
-
-`Correctness` 这个 scorer 想知道「正确答案长什么样」，有两种方式告诉它：
-
-- `expected_response`：完整参考答案字符串（`"MLflow 是开源的 ML 生命周期管理平台"`）
-- `expected_facts`：关键事实列表（`["MLflow 是开源的", "ML 生命周期管理"]`）
-
-**重要**：**两者只能选一个，不能同时给**。如果同时给，MLflow 会触发额外的 judge 调用（用默认的 `gpt-4.1-mini`），国内服务商又会挂掉。
-
-### 8. 跨 prompt 版本对比的思路
-
-把「新旧 prompt」当成两个「考生 A、B」，跑同一份题库，比较谁分高：
-
-```
-production (v2) ─┐
-                 ├─→ 同一份题库 + 同一组 scorer → 看 metrics 差异
-staging   (v3) ─┘
-```
-
-决策流程：
-- 分高的胜出 → 用 `set_prompt_alias` 把胜出版本设为新的 production
-- 输的版本保留在 Registry 方便回滚
-- 在 UI 里勾选两个 Run → Compare 看指标差异
-
----
-
-## 实战步骤
-
-### Step 0：环境准备
-
+**练习 1：跑基础评估（07a）**
 ```bash
-conda activate mlflow
-# 确保 .env 里有 OPENAI_API_KEY / OPENAI_API_BASE / DEEPSEEK_MODEL
-# 启动 MLflow
-mlflow ui --port 5000   # 另开终端
+cd <project-root> && python 07_evaluation/07a_basic_evaluate.py
 ```
+✅ 验证标准：终端打印 `judge_model = openai:/deepseek-v4-flash` 以及 `correctness/mean`、`safety/mean`、`relevance_to_query/mean` 等聚合分；UI 的 `07_evaluate` experiment 下出现新 Run，逐行打分在 Evaluation 标签或 `Artifacts/eval/`。
 
-### Step 1：跑基础评估（`07a_basic_evaluate.py`）
-
-```bash
-cd <project-root>
-python 07_evaluation/07a_basic_evaluate.py
-```
-
-脚本做的事：
-1. 构造一个 5 行的 `EVAL_DATA`（5 个问题 + 期望答案）
-2. 定义 `predict_fn(question)` 用 OpenAI 客户端调 LLM
-3. 显式构造 `judge_model = f"openai:/{DEEPSEEK_MODEL}"`
-4. 用 3 个内置 Scorer（Correctness / Safety / RelevanceToQuery）跑评估
-5. 打印聚合指标和逐行结果
-
-预期输出（节选）：
-```
-judge_model = openai:/deepseek-v4-flash
-🔍 用内置 scorers 评估...
-评估完成:
-  行数: 5
-
-聚合指标:
-  correctness/mean: 0.800
-  safety/mean: 1.000
-  relevance_to_query/mean: 1.000
-```
-
-### Step 2：UI 看逐行打分
-
-浏览器打开 `http://localhost:5000`：
-
-1. 选 experiment `07_evaluate`
-2. 点开最新的 Run
-3. 看 **Metrics** 标签里的聚合分数
-4. 看 **Evaluation** 标签（如果有）或 **Artifacts/eval/** 里的明细 JSON——每行能看到：问题、LLM 答案、每个 scorer 的打分 + reasoning
-
-### Step 3：跑自定义 Scorer（`07b_custom_scorer.py`）
-
+**练习 2：跑自定义 scorer（07b）**
 ```bash
 python 07_evaluation/07b_custom_scorer.py
 ```
+✅ 验证标准：聚合指标里多出 `has_citation/mean`、`is_concise/mean`、`mentions_mlflow/mean`、`brand_tone/mean`——对比 07a 只有内置 3 个，体会「内置 / @scorer / make_judge」三类 scorer 的分工（07b 的 `Correctness()`/`Safety()` 未传 expectations 跑得宽松，真正调 judge 的是 `brand_tone`）。
 
-脚本组合了 6 个 scorer：
-- `Correctness()`、`Safety()`（内置）
-- `has_citation`、`is_concise`、`mentions_mlflow`（@scorer）
-- `brand_tone`（make_judge）
-
-预期输出（节选）：
-```
-聚合指标:
-  correctness/mean: ...
-  safety/mean: ...
-  has_citation/mean: ...
-  is_concise/mean: ...
-  mentions_mlflow/mean: ...
-  brand_tone/mean: ...
-```
-
-### Step 4：跑跨 prompt 版本对比（`07c_prompt_comparison.py`）
-
-**前置**：确保你在第 8 章注册过 `customer-support-qa` 这个 prompt，并且有 `production` 和 `staging` 两个 alias。
-
-```bash
-python 07_evaluation/07c_prompt_comparison.py
-```
-
-脚本会做：
-1. 用 `prompts:/customer-support-qa@production` 跑一遍评估（run_name=`production`）
-2. 用 `prompts:/customer-support-qa@staging` 跑一遍评估（run_name=`staging`）
-3. 终端打印对比表 + 决策建议
-4. 在 UI 里勾选 `production` 和 `staging` 两个 Run → 点 Compare 看差异
-
-预期输出（节选）：
-```
-📊 对比结果：
-指标                            production      staging        赢家
-----------------------------------------------------------------------
-correctness/mean                0.800           0.900          staging
-safety/mean                     1.000           1.000          production
-response_length_ok/mean         1.000           0.800          production
-
-🎯 决策建议：
-  ✅ staging 比 production 高 12.5%，建议切到 staging
-```
-
-### Step 5：根据对比结果决策
-
-切流代码（一行搞定）：
-
-```python
-# 假设 staging 的版本号是 3
-mlflow.genai.set_prompt_alias(
-    "customer-support-qa",
-    alias="production",
-    version=3,
-)
-```
-
-切完所有通过 `prompts:/customer-support-qa@production` 加载 prompt 的应用，下次启动就用新版本。
-
----
-
-## 🛠️ 动手做：构建 5 行 eval 数据集 + 自定义 scorer，评估 `@production` 提示词
-
-任务：写一个新脚本，构造自己的 5 行评估数据集 + 1 个自定义 scorer，用 `prompts:/customer-support-qa@production` 这个 prompt 跑一次评估。
-
-**步骤**：
-
-1. 写一个新脚本 `/tmp/my_eval.py`：
-
-```python
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path("<project-root>/04_tracing")))
-import env_bootstrap
-
-import mlflow
-import os
-import re
-import pandas as pd
-from openai import OpenAI
-from mlflow.genai.scorers import scorer, Correctness, Safety
-
-
-# ============ 1. 自定义 scorer：必须提到 MLflow ============
-@scorer(name="mentions_mlflow")
-def mentions_mlflow(outputs) -> float:
-    """回答提到 MLflow 的次数（截断到 5）"""
-    if not isinstance(outputs, str):
-        return 0.0
-    count = len(re.findall(r"(?i)mlflow", outputs))
-    return min(float(count), 5.0)
-
-
-# ============ 2. 5 行评估数据集 ============
-EVAL_DATA = pd.DataFrame([
-    {
-        "inputs": {"question": "MLflow Tracking 干什么的？"},
-        "expectations": {"expected_response": "记录实验参数、指标、artifact"},
-    },
-    {
-        "inputs": {"question": "Prompt Registry 怎么用？"},
-        "expectations": {"expected_response": "register_prompt + set_prompt_alias"},
-    },
-    {
-        "inputs": {"question": "MLflow Model Registry 和 Prompt Registry 的区别？"},
-        "expectations": {"expected_response": "前者管模型，后者管提示词"},
-    },
-    {
-        "inputs": {"question": "GenAI evaluate() 需要什么？"},
-        "expectations": {"expected_response": "data + predict_fn + scorers"},
-    },
-    {
-        "inputs": {"question": "make_judge 是干什么的？"},
-        "expectations": {"expected_response": "LLM-as-judge，让 LLM 当裁判打分"},
-    },
-])
-
-
-# ============ 3. predict_fn：用 production 提示词 ============
-def predict_fn(question: str) -> str:
-    # 加载 production prompt
-    prompt_obj = mlflow.genai.load_prompt("prompts:/customer-support-qa@production")
-
-    # 渲染（自动判断文本格式还是 chat 格式）
-    variables = prompt_obj.variables or set()
-    fmt_kwargs = {"question": question}
-    for v in variables:
-        if v not in fmt_kwargs:
-            fmt_kwargs[v] = "(默认)"
-
-    if prompt_obj.is_text_prompt:
-        prompt_text = prompt_obj.format(**fmt_kwargs)
-        messages = [{"role": "user", "content": prompt_text}]
-    else:
-        messages = prompt_obj.format(**fmt_kwargs)
-
-    # 调 LLM
-    client = OpenAI(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_API_BASE"),
-    )
-    resp = client.chat.completions.create(
-        model=os.getenv("DEEPSEEK_MODEL", "deepseek-v4-flash"),
-        messages=messages,
-        max_tokens=200,
-        temperature=0.3,
-    )
-    return resp.choices[0].message.content
-
-
-# ============ 4. 跑评估 ============
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
-mlflow.set_experiment("09_my_eval_demo")
-mlflow.openai.autolog()
-
-judge = f"openai:/{os.getenv('DEEPSEEK_MODEL', 'deepseek-v4-flash')}"
-print(f"judge_model = {judge}")
-
-result = mlflow.genai.evaluate(
-    data=EVAL_DATA,
-    predict_fn=predict_fn,
-    scorers=[
-        Correctness(model=judge),
-        Safety(model=judge),
-        mentions_mlflow,
-    ],
-)
-
-print("\n聚合指标:")
-for metric, value in result.metrics.items():
-    print(f"  {metric}: {value:.3f}")
-```
-
-2. 跑这个脚本：
-
-```bash
-python /tmp/my_eval.py
-```
-
-3. 去 UI 看 `09_my_eval_demo` 这个 experiment：
-   - 看 Metrics 标签下的 `correctness/mean`、`safety/mean`、`mentions_mlflow/mean`
-   - 看逐行打分（Evaluation 标签或 Artifacts/eval/）
-
-4. **加分项**：把 `predict_fn` 改成加载 `@staging` 别名，再跑一次，然后在 UI 里 Compare 两个 Run，看哪个 prompt 的分数更高。
-
----
-
-## 避坑清单
-
-### 坑 1：内置 Scorer 默认用 `gpt-4.1-mini`（国内服务商不支持）
-
-**症状**：跑 `Correctness()` 时报 `Model gpt-4.1-mini not found` 或 `404`。
-
-**解决**：显式传 `model=f"openai:/{你的模型名}"`，让 MLflow 通过你的 `base_url` 调 judge 模型。
-
-```python
-# ✅ 正确
-Correctness(model=f"openai:/{os.getenv('DEEPSEEK_MODEL', 'deepseek-v4-flash')}")
-
-# ❌ 错误（用默认值，国内服务商挂）
-Correctness()
-```
-
-### 坑 2：`expected_response` 和 `expected_facts` 不能同时给
-
-**症状**：同时给两个字段时，会触发额外的 judge 调用（用默认 `gpt-4.1-mini`），然后报模型不存在。
-
-**解决**：二选一。
-
-```python
-# ✅ 二选一
-{"expectations": {"expected_response": "..."}}
-{"expectations": {"expected_facts": ["事实1", "事实2"]}}
-
-# ❌ 两个都给
-{"expectations": {"expected_response": "...", "expected_facts": [...]}}
-```
-
-### 坑 3：`model=` 参数不能传 None 或空字符串
-
-**症状**：传 `model=None` 会报错或悄悄退回到默认值（然后挂）。
-
-**解决**：用 `os.getenv(..., 'deepseek-v4-flash')` 确保有非空默认值。
-
-### 坑 4：`predict_fn` 签名不对
-
-**症状**：跑评估时第一行就报错 `predict_fn() takes 0 positional arguments`。
-
-**解决**：`predict_fn` 必须接收至少一个参数，参数名要与 `inputs` 里的 key 对应。
-
-```python
-# ✅ 正确：参数名 "question" 与 inputs 的 key 对应
-data = [{"inputs": {"question": "..."}}]
-predict_fn = lambda question: answer(question)
-
-# ✅ 也正确（用 "row" 包一层）
-data = [{"inputs": {"row": {"question": "..."}}}]
-predict_fn = lambda row: answer(row["question"])
-
-# ❌ 错误：不接收参数
-predict_fn = lambda: "..."
-```
-
-### 坑 5：`make_judge` 的 instructions 忘了写变量
-
-**症状**：`make_judge` 报 `instructions must contain at least one variable`。
-
-**解决**：在 instructions 里至少包含 `{{ inputs }}`、`{{ outputs }}`、`{{ trace }}` 其中的一个。
-
-```python
-# ✅ 正确
-instructions="评估 {{ outputs }} 的语气是否友好专业"
-
-# ❌ 错误（没变量）
-instructions="评估回答的语气是否友好专业"
-```
-
-### 坑 6：`@scorer` 函数参数名写错
-
-**症状**：MLflow 找不到输入数据，或者 scorer 永远返回固定值。
-
-**解决**：参数名必须是 `inputs`、`outputs`、`expectations` 这三个（不能拼错、不能改名）。
-
-```python
-# ✅ 正确
-@scorer
-def my_scorer(outputs: str) -> bool:
-    return len(outputs) > 0
-
-# ❌ 错误
-@scorer
-def my_scorer(output: str) -> bool:  # "output" 不是约定名
-    return len(output) > 0
-```
-
-### 坑 7：跨版本对比的题库要固定
-
-**症状**：换题库对比没有意义（A 答对难的题、B 答对简单的题，无法判断哪个 prompt 更好）。
-
-**解决**：跨版本对比必须用**同一份题库**、**同一组 scorer**——只换 `predict_fn` 里的 prompt 版本。
-
-### 坑 8：评估数据太少（5 行不够）
-
-**症状**：评估结果波动大，今天高分明天低分，根本看不出真实差异。
-
-**解决**：至少 30-50 行评估数据，覆盖你关心的典型场景。如果数据实在凑不齐，先用 5-10 行跑通流程，后续慢慢补。
-
----
+## 📖 深入阅读（关键！）
+> 📚 [`notes/07_evaluation.md`](07_evaluation.md)（Phase 7：GenAI 评估与自定义 Scorer）——重点：judge_model 必须显式传的坑、`expected_response` vs `expected_facts` 不能同时给、完整内置 Scorer 清单、07c 跨版本对比模板。
 
 ## 📖 下一步
+→ [Chapter 10：模型评估与本地部署服务](#chapter-10-模型评估与本地部署服务)
+# Chapter 10：模型评估与本地部署服务 —— 给模型打分 + 起成 REST API
 
-你已经学会了：
-- 用 `mlflow.genai.evaluate()` 给 LLM 应用打分
-- 用内置 Scorer / `@scorer` / `make_judge` 三种评分器组合
-- 跨 prompt 版本做 A/B 评估并决策
-
-至此你掌握了 MLflow 的「评估 → 决策 → 切流」完整闭环。下一阶段（Chapter 10+）会进入**部署与服务化**：把评估胜出的 prompt + 模型打包成 REST API、用 Docker 部署、监控线上数据漂移。
-
-详细学习笔记见：`notes/07_evaluation.md`。
-# Chapter 10：模型评估与本地部署服务
-
-> ⏱️ 预计时间：60 分钟
+> ⏱️ 预计时间：45 分钟
 > 🔑 是否需 API Key：否
-> 📚 前置知识：第 6 章（注册模型 + alias）、第 7 章（trace）
+> 📚 前置知识：Chapter 6（注册模型 + alias）、Chapter 7（trace）
 
 ## 🎯 这章做什么
 
-模型训完、注册到 Registry 之后，真正的工作才刚开始：你要回答两个问题——
+模型训完、注册到 Registry 后，要回答两个问题：**这个模型到底好不好？**（哪一类 0.97，不是一句敷衍）和 **怎么让别人用它？**（发个 HTTP 请求拿预测，不是发 pickle 文件）。这一章解决这两件事：先用 `mlflow.models.evaluate()` 一行算全套指标 + 自动出图，再用 `mlflow models serve` 把模型起成 REST API，最后用 `curl` 调它。
 
-1. **这个模型到底好不好？** 不是"accuracy 0.97"那种一句敷衍，而是"哪一类 0.97、哪些图能看出来"。
-2. **怎么让别人用它？** 不是"我发你 pickle 文件"，而是"你给我发个 HTTP 请求，我把预测结果返回给你"。
-
-这一章解决这两件事：先用 `mlflow.models.evaluate()` 一键算全套指标 + 自动出图，再用 `mlflow models serve` 把模型起成 REST API，最后用 `curl` 调它。
-
-> 🍳 **类比**：训练模型就像做菜——厨师（你）做完一道菜，要做两件事：
-> - **试吃**（评估）：找几个食客打分（accuracy、F1）、看摆盘（混淆矩阵）、看味道曲线（ROC）。MLflow 的 `evaluate` 就是帮你搞了个自动试吃团。
-> - **上桌**（部署）：把菜放进窗口让客人点餐（`models serve` 起一个 HTTP 服务）。
+类比：训练模型像做菜——**试吃**（`evaluate`：食客打分 accuracy/F1、看摆盘混淆矩阵、看味道曲线 ROC）和 **上桌**（`models serve` 把菜放进窗口让客人点餐）。产出：`04_evaluate` / `04_evaluate_custom` 两个 experiment 的评估 Run，以及一个能 curl 的本地推理服务。
 
 ### 你会学到什么
+- 用 `mlflow.models.evaluate()` 一行算全部分类/回归指标 + 自动出混淆矩阵、ROC、PR 图
+- 用 `make_metric()` 写自定义业务指标（如「高价值客户加权 accuracy」）
+- 用 `validate_evaluation_results()` 给新模型设「上线门槛」（MLflow 3 新 API）
+- 用 `mlflow models serve -m models:/Name@champion -p 5001` 起 REST API，`curl` 调 `/invocations` 推理
 
-- 用 `mlflow.models.evaluate()` 一行代码算全套分类/回归指标 + 自动出混淆矩阵、ROC、PR 曲线
-- 用 `make_metric()` 写自定义业务指标（例如"高价值客户加权 accuracy"）
-- 用 `validate_evaluation_results()` 对比新模型 vs baseline（MLflow 3 新 API）
-- 知道 `extra_metrics=` 而不是 `custom_metrics=`（MLflow 3 改名了）
-- 用 `mlflow models serve -m models:/<name>@champion -p 5001` 把模型起成 REST API
-- 用 `curl` 推 JSON / CSV 到 `/invocations` 做推理
+### 前置
+- 已完成 Chapter 6：会 `mlflow.start_run()` / `mlflow.sklearn.log_model()`，注册过 `WineQualityClassifier` 且有 `@champion` 别名
+- 需 API Key：否；无需任何外部服务
+- 04a/04b 用本地文件模式即可；04c **必须** server 模式（`sqlite:///mlflow.db` + `./mlruns`）
 
-### 对应脚本清单
+### 必跑脚本清单
+| 脚本 | 一句话作用 | 前置 |
+|------|-----------|------|
+| `04_evaluate/04a_evaluate_basics.py` | 对 RandomForest 跑 `mlflow.models.evaluate`，自动算内置指标 + 生成混淆矩阵/ROC 图 | Chapter 6 |
+| `04_evaluate/04b_evaluate_custom.py` | 写「高价值客户加权」自定义指标，对比 RF vs LR，验证 B 是否达标 | 跑过 04a |
+| `04_evaluate/04c_models_serve.sh` | `mlflow models serve` 起本地 REST API，`curl` 调 `/invocations` 推理 | 跑过 04b + 有 champion 模型 |
 
-| 脚本 | 一句话作用 | 是否必跑 | 前置 |
-|------|-----------|---------|------|
-| `04a_evaluate_basics.py` | 跑一次 `mlflow.models.evaluate`，自动算内置指标 + 生成混淆矩阵/ROC 图 | ✓ 必跑 | 第 6 章 |
-| `04b_evaluate_custom.py` | 写一个"高价值客户加权"自定义指标，对比 RF 和 LR，验证 B 是否比 A 好 | ✓ 必跑 | 跑过 04a |
-| `04c_models_serve.sh` | 用 `mlflow models serve` 起本地 REST API，用 `curl` 调 `/invocations` 推理 | ✓ 必跑 | 跑过 04b + 注册过模型 |
+## 核心概念（一句话版）
+- **`mlflow.models.evaluate()`**：全自动评估 + 自动作图 + 自动写回 MLflow 的整合入口——指模型（`runs:/xxx/model` 或 `models:/xxx@champion`）+ 含 label 的数据 + `model_type="classifier"`，吐全套内置指标和图（写入 `Artifacts/eval/`）：
+  ```python
+  result = mlflow.models.evaluate(model=model_uri, data=eval_df, targets="target", model_type="classifier")
+  # result.metrics → 指标 dict；result.artifacts → ['confusion_matrix.png', 'roc_curve_plot.png', ...]
+  ```
+- **`make_metric()` 自定义指标**：把业务特殊规则（class_0 错代价 5 倍 → 加权 accuracy）包装成 MLflow 指标，和内置指标一起出现在 UI 的 Metrics 标签；`eval_fn` 必须接收 `predictions`/`targets` 两个 Series 并返回标量（纯函数）。
+- **`validate_evaluation_results()`（MLflow 3）**：先对 A、B 各 `evaluate()` 一次，再用 `MetricThreshold(threshold=..., greater_is_better=...)` 集中验证「B 是否比 A 好、好多少」——阈值可独立复用、可塞 CI；替代 MLflow 2 的 `baseline_model=` 一锅炖。
+- **`mlflow models serve`**：把模型起成标准 REST API，统一路径 `/invocations`，收 JSON（`dataframe_records`，推荐）或 `text/csv`——别人用 `curl` / `requests.post` 就能调；首次启动会自动装模型依赖。
+- **`extra_metrics=` 而非 `custom_metrics=`（坑）**：MLflow 3 把自定义指标参数改名成 `extra_metrics`，写 `custom_metrics=` 直接 `TypeError`。
 
-### 前置知识
+## 🛠️ 动手做
 
-- 已完成第 6 章，会用 `mlflow.start_run()`、`mlflow.sklearn.log_model()`
-- 至少注册过一个模型到 Model Registry，并且有 `@champion` 别名
-- MLflow Tracking Server 已在 `sqlite:///mlflow.db` + `./mlruns` 跑起来（04a/04b 用本地文件模式也行；04c **必须** server 模式）
-
-### 跑完必看（UI）
-
-1. 启动 UI：`mlflow ui --port 5000`
-2. 选 experiment `04_evaluate`
-3. 点开 Run `evaluate-baseline`
-4. 看：
-   - **Metrics 标签**：`accuracy_score`、`f1_score`、`roc_auc` 等内置指标一行行排好
-   - **Artifacts → eval/**：自动生成的 `confusion_matrix.png`、`roc_curve_plot.png`、`precision_recall_curve_plot.png`
-   - **Artifacts → model/**：模型本身 + `signature` + `requirements.txt`
-
----
-
-## 核心概念
-
-### 1. `mlflow.models.evaluate()` 是干嘛的
-
-想想你以前怎么"评估一个 sklearn 模型"：
-
-```python
-y_pred = model.predict(X_test)
-print(accuracy_score(y_test, y_pred))
-print(f1_score(y_test, y_pred, average="macro"))
-# 还得 import matplotlib, 手写混淆矩阵代码...
-# 想跑回归？再 import 一堆 metrics...
-```
-
-`mlflow.models.evaluate()` 是 **"全自动评估 + 自动作图 + 自动写回 MLflow"** 的整合入口。你只需要：
-
-- 指一个模型（`runs:/xxx/model` 或 `models:/MyModel@champion`）
-- 给一份含 label 列的数据
-- 说清楚是分类还是回归（`model_type="classifier"`）
-
-它就帮你：
-
-- 算所有内置指标（accuracy / F1 / precision / recall / ROC-AUC / log_loss...）
-- 对分类自动生成：混淆矩阵图、ROC 曲线、PR 曲线、校准曲线
-- 对回归自动生成：残差图、预测 vs 真实散点图
-- 把所有指标和图都写回当前 Run
-
-> 💡 **这意味着**：在 MLflow UI 里你点开一个 Run，**所有评估结果在同一个页面**，不用跳到别处找图。
-
-### 2. 自定义指标 `make_metric`
-
-内置指标对简单问题够用，但业务上经常要更"狡猾"的指标，例如：
-
-- "class_0 是高价值客户，识别错了代价 5 倍" → **加权 accuracy**
-- "假阳性罚 10 元，假阴性罚 100 元" → **业务损失函数**
-- "top-5 推荐命中率" → **业务命中率**
-
-`make_metric` 就是让你把这种"我的业务特殊规则"塞进去，包装成一个 MLflow 指标。它会和内置指标一起出现在 UI 的 Metrics 标签里。
-
-### 3. `validate_evaluation_results`：MLflow 3 的"模型升级门槛"
-
-业务里上线的真实流程：
-
-1. 旧模型 A 在跑
-2. 你训了新模型 B
-3. 关键是：**B 必须比 A 好多少才允许替换？**
-
-MLflow 2 时代这套规则藏在 `mlflow.evaluate(baseline_model=...)` 一个超长参数里，很难复用、很难调试。
-MLflow 3 拆成了两步：
-
-- 先分别对 A、B 各 `evaluate()` 一次（拿到两个 `EvaluationResult` 对象）
-- 再用 `validate_evaluation_results(candidate=B, baseline=A, thresholds={...})` 验证 B 是否达标
-
-好处：**阈值规则可以独立写、独立复用、独立测试**，还能塞进 CI。
-
-### 4. `mlflow models serve`：把模型变成 HTTP 服务
-
-训练完的模型本质是个文件，**别人没法直接用**（除非你把 sklearn + pickle 文件传给他）。`mlflow models serve` 把模型起成一个标准 REST API，路径统一是 `/invocations`，接受 JSON 或 CSV——这样前端、后端、别的服务都能用 `curl` 调。
-
-它内部会装好这个模型需要的 Python 环境（用 model signature + requirements 推断），你不用管 conda。
-
----
-
-## 实战步骤
-
-### Step 1：跑 `04a_evaluate_basics.py`
-
+**练习 1：跑基础评估（04a）**
 ```bash
-cd <project-root>
-python 04_evaluate/04a_evaluate_basics.py
+cd <project-root> && python 04_evaluate/04a_evaluate_basics.py
 ```
+✅ 验证标准：UI → `04_evaluate` → Run `evaluate-baseline`：Metrics 标签有 `accuracy_score`/`f1_score`/`roc_auc`；Artifacts → eval/ 有 `confusion_matrix.png`、`roc_curve_plot.png`（不用自己写 matplotlib）。
 
-你会看到：训练完一个 RandomForest，对它跑一遍 `mlflow.models.evaluate`，打印一坨指标和图的名字。
-
-打开 MLflow UI → experiment `04_evaluate` → Run `evaluate-baseline`：
-
-- **Metrics 标签**：看 `accuracy_score`、`f1_score`、`roc_auc` 等
-- **Artifacts → eval/**：能看到 `confusion_matrix.png`、`roc_curve_plot.png` 等自动生成的图
-
-> ✨ 这一步完成时，你应该理解：**模型评估这件事，UI 里点开 Run 就能看到所有结果——不用自己 plot。**
-
-### Step 2：跑 `04b_evaluate_custom.py`
-
+**练习 2：跑自定义指标（04b）**
 ```bash
 python 04_evaluate/04b_evaluate_custom.py
 ```
+✅ 验证标准：`04_evaluate_custom` 下两个 Run（model-A-RF / model-B-LR）的 Metrics 里都有 `weighted_accuracy_v1`；脚本末尾打印「✓ 模型 B 通过验证」或「✗ 验证失败」。
 
-这一脚本做了 6 件事：
-
-1. 训练 RF（A）和 LR（B）两个模型
-2. 写一个"高价值客户（class_0）加权 5 倍"的自定义 `weighted_accuracy_v1`
-3. 对 A、B 各跑一次 `evaluate()`，塞入 `extra_metrics=[custom_metric]`
-4. 用 `validate_evaluation_results` 比 B 是否比 A 好
-5. 打印 MLflow 2 vs 3 的 API 差异
-6. 打印"通过/不通过"结果
-
-**重点观察**：
-
-- 两个 Run 的 Metrics 标签里都多了一行 `weighted_accuracy_v1`
-- 脚本末尾会打印"✓ 通过"或"✗ 不通过"，看看 B 是不是真的比 A 好（业务场景下 LR 在小数据上可能不如 RF）
-
-### Step 3：跑 `04c_models_serve.sh`
-
-这个是 shell 脚本，需要**多个终端**：
-
-**终端 A**（启动 MLflow server）：
-
+**练习 3：起 serve 用 curl 调（04c）**
+先起 server（sqlite 后端），再另开终端：
 ```bash
-bash 04_evaluate/04c_models_serve.sh
-# 复制里面"终端 A"那段命令
-mlflow server \
-  --backend-store-uri sqlite:///$(pwd)/mlflow.db \
-  --default-artifact-root $(pwd)/mlruns \
-  --host 0.0.0.0 \
-  --port 5000
-```
-
-> ⚠️ **必须用 server 模式**：纯本地文件模式不支持 Model Registry，会报 `No such registered model`。
-
-**终端 B**（确保有 champion 模型，先跑过第 6 章的注册脚本）：
-
-```bash
-python 03_registry/02a_log_model.py
-python 03_registry/02b_register_alias.py
-```
-
-**终端 C**（起模型服务）：
-
-```bash
-mlflow models serve \
-  -m "models:/WineQualityClassifier@champion" \
-  -p 5001
-# 第一次启动会 pip install,等几十秒到一分钟
-# 看到 "Listening on http://127.0.0.1:5001" 就 ok
-```
-
-**终端 D**（curl 推理）：
-
-```bash
-# JSON 格式（推荐）
+mlflow models serve -m "models:/WineQualityClassifier@champion" -p 5001
+# 看到 "Listening on http://127.0.0.1:5001" 后，第三个终端：
 curl -X POST http://127.0.0.1:5001/invocations \
   -H "Content-Type: application/json" \
-  --data '{
-    "dataframe_records": [
-      {"alcohol": 13.0, "malic_acid": 1.5, "ash": 2.5, "alcalinity_of_ash": 19.0,
-       "magnesium": 100, "total_phenols": 2.8, "flavanoids": 3.0,
-       "nonflavanoid_phenols": 0.3, "proanthocyanins": 1.8, "color_intensity": 5.0,
-       "hue": 1.0, "od280/od315_of_diluted_wines": 3.0, "proline": 1000}
-    ]
-  }'
+  --data '{"dataframe_records": [{"alcohol": 13.0, "malic_acid": 1.5, "ash": 2.5, "alcalinity_of_ash": 19.0, "magnesium": 100, "total_phenols": 2.8, "flavanoids": 3.0, "nonflavanoid_phenols": 0.3, "proanthocyanins": 1.8, "color_intensity": 5.0, "hue": 1.0, "od280/od315_of_diluted_wines": 3.0, "proline": 1000}]}'
 ```
+✅ 验证标准：返回 `{"predictions": [0]}`；把 `Content-Type` 换成 `text/csv`、body 换成 CSV 文本（见 `04c_models_serve.sh` 4.2）也能得到预测。
 
-返回：
-
-```json
-{"predictions": [0]}
-```
-
-> ✨ 这一步完成时，你已经在用生产级的方式（HTTP + JSON）调用模型了——和 `requests.post(url, json=...)` 完全一样。
-
-### Step 4：（可选）容器化部署
-
-```bash
-# 把模型打成 Docker 镜像
-mlflow models build-docker -m "models:/WineQualityClassifier@champion" -n wine-classifier
-
-# 跑容器（容器内 8080 端口对应外部 5001）
-docker run -p 5001:8080 wine-classifier
-```
-
-> 这个就是你写论文/做 demo 时给评审看"我真的部署了一个 ML 服务"的证据。
-
----
-
-## 代码模式（可复用模板）
-
-### 模式 1：内置评估模板
-
-```python
-import mlflow
-
-with mlflow.start_run(run_name="evaluate-baseline") as run:
-    # 先把模型 log 进去（evaluate 要 model_uri）
-    mlflow.sklearn.log_model(model, name="model", input_example=X_train.head(3))
-    model_uri = f"runs:/{run.info.run_id}/model"
-
-    # 一行评估
-    result = mlflow.models.evaluate(
-        model=model_uri,
-        data=eval_df,                       # 必须含 label 列
-        targets="target",                   # label 列名
-        model_type="classifier",            # 或 "regressor"
-        evaluators=["default"],
-    )
-
-    # 拿指标
-    print(result.metrics)                  # dict: {accuracy_score: 0.97, ...}
-    # 拿可视化列表
-    print(result.artifacts)                # ['confusion_matrix.png', 'roc_curve_plot.png', ...]
-```
-
-**自动产出**（写到 Run 的 `Artifacts/eval/`）：
-
-- `confusion_matrix.png`：分类器最常看的图
-- `roc_curve_plot.png`：ROC 曲线 + AUC
-- `precision_recall_curve_plot.png`：不平衡数据更该看的图
-- `calibration_curve_plot.png`：概率校准
-- `per_class_metrics/`：每个类单独的指标 JSON
-
-**内置指标全集**（分类）：`accuracy_score`、`precision_score`、`recall_score`、`f1_score`、`log_loss`、`roc_auc`、`precision_recall_auc`
-
-**内置指标全集**（回归）：`mean_absolute_error`、`mean_squared_error`、`root_mean_squared_error`、`r2_score`、`mean_absolute_percentage_error`
-
-> ⚠️ **MLflow 3 的参数名是 `extra_metrics`，不是 `custom_metrics`**——这是新手最容易翻车的地方，下面避坑清单有专门说明。
-
-### 模式 2：自定义指标模板
-
-```python
-from mlflow.metrics import make_metric
-import numpy as np
-
-def my_metric_fn(predictions, targets):
-    """
-    predictions 和 targets 都是 pandas Series,index 一一对齐。
-    返回值必须是 float (或可转 float 的标量)。
-    """
-    preds = np.asarray(predictions)
-    targs = np.asarray(targets)
-    # 例：按 class_weights 加权的 accuracy
-    CLASS_WEIGHTS = {0: 5.0, 1: 1.0, 2: 1.0}
-    total = 0.0
-    correct = 0.0
-    for p, t in zip(preds, targs):
-        w = CLASS_WEIGHTS.get(int(t), 1.0)
-        total += w
-        if p == t:
-            correct += w
-    return float(correct / total)
-
-custom_metric = make_metric(
-    eval_fn=my_metric_fn,
-    greater_is_better=True,         # 越大越好；如果是 loss 这种，填 False
-    name="weighted_accuracy_v1",    # 在 UI 显示的名字
-)
-
-# 塞进 evaluate
-result = mlflow.models.evaluate(
-    model=model_uri, data=eval_df, targets="target",
-    model_type="classifier",
-    extra_metrics=[custom_metric],   # ← 注意：MLflow 3 用 extra_metrics
-)
-# 现在 result.metrics 里会多一项 "weighted_accuracy_v1"
-```
-
-**`eval_fn` 签名必须遵守的规矩**：
-
-- 入参：`predictions`（模型预测值 Series）、`targets`（真实标签 Series）
-- 返回：标量（float / int / numpy scalar）
-- 不要在这里面 print 或写文件——**纯函数**（MLflow 在某些场景会并行调用 `eval_fn`，有副作用会乱序或丢）
-
-### 模式 3：`validate_evaluation_results` 模板（MLflow 3 新写法）
-
-```python
-from mlflow.models import MetricThreshold
-
-# 假设 result_a 是旧模型、result_b 是新模型的 EvaluationResult
-result_a = mlflow.models.evaluate(model=old_uri,  data=eval_df, targets="target", model_type="classifier", evaluators=["default"])
-result_b = mlflow.models.evaluate(model=new_uri,  data=eval_df, targets="target", model_type="classifier", evaluators=["default"])
-
-# 定义 candidate (新模型 B) 必须达到的门槛
-thresholds = {
-    "accuracy_score": MetricThreshold(
-        threshold=0.90,                # 绝对值下限：B 至少要 0.90
-        greater_is_better=True,
-        # 可选：相对 baseline 的提升要求
-        # min_absolute_change=0.02,   # B 比 A 至少高 0.02
-        # min_relative_change=0.05,   # 或至少高 5%
-    ),
-    "f1_score": MetricThreshold(
-        threshold=0.85,
-        greater_is_better=True,
-    ),
-}
-
-# 验证
-try:
-    mlflow.validate_evaluation_results(
-        validation_thresholds=thresholds,
-        candidate_result=result_b,     # 新模型
-        baseline_result=result_a,      # 旧模型（可省略,只验绝对值）
-    )
-    print("✓ 通过，新模型可以替换")
-except Exception as e:
-    print(f"✗ 不通过：{e}")
-    # MLflow 会抛 MlflowException；你可以决定是否让上线流程中断
-```
-
-**MLflow 2 vs 3 对比**：
-
-```python
-# MLflow 2（你可能在旧文档里看到）
-result = mlflow.evaluate(
-    model=new_uri,
-    data=eval_df,
-    targets="target",
-    model_type="classifier",
-    baseline_model=old_uri,           # ← 旧写法,所有阈值挤在一个地方
-    metric_thresholds=thresholds,
-)
-
-# MLflow 3（推荐）
-result_a = mlflow.evaluate(model=old_uri, ...)
-result_b = mlflow.evaluate(model=new_uri, ...)
-mlflow.validate_evaluation_results(   # ← 新写法：拆出来,更清晰可测
-    validation_thresholds=thresholds,
-    candidate_result=result_b,
-    baseline_result=result_a,
-)
-```
-
-> 💡 **为什么 MLflow 3 要拆开？** 因为 `validate_evaluation_results` 拿到的 `EvaluationResult` 对象本身就是可序列化、可缓存、可存数据库的——你可以在 CI 里把它的 JSON 存下来，下次复用同样的 baseline 做对比。
-
-### 模式 4：`mlflow models serve` 部署模板
-
-```bash
-# 终端 A：启 MLflow server（models serve 必须有 server）
-mlflow server \
-  --backend-store-uri sqlite:///$(pwd)/mlflow.db \
-  --default-artifact-root $(pwd)/mlruns \
-  --host 0.0.0.0 --port 5000
-
-# 终端 B：部署 champion 模型
-mlflow models serve \
-  -m "models:/WineQualityClassifier@champion" \
-  -p 5001
-# 第一次启动会 pip install 模型依赖（conda env，要等几十秒）
-
-# 终端 C：curl 推理（JSON 格式，推荐）
-curl -X POST http://127.0.0.1:5001/invocations \
-  -H "Content-Type: application/json" \
-  --data '{
-    "dataframe_records": [
-      {"alcohol": 13.0, "malic_acid": 1.5, "ash": 2.5, "alcalinity_of_ash": 19.0,
-       "magnesium": 100, "total_phenols": 2.8, "flavanoids": 3.0,
-       "nonflavanoid_phenols": 0.3, "proanthocyanins": 1.8, "color_intensity": 5.0,
-       "hue": 1.0, "od280/od315_of_diluted_wines": 3.0, "proline": 1000}
-    ]
-  }'
-```
-
-**支持的请求格式**（格式由模型签名自动决定）：
-
-| Content-Type | Body 格式 |
-|---|---|
-| `application/json` | `{"dataframe_records": [...]}` —— 每条是一个 dict（推荐） |
-| `application/json` | `{"dataframe_split": {"columns": [...], "data": [[...]]}}` |
-| `text/csv` | 纯 CSV 文本，第一行是列名 |
-
-返回是 JSON：`{"predictions": [...]}` 或带 `{"predictions": [...], "probabilities": [[...]]}`。
-
----
-
-## 🛠️ 动手做
-
-> **目标**：把"评估 + 部署"两个能力连起来跑一遍：先评估新模型比 baseline 好，再把它 serve 起来，curl 一次得到预测。
-
-**步骤**：
-
-1. 先跑 `04a_evaluate_basics.py`，看到 UI 的混淆矩阵和 ROC 图。
-2. 再跑 `04b_evaluate_custom.py`，观察 `weighted_accuracy_v1` 是否被两个 Run 都记录了，并看 `validate_evaluation_results` 是"通过"还是"不通过"。
-3. 跑 `04c_models_serve.sh`：
-   - 终端 A 启动 `mlflow server`
-   - 终端 C 启动 `mlflow models serve -m models:/WineQualityClassifier@champion -p 5001`
-   - 终端 D 用 `curl` 推一个 JSON 推理请求，得到 `{"predictions": [0]}`
-4. 试着把 curl 的 `Content-Type` 换成 `text/csv`，把 body 换成 CSV 文本，看看是否一样能返回预测。
-5. 观察 `mlflow models serve` 第一次启动时打印的 "Installing dependencies..." 日志——它用 `MLmodel` 文件里的 `requirements.txt` 自动装环境。
-
-**预期结果**：
-
-- UI 的 `04_evaluate` experiment 下，Run `evaluate-baseline` 有 `confusion_matrix.png`、`roc_curve_plot.png` 等 artifacts
-- UI 的 `04_evaluate_custom` experiment 下，两个 Run 都有 `weighted_accuracy_v1` 这条自定义 metric
-- `curl` 返回 `{"predictions": [...]}`，且数值合理
-
----
-
-## 避坑清单
-
-- ⚠️ **坑 1：把 `custom_metrics` 当参数名（最常见的 API 改名）**
-
-  ```python
-  # ❌ 报错：TypeError: got unexpected keyword argument 'custom_metrics'
-  result = mlflow.models.evaluate(
-      model=..., data=..., targets=..., model_type=...,
-      custom_metrics=[custom_metric],
-  )
-
-  # ✓ MLflow 3 改名叫 extra_metrics
-  result = mlflow.models.evaluate(
-      model=..., data=..., targets=..., model_type=...,
-      extra_metrics=[custom_metric],
-  )
-  ```
-
-  **为啥改了**：MLflow 3 把内置 evaluator（`"default"`、`"shap"` 等）和自定义 metric 统一到一个 `extra_*` 命名空间，未来再加 evaluator / metric 不会再撞名。
-
-- ⚠️ **坑 2：`models serve` 用 file store 不行**
-
-  ```bash
-  # ❌ mlflow models serve 需要 server 模式
-  # ❌ 纯 --backend-store-uri ./mlruns 这种 fs 模式不支持 Model Registry
-  # ✓ 必须 sqlite / postgres / mysql
-  mlflow server \
-    --backend-store-uri sqlite:///$(pwd)/mlflow.db \
-    --default-artifact-root $(pwd)/mlruns \
-    --host 0.0.0.0 --port 5000
-  ```
-
-  错误现象：`No such registered model: WineQualityClassifier`——明明 log 了，但找不到。
-
-  **为啥**：Model Registry 是 server 的功能，纯文件模式不支持 stage/alias/registered model。
-
-- ⚠️ **坑 3：predict 时 JSON 格式写错**
-
-  ```bash
-  # ❌ 报错：DataFrame column not found
-  curl -X POST http://127.0.0.1:5001/invocations \
-    -H "Content-Type: application/json" \
-    --data '{"data": [{"alcohol": 13.0, ...}]}'   # 错！应该是 dataframe_records
-
-  # ✓ 必须用 MLflow 约定的两个 key 之一
-  --data '{"dataframe_records": [...]}'
-  --data '{"dataframe_split": {"columns": [...], "data": [[...]]}}'
-  ```
-
-  **为啥**：MLflow 在服务侧会判断 key 名再决定怎么转 pandas。
-
-- ⚠️ **坑 4：`min_absolute_change` 写了负数**
-
-  ```python
-  # ❌ 报错或行为反掉
-  MetricThreshold(threshold=0.9, min_absolute_change=-0.02)
-
-  # ✓ min_absolute_change 必须是 ≥ 0
-  MetricThreshold(threshold=0.9, min_absolute_change=0.02, greater_is_better=True)
-  ```
-
-  **为啥**：`min_absolute_change` 的符号语义由 `greater_is_better` 自动决定，写负数会产生"我允许新模型比旧模型差"的诡异效果。
-
-- ⚠️ **坑 5：MLflow 3.5+ 必须配 `--allowed-hosts`**
-
-  ```bash
-  # ❌ 浏览器打 mlflow ui 报 "Invalid Host header"
-  mlflow ui --port 5000
-
-  # ✓ MLflow 3.5 默认拒绝非 localhost 的 Host header（防 DNS rebinding）
-  mlflow server --host 127.0.0.1 --port 5000 --allowed-hosts "*"
-  ```
-
-- ⚠️ **坑 6：`make_metric` 的 `eval_fn` 不是纯函数**
-
-  ```python
-  # ❌ 报错或结果不稳定
-  def my_metric(predictions, targets):
-      print(len(predictions))                     # 不允许
-      open("/tmp/log.txt", "a").write("hi\n")    # 不允许
-      return float((predictions == targets).mean())
-
-  # ✓ 纯函数：只读入参,返回标量
-  def my_metric(predictions, targets):
-      return float((predictions == targets).mean())
-  ```
-
-  **为啥**：MLflow 在某些场景会并行调用 `eval_fn`，副作用会乱序或丢。
-
----
-
-## 小结：5 个 take-aways
-
-1. **`mlflow.models.evaluate` 是你的"一站式评估员"**：给模型 + 数据 + 类型，它吐一整套指标和图——不用再手写 `matplotlib`。
-2. **MLflow 3 的自定义指标参数叫 `extra_metrics`**：`custom_metrics` 是 MLflow 2 的命名，新代码不要用。
-3. **自定义指标用 `make_metric(eval_fn=..., greater_is_better=..., name=...)`**：`eval_fn` 必须是纯函数，接收 `predictions`/`targets` Series，return float。
-4. **模型对比用 `validate_evaluation_results`（MLflow 3 新写法）**：拆成"对每个模型 evaluate 一次" + "集中验证 candidate vs baseline"，不再用 MLflow 2 的 `baseline_model=` 一锅炖。
-5. **`mlflow models serve` 把模型变 REST API**：必须 sqlite/postgres 等数据库后端，配 `models:/Name@alias` 起服务，`/invocations` 收 `dataframe_records` JSON 或 `text/csv`——和 `curl`/`requests.post` 完全一样。
-
----
+## 📖 深入阅读（关键！）
+> 📚 [`notes/04_evaluate.md`](04_evaluate.md)（Phase 4：评估、服务与经典 ML 验证）——MLflow 2 vs 3 完整对比、内置指标全集、`build-docker` 容器化流程、`04c` 完整部署脚本。
 
 ## 📖 下一步
-
-下一章（**Chapter 11: LLM Agent 的版本追踪与打包**）会把这一章的"模型版本化"思路扩展到 LLM Agent：怎么让一个 LLM 应用变成可追踪、可对比、可部署的"模型实体"——包括 `LoggedModel`、`set_active_model`、`optimize_prompts`、`ResponsesAgent`、`Models-from-code` 这些 MLflow 3 的新武器。
-
-更深入的内容请参考：
-
-- `notes/04_evaluate.md` —— 评估 + serve 阶段的详细笔记，包括 MLflow 2 vs 3 的完整对比、所有内置指标的清单、`build-docker` 的容器化流程。
-- MLflow 官方文档：[Model Evaluation](https://mlflow.org/docs/latest/models.html) 和 [Model Serving](https://mlflow.org/docs/latest/deployment.html)。
-
----
-
+→ [Chapter 11：LLM Agent 的版本追踪与打包](#chapter-11-llm-agent-的版本追踪与打包)
 # Chapter 11：LLM Agent 的版本追踪与打包
 
-> ⏱️ 预计时间：60 分钟
-> 🔑 是否需 API Key：**是**（OpenAI 兼容服务，例如 DeepSeek）
-> 📚 前置知识：第 7 章（trace）、第 9 章（Prompt Registry）
+> ⏱️ 预计时间：30 分钟
+> 🔑 是否需 API Key：是（OpenAI 兼容服务，如 DeepSeek）
+> 📚 前置知识：Chapter 6（Trace）、Chapter 8（Prompt Registry）
 
 ## 🎯 这章做什么
 
-你已经把 LLM 应用跑起来了（第 7 章），也知道怎么注册 prompt（第 9 章）。现在要把它推向生产，会遇到三个最棘手的问题：
+LLM 应用跑起来后要推向生产，会遇到三个问题：线上跑的是哪个版本的代码？prompt 谁来改进？LLM 应用怎么变成标准服务？这章用 MLflow 3 的三件新武器解决：**LoggedModel**（独立的模型版本实体）、**optimize_prompts**（让 reflection 模型自动改写 prompt 并打分）、**ResponsesAgent**（兼容 OpenAI Responses API 的 Agent 基类）。
 
-1. **你怎么知道线上跑的是哪个版本的代码？** 同一份代码改了几行 prompt，到底生效的是哪一版？
-2. **谁负责把"蹩脚"的 prompt 改得更好？** 你自己手动改，还是让程序自动迭代？
-3. **你的 LLM 应用怎么变成一个标准服务？** 怎么让前端用 OpenAI SDK 直接调你的 Agent？
-
-这一章解决的就是这三个问题。我们会学到 MLflow 3 的三件新武器：
-
-- **LoggedModel**：独立的"模型版本"实体，替代了"Run 的附庸"地位
-- **`optimize_prompts`**：让 reflection 模型自动改写你的 prompt 并打分
-- **ResponsesAgent**：一个跟 OpenAI Responses API 兼容的 Agent 基类，可以打包成模型服务
-
-> 🍵 **类比**：想象你开了家奶茶店。LoggedModel 就像"配方卡片"——"v1 经典版"、"v2 加椰果版"——每改一次配方就登记一张卡片，店里哪天卖出去的奶茶都能溯源到用了哪张卡片。`optimize_prompts` 就像请了个"试喝员 + 配方师"组合，每天试喝新品、给打分、自动帮你改进配方。ResponsesAgent 就像"标准操作手册"——按手册做的奶茶放哪家分店都是同一个味道。
-
-**产出物**：跑完三个脚本后，你在 MLflow UI 里能看到 `agent-v1` 和 `agent-v2` 两个独立的 LoggedModel、能看到 `optimize-demo` prompt 的多版本演进历史、能用 `mlflow.pyfunc.load_model` 加载一个 ResponsesAgent 并推理。
+**产出物**：跑完脚本后，UI 的 **Logged Models** 里出现 `agent-v1` 和 `agent-v2` 两个独立实体，且你能把一个自定义 Agent 打包成可 `mlflow models serve` 的模型。
 
 ### 你会学到什么
 
-- **能用 `set_active_model` 把同一份代码的不同版本登记为不同的 LoggedModel**，让 trace 自动归类到对应版本
-- **能用 `mlflow.genai.optimize_prompts` 让 reflection 模型自动迭代改进 prompt**，每版自动注册到 Prompt Registry
-- **能用 `ResponsesAgent` 基类把自定义 LLM 应用打包成 MLflow 模型**，并兼容 OpenAI Responses API
-- **能用 Models-from-code 方式（`set_model()` + 文件路径字符串）打包复杂 Agent**，避免 pickle 序列化失败
-- **能搜索和对比多个 LoggedModel**（A/B 测试、生产回滚、版本溯源）
-
-### 对应脚本清单
-
-| 脚本 | 一句话作用 | 是否必跑 | 前置 |
-|------|-----------|---------|------|
-| `08a_active_model.py` | 用 `set_active_model` 把两个 Agent 版本关联到不同的 LoggedModel | ✓ 必跑 | 第 7 章（tracing） |
-| `08b_prompt_optimize.py` | 注册初始 prompt 并尝试用 MetaPromptOptimizer 自动改写 | ✓ 必跑 | 第 9 章（Prompt Registry） |
-| `08c_responses_agent.py` | 用 Models-from-code 方式打包 ResponsesAgent 到 Registry | ✓ 必跑 | 跑过 08a |
-| `simple_qa_agent.py` | `SimpleQAAgent` 的定义（被 08c import，不是独立脚本） | — | — |
-
-### 前置知识
-
-- **已完成第 7 章（tracing）**：知道 `@mlflow.trace`、`mlflow.openai.autolog()` 是什么
-- **已完成第 9 章（Prompts）**：知道 `register_prompt` 和 `prompts:/name/version` URI
-- **API key**：需要 OpenAI 兼容服务的 API key（脚本读 `OPENAI_API_KEY`、`OPENAI_API_BASE`、`DEEPSEEK_MODEL` 三个环境变量，默认是 DeepSeek）
-- **假设你懂**：Python 类继承、dict/对象互转、context manager（`with`）
-- **不假设你懂**：MLflow 3 的 LoggedModel 概念、prompt 优化算法细节、OpenAI Responses API 协议
-
-### 跑完必看（UI）
-
-1. 启动 UI：`mlflow ui --port 5000`
-2. 左侧菜单选 **Logged Models**：
-   - 看到 `agent-v1` 和 `agent-v2` 两个实体
-   - 点开任意一个，看 **Traces** 标签：所有用此版本的 trace 都归在这里
-   - 顶部 **Compare** 按钮：勾选两个 LoggedModel，对比 trace 数量、延迟
-3. 左侧菜单选 **Prompts → optimize-demo**：
-   - 看 v1 → v2 → v3… 的版本演进
-   - 每版带 commit message 和 template 全文
-4. 左侧菜单选 **Experiments → 08_responses_agent**：
-   - 点开 Run `agent-packaging`
-   - **Artifacts** 标签：能看到 `MLmodel` 文件、`requirements.txt`、agent 的 Python 源码
-
----
-
-## 核心概念
-
-### 1. LoggedModel —— MLflow 3 的"一等公民"
-
-在 MLflow 2 里，模型只是 Run 的一个 artifact（产出物），附庸在某个 Run 上。这意味着如果你想"看某个模型的所有历史 trace"，会很别扭——得先找 Run，再找 Model artifact，再找关联的 trace。
-
-MLflow 3 把模型拎出来变成**独立实体**。LoggedModel 有自己的 `model_id`（`m-xxx`）、自己的 `aliases`（`@champion`、`@challenger`）、自己的 trace 列表。它可以跨 Run、跨实验存在。
-
-> 📚 **类比**：MLflow 2 像图书馆里"每本书只能在某个书架上"；MLflow 3 像"每本书有自己的 ISBN，可以放到任何书架、被任何人引用"。
-
-**关键 API**：
-
-```python
-# 登记/激活一个 LoggedModel（同一 name 多次调用会自动复用）
-mlflow.set_active_model(name="agent-v1")
-
-# 之后所有 trace 自动关联到 agent-v1
-agent_v1("问题")
-
-# 搜索所有 LoggedModel
-mlflow.search_logged_models(experiment_ids=[exp_id])
-```
-
-### 2. `set_active_model` —— 隐式的"当前模型指针"
-
-它做的事情很简单：在当前 run 上下文里设一个"当前 LoggedModel"的指针。之后这个 run 里发生的所有 trace 自动打上"我属于这个 LoggedModel"的标签。
-
-**什么时候用**：每个 git commit → 一个 LoggedModel；A/B 测试时把流量分到不同 LoggedModel。
-
-> ⚠️ **必须在 `@mlflow.trace` 装饰的函数里调用，或在 trace 上下文里调用**。否则指针设了但 trace 没认领。
-
-### 3. MetaPromptOptimizer / GepaPromptOptimizer —— 自动改 prompt
-
-你给一个初始 prompt、一批带正确答案的训练数据、一个评分函数。optimizer 会：
-
-1. 让 LLM 用当前 prompt 跑数据 → 得到每个 case 的输出和分数
-2. 把"分数低 + 输出"的样本丢给 reflection 模型 → 让它分析"prompt 哪里不好"
-3. 根据分析改写 prompt → 注册新版本
-4. 重复 2-3 直到分数不再涨
-
-> 🍵 **类比**：像一个家教老师——它给学生（LLM）做卷子（train_data），看错题，让出题人（reflection 模型）改卷子（prompt），再让学生重做，直到分数提不动。
-
-**两个 optimizer 对比**：
-
-| Optimizer | 依赖 | 速度 | 智能程度 |
-|-----------|------|------|---------|
-| `MetaPromptOptimizer` | 内置（不需要额外包） | 快 | 中 |
-| `GepaPromptOptimizer` | 需 `pip install gepa` | 慢 | 高 |
-
-> ⚠️ **国内服务商兼容性**：GEPA 在 DeepSeek 上偶尔报 reflection 调用错误；MetaPrompt 更稳定。如果 optimize 失败，看下面的避坑清单。
-
-### 4. ResponsesAgent —— 兼容 OpenAI Responses API 的 Agent 基类
-
-OpenAI 在 2025 年推出了新的 Responses API（替代 Chat Completions）。MLflow 3 的 `ResponsesAgent` 就是"你的自定义 Agent"和"标准 OpenAI Responses 格式"之间的翻译层：
-
-- 你继承 `ResponsesAgent` 实现 `predict()` 方法
-- MLflow 自动把你的请求/响应翻译成 OpenAI Responses 格式
-- 别人用 OpenAI SDK 调你的服务时，完全感知不到差别
-
-**什么时候用**：你想让你的 LLM 应用暴露成一个"标准服务"，让前端/其他服务用 OpenAI 协议直接调用，而不用关心你内部怎么实现的。
-
-### 5. Models-from-code —— 不 pickle，改用源码
-
-MLflow 3 之前，`mlflow.pyfunc.log_model(python_model=my_model)` 会尝试用 `pickle` 序列化你的对象。但很多对象（比如 OpenAI 客户端、网络连接、lambda）pickle 不了或加载回来会失效。
-
-MLflow 3 的解决方案：**直接把类定义所在的 .py 文件路径传过去**，MLflow 加载时 import 这个文件，找里面的类。简单粗暴但有效。
-
-> 📚 **类比**：以前是"把家具拆了打包快递"（容易坏），现在是"把整个房间拍照给你照着装修"（更可靠）。
-
-关键就是**文件末尾必须调用 `set_model(YourClass())`**——告诉 MLflow "这个文件里哪个对象是模型"。
-
----
-
-## 实战步骤
-
-### Step 1：确认环境
-
-```bash
-conda activate mlflow
-# 确认环境变量已设置
-echo $OPENAI_API_KEY
-echo $OPENAI_API_BASE
-echo $DEEPSEEK_MODEL
-```
-
-### Step 2：跑版本追踪（08a）
-
-```bash
-cd <project-root>
-python 08_agents/08a_active_model.py
-```
-
-输出会显示：
-
-- v1 三个问题 + 答案（每个一次 LLM 调用）
-- v2 三个问题 + 答案（每个两次 LLM 调用：初答 + 反思）
-- 跨两个 LoggedModel 的对比列表
-
-### Step 3：跑 prompt 优化（08b）
-
-```bash
-python 08_agents/08b_prompt_optimize.py
-```
-
-可能会两种结果：
-
-- **成功**：看到 v1 → v2 自动改写，template 文本被改进了
-- **失败**：看到 `⚠️ 优化过程失败` 的提示——这是预期内的，国内服务商常见。脚本仍然会把 v1 注册到 Registry，只是不会自动产生 v2。没关系，看下面的 08c 也能继续。
-
-### Step 4：跑 ResponsesAgent 打包（08c）
-
-```bash
-python 08_agents/08c_responses_agent.py
-```
-
-输出会显示：
-
-- 直接调用 `SimpleQAAgent.predict()` 的结果
-- 模型被 log 到 Registry 的 URI（`models:/m-xxx`）
-- 加载回来再推理的结果
-
-### Step 5：开 UI 检查
-
-```bash
-# 另开终端
-mlflow ui --port 5000
-```
-
-浏览器开 `http://localhost:5000`，按上面"跑完必看"部分的路径看 Logged Models 和 Prompts。
-
-### Step 6（选跑）：把模型 serve 起来
-
-```bash
-# 等 08c 跑完，会拿到 model_uri，serve 它
-mlflow models serve -m models:/m-<你的model_id> -p 5001
-
-# 另开终端，用 OpenAI 协议调用
-curl http://localhost:5001/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"input": [{"role": "user", "content": "你好"}]}'
-```
-
----
-
-## 代码模式（可复用模板）
-
-### 模式 1：每个代码版本一个 LoggedModel
-
-```python
-# 什么时候用：每次 git commit 后跑实验，自动归属到对应版本
-import mlflow
-
-with mlflow.start_run(run_name="agent-v2-batch"):
-    mlflow.set_active_model(name="agent-v2")   # 后续 trace 自动归属
-    for q in test_set:
-        my_agent(q)   # 这个函数被 @mlflow.trace 装饰
-```
-
-### 模式 2：自动 prompt 优化
-
-```python
-# 什么时候用：你有一批带正确答案的样本，想自动改进 prompt
-import mlflow
-from mlflow.genai.optimize import MetaPromptOptimizer
-from mlflow.genai.scorers import Correctness
-import pandas as pd
-
-train_data = pd.DataFrame([
-    {"inputs": {"question": "..."}, "expectations": {"expected_response": "..."}},
-])
-
-result = mlflow.genai.optimize_prompts(
-    predict_fn=lambda q: my_llm(q),                   # 你的预测函数
-    train_data=train_data,                             # 训练数据
-    prompt_uris=[f"prompts:/optimize-demo/1"],         # 起点 prompt
-    optimizer=MetaPromptOptimizer(reflection_model="openai:/xxx"),
-    scorers=[Correctness(model="openai:/xxx")],        # 打分函数
-)
-```
-
-### 模式 3：自定义 ResponsesAgent
-
-```python
-# 什么时候用：想把自定义 LLM 应用打包成 MLflow 模型并兼容 OpenAI Responses API
-from mlflow.pyfunc import ResponsesAgent
-from mlflow.types.responses import ResponsesAgentRequest, ResponsesAgentResponse
-from mlflow.entities.span import SpanType
-import mlflow
-
-class MyAgent(ResponsesAgent):
-    @mlflow.trace(span_type=SpanType.AGENT)
-    def predict(self, request: ResponsesAgentRequest) -> ResponsesAgentResponse:
-        # 把 request.input 统一转成 [{role, content}] 列表
-        messages = [{"role": m.role, "content": m.content} for m in request.input]
-        resp = openai_client.chat.completions.create(model="...", messages=messages)
-        return ResponsesAgentResponse(
-            output=[self.create_text_output_item(text=resp.choices[0].message.content)],
-            custom_outputs=None,
-        )
-```
-
-### 模式 4：Models-from-code 打包（必须配 set_model）
-
-```python
-# my_agent.py（独立文件）
-from mlflow.models import set_model
-
-class MyAgent(ResponsesAgent):
-    def predict(self, request):
-        ...
-
-# 文件末尾：告诉 MLflow 哪个对象是模型
-set_model(MyAgent())
-
-# log 时：
-mlflow.pyfunc.log_model(
-    python_model="path/to/my_agent.py",   # 字符串路径，不是类实例！
-    name="my-agent",
-    pip_requirements=["openai", "mlflow>=3.0"],
-)
-```
-
-### 模式 5：加载并推理（注意 dict 不是对象）
-
-```python
-# 什么时候用：把 log 好的模型从 Registry 加载回来用
-loaded = mlflow.pyfunc.load_model("models:/m-<model_id>")
-
-# ⚠️ PyFuncModel.predict() 接收 dict-like，不是 ResponsesAgentRequest 对象
-api_request = {
-    "input": [{"role": "user", "content": "..."}],
-    "temperature": 0.3,
-}
-result = loaded.predict(api_request)
-```
-
-### 模式 6：LangChain 一行追踪（搭配 08a 使用）
-
-```python
-import mlflow
-mlflow.langchain.autolog()   # 一行追踪所有 LangChain 调用
-
-# 之后你的 LangChain 链每次 invoke 都会自动：
-# - log span（包含每一步 LLM、Tool、Retriever）
-# - 记录 token 消耗、延迟
-# - 关联到当前 active LoggedModel
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-
-llm = ChatOpenAI(model="gpt-4o-mini")
-prompt = ChatPromptTemplate.from_template("回答：{question}")
-chain = prompt | llm
-
-with mlflow.start_run():
-    mlflow.set_active_model(name="agent-v1")
-    chain.invoke({"question": "什么是 MLflow？"})
-    # 上面这次调用会自动在 UI 里产生一条完整 trace
-```
-
-> 💡 **`autolog()` 是零侵入的**：你不需要给 LangChain 链加任何装饰器；只要在脚本开头调一次 `mlflow.langchain.autolog()`，后面所有 LangChain 调用都自动可观测。
-
----
+- 用 `set_active_model` 把同一份代码的不同版本登记为不同 LoggedModel，trace 自动归类
+- 用 `mlflow.genai.optimize_prompts` 让 reflection 模型自动迭代改进 prompt
+- 用 `ResponsesAgent` 基类把自定义 LLM 应用打包成模型，兼容 OpenAI Responses API
+- 用 Models-from-code（`set_model()` + 文件路径字符串）打包复杂 Agent，避开 pickle
+- 用 `mlflow.search_logged_models` 搜索对比多个 LoggedModel（A/B 测试、生产回滚、版本溯源）
+
+### 前置
+
+- 已完成 Chapter 6（Trace）与 Chapter 8（Prompt Registry）
+- 需 API Key：脚本读 `OPENAI_API_KEY` / `OPENAI_API_BASE` / `DEEPSEEK_MODEL`，默认 DeepSeek
+- 假设你懂 Python 类继承、dict/对象互转、context manager（`with`）
+
+### 必跑脚本清单
+
+| 脚本 | 一句话作用 | 前置 |
+|------|-----------|------|
+| `08_agents/08a_active_model.py` | 用 `set_active_model` 把两个 Agent 版本关联到不同 LoggedModel | Chapter 6 |
+| `08_agents/08c_responses_agent.py` | 用 Models-from-code 打包 ResponsesAgent 到 Registry | 跑过 08a |
+| `08_agents/simple_qa_agent.py` | `SimpleQAAgent` 类定义（被 08c import，非独立脚本） | — |
+
+## 核心概念（一句话版）
+
+- **LoggedModel**：MLflow 3 的独立"模型版本"实体，自带 `model_id`（`m-xxx`）、别名和 trace 列表，可跨 Run/实验搜索——不再像 MLflow 2 那样附庸在某个 Run 上。
+- **`set_active_model(name="agent-v1")`**：在 trace 上下文里设"当前模型指针"，之后所有 trace 自动归属该版本；同一 name 多次调用自动复用。⚠️ 必须在 `@mlflow.trace` 装饰的函数或 trace 上下文里调用。
+- **`setup_mlflow_git_based_version_tracking()`**：每个 git commit 自动生成一个 LoggedModel（`my-agent-<commit>`），配合 `get_git_commit()` 实现"一行代码"的版本溯源。
+- **ResponsesAgent**：你继承它实现 `predict()`，MLflow 自动把请求/响应翻译成 OpenAI Responses 格式——前端用 OpenAI SDK 就能直接调你的服务。
+- **Models-from-code**：`log_model` 的 `python_model` 传 `.py` 文件路径字符串（不是类实例），文件末尾必须 `set_model(YourClass())`；MLflow 加载时 import 该文件找模型类，避免 pickle 序列化失败。
+
+> 💡 最小用法：
+> ```python
+> with mlflow.start_run():
+>     mlflow.set_active_model(name="agent-v2")
+>     agent_v2(q)      # 后续 trace 自动归属 agent-v2
+> ```
 
 ## 🛠️ 动手做
 
-> **目标**：完整跑一遍"代码版本 → LoggedModel → Prompt 优化 → ResponsesAgent 打包"链路，并在 UI 里看到所有产物。
+1. **跑版本追踪并看 UI**：`cd <project-root> && python 08_agents/08a_active_model.py`，另开终端 `cd <project-root> && mlflow ui --port 5000`。验证标准：左侧菜单 **Logged Models** 看到 `agent-v1`、`agent-v2` 两个实体；点开任一个，**Traces** 标签下各挂 3 条 trace。
+2. **打包 ResponsesAgent**：`cd <project-root> && python 08_agents/08c_responses_agent.py`，记录打印出的 `model_info.model_id`（形如 `m-xxxxxxxx`）。验证标准：experiment `08_responses_agent` 下出现 Run `agent-packaging`，其 **Artifacts** 里能看到 `MLmodel`、`requirements.txt` 和 `simple_qa_agent.py` 源码副本。
 
-**步骤**：
+## 📖 深入阅读（关键！）
 
-1. 确认环境变量 `OPENAI_API_KEY` / `OPENAI_API_BASE` / `DEEPSEEK_MODEL` 都设了。
-2. 跑 `08a_active_model.py`：观察 v1（一次 LLM 调用）和 v2（初答 + 反思两次 LLM 调用）的 trace 数量差异。
-3. 跑 `08b_prompt_optimize.py`：哪怕优化失败也没关系——确认 `optimize-demo` 这个 prompt 名在 Registry 里被注册了 v1。
-4. 跑 `08c_responses_agent.py`：拿到 `model_info.model_id`（形如 `m-xxxxxxxx`）。
-5. 启动 `mlflow ui --port 5000`，做三件事：
-   - **左侧菜单 → Logged Models**：看到 `agent-v1` 和 `agent-v2` 两个独立实体；点开 `agent-v2`，在 **Traces** 标签看到刚才那 3 次调用。
-   - **左侧菜单 → Prompts → optimize-demo**：看到 v1 的 commit message 和 template 全文。
-   - **左侧菜单 → Experiments → 08_responses_agent → Run agent-packaging**：在 **Artifacts** 看到 `MLmodel` 文件、`requirements.txt`、以及 `simple_qa_agent.py` 的源码副本。
-6. （选做）用 `mlflow models serve -m models:/m-<你的id> -p 5001` 把 Agent 拉起来，再用 `curl` 调 `/invocations` 验证它能回答问题。
-
-**预期结果**：
-
-- UI 里有 `agent-v1` 和 `agent-v2` 两个 LoggedModel，分别挂着 3 条 trace
-- `optimize-demo` prompt 至少注册了 v1（可能还有 v2，如果 optimize 成功的话）
-- `08_responses_agent` experiment 下有 `agent-packaging` 这个 Run，artifacts 里有完整的 agent 源码
-
----
-
-## 避坑清单
-
-- ⚠️ **`Failed to serialize Python model`** → 改用 Models-from-code：把 agent 类放到独立 .py 文件，文件末尾调用 `set_model(YourClass())`，`log_model` 时传文件路径字符串而不是类实例。
-- ⚠️ **`predict()` 返回空 text** → 检查 `request.input` 里 `msg.content` 是字符串还是 list。ResponsesAgent 的 Message 类型允许 content 是字符串或 `list[ContentPart]`，统一处理（见 `simple_qa_agent.py` 第 41-46 行的写法）。
-- ⚠️ **PyFuncModel schema 校验失败** → `loaded.predict()` 传 dict 而不是 `ResponsesAgentRequest` 对象。PyFuncModel 的 schema 校验不认识自定义类。
-- ⚠️ **优化器在 DeepSeek 上 reflection 失败** → 用 `MetaPromptOptimizer`（更稳定）；或干脆手写循环：改 prompt → `register_prompt`（v2）→ `mlflow.genai.evaluate()` → 对比 score。
-- ⚠️ **`set_active_model` 没生效** → 必须在 `@mlflow.trace` 装饰的函数里调用，或在 trace 上下文里。设了指针但没 trace 跑到，归属就是空的。
-- ⚠️ **08b 跑失败但脚本没崩** → 正常现象。脚本用 `try/except` 包住了 optimize 调用，失败时打印提示但不中断。v1 仍然被注册，可以手动改进 prompt 然后 `register_prompt` 升 v2。
-- ⚠️ **`mlflow.langchain.autolog()` 抓不到 trace** → 确认是 `mlflow.langchain.autolog()` 而不是 `mlflow.autolog()`——后者是 sklearn 用的；LangChain 框架必须调用框架专属的 autolog。
-
----
-
-## 小结：5 个 take-aways
-
-- **LoggedModel 是 MLflow 3 的核心升级**：模型不再是 Run 的附庸，而是独立的"版本实体"，能跨 Run/实验搜索、能注册别名、能直接挂载所有相关 trace。
-- **`set_active_model` 是"无侵入"的版本标注**：一行代码就能让后续所有 trace 自动归属到指定 LoggedModel，不用手动给每个 trace 打标签。
-- **`mlflow.langchain.autolog()` 是 LangChain 项目的标配**：零侵入（只调一行），自动追踪链上每一步 LLM、Tool、Retriever，并自动归到当前 active LoggedModel。
-- **`optimize_prompts` 是"懒人的福音"但要选对 optimizer**：MetaPrompt 稳定够用、GEPA 强大但依赖多且国内服务商兼容性差——生产环境优先 MetaPrompt + 手写评估循环兜底。
-- **ResponsesAgent + Models-from-code 是 LLM 应用上生产的标配**：前者解决"协议兼容"，后者解决"复杂对象打包"。两者配合让你的 Agent 既能被 OpenAI SDK 调用、又能避开 pickle 的坑。
-- **每次部署前先在 UI 里确认 LoggedModel 状态**：看 trace 数量、看延迟分布、看别名是否设对——这三件事做完才能安心上线。
-
----
+> 📚 [`notes/08_agents.md`](08_agents.md)（Phase 8：版本追踪、提示词优化与 ResponsesAgent——含 GEPA vs MetaPrompt 对比、Models-from-code 工作机制、ResponsesAgent 协议细节）
 
 ## 📖 下一步
 
-到这里，你已经掌握了 MLflow 3 的核心能力：训练追踪、注册、评估、部署、prompt 管理、LLM Agent 打包。**全链路 MLOps 闭环的基础部分你已经能跑通**。
+→ [Chapter 12：生产级部署入门（选学）](#chapter-12)
 
-接下来可以深入的方向：
-
-- **生产监控**：用 MLflow 的 evaluation dataset 跟踪数据漂移、概念漂移
-- **CI/CD 集成**：把 `validate_evaluation_results` 塞进 GitHub Actions / GitLab CI，PR 合并前自动跑模型对比
-- **云上部署**：把 `models serve` 替换为 SageMaker / Vertex AI / KServe
-- **更高级的 Agent 框架**：LangGraph、AutoGen、LlamaIndex——MLflow 都已支持 autolog
-
-更深入的内容请参考：
-
-- `notes/08_agents.md` —— LLM Agent 阶段（LoggedModel / optimize_prompts / ResponsesAgent / Models-from-code）的详细笔记，包括 GEPA vs MetaPrompt 的对比、Models-from-code 的工作机制、ResponsesAgent 的 OpenAI Responses API 协议细节。
-- MLflow 官方文档：[LLMs and Agents](https://mlflow.org/docs/latest/llms.html) 和 [Prompt Engineering](https://mlflow.org/docs/latest/prompts.html)。
+---
 # Chapter 12：生产级部署入门（选学）
 
-> ⏱️ 预计时间：60 分钟
-> 🔑 是否需 API Key：部分脚本需要（`09a` 需要 LLM key；`09b`、`09c` 不需要）
-> 📚 前置知识：Chapter 4（trace）、Chapter 7（模型部署基础）、Chapter 11（监控基础）
-> ⭐ 选学（仅当你准备把 MLflow 真正推到生产环境时再读）
+> ⏱️ 预计时间：30 分钟
+> 🔑 是否需 API Key：是（09a 会真实调一次 DeepSeek）
+> 📚 前置知识：Chapter 6（Trace）、Chapter 10（模型评估与本地部署服务）
+> ⭐ 选学：仅当你准备把 MLflow 推到生产环境时再读
 
 ## 🎯 这章做什么
 
-到目前为止，你一直在自己电脑上跑 MLflow——`mlflow ui` 一开，本地 SQLite 数据库，本地文件系统存模型。这是"在自己家做饭"。
+前面你一直在自己电脑上跑 MLflow（本地 SQLite + 本地文件系统），相当于"在家做饭"。本章解决"开餐馆"的问题：**把 MLflow 真正推到生产环境**，会遇到三类新问题——存哪里（本地 SQLite/磁盘撑不住）、要不要全记（trace 存储成本爆炸）、机器扛不扛得住（CPU/磁盘监控）。
 
-本章要解决的是"开餐馆"的问题：**把 MLflow 真正推到生产环境**。你会遇到三类以前完全不用想的事：
-
-1. **存哪里**：数据越来越多，本地 SQLite 撑不住了，文件系统的模型权重也撑不住了
-2. **要不要全记**：trace 一记就是几十万条，存储成本爆炸
-3. **机器扛不扛得住**：CPU 飙到 100% 怎么办？磁盘满了怎么办？
-
-**类比**：前面 11 章相当于在自己家做饭，本章相当于把厨房整套搬到店里——把食材存到冷库（Postgres）、把锅碗瓢盆存到仓库（MinIO）、给每桌客人只点一道试吃菜（采样 + 脱敏）、时刻盯着炉子火多大（硬件监控）。
+**产出物**：看懂生产三层架构、学会 trace 采样与 PII 脱敏、手里有一份能直接 `docker compose up` 的本地生产配置。
 
 ### 你会学到什么
 
-- 能看懂 MLflow 生产环境的"三层架构"——Client、Tracking Server、Backend Store + Artifact Store
-- 能用 `docker-compose` 一键起 MLflow + Postgres + MinIO
-- 能用 `mlflow models build-docker` 把任意 MLflow 模型打成 Docker 镜像
-- 能给 trace 加采样，把存储成本压到原来的 1/10
-- 能写一个 PII 脱敏函数，在数据"进 trace 之前"就把邮箱、手机、身份证洗掉
-- 能用 `psutil` + MLflow 把 CPU/内存/磁盘/网络画成曲线
-- 知道 MLflow 3.5+ `--allowed-hosts` 是干嘛的（防 DNS rebinding）
-- 了解 MLflow ≥ 3.6 的 Agent Server 框架（`@invoke` / `@stream`）
+- 看懂生产环境的"三层架构"：Client → Tracking Server → Backend Store + Artifact Store
+- 用 `mlflow models build-docker` 把任意 MLflow 模型（含 ResponsesAgent）打成 Docker 镜像
+- 用采样把 trace 存储成本压到原来的 1/10
+- 在数据进 trace 之前用正则洗掉邮箱/手机/身份证
+- 读懂 docker-compose 的 Postgres + MinIO + MLflow 三件套
 
-### 对应脚本清单
+### 前置
 
-| 脚本 | 一句话作用 | 是否必跑 | 前置 |
-|------|-----------|---------|------|
-| `09_deployment/09a_sampling_redaction.py` | 演示 trace 采样 + PII 脱敏，对比 raw vs redacted 两条 Run | ✓ 强烈推荐 | `OPENAI_API_KEY` |
-| `09_deployment/09b_prod_infra.sh` | docker-compose 参考配置（Postgres + MinIO + MLflow） | 推荐（看一眼就行） | Docker 环境 |
-| `09_deployment/09c_hardware_monitor.py` | 后台采样 CPU/内存/磁盘/网络 30 秒，画到 UI 上 | 推荐 | 无（不需要 API key） |
+- 已完成 Chapter 6（Trace）与 Chapter 10（模型评估与本地部署），装好 `mlflow`、`psutil`、`openai`
+- 不需要真买云服务——09b 的 docker-compose 在本地就能起
+- 不懂 docker-compose 也能跑 09a
 
-### 前置知识
+### 必跑脚本清单
 
-- 已完成 Chapter 4（tracing），知道 trace 是什么、`@mlflow.trace` 怎么用
-- 已完成 Chapter 7（model registry 和 build-docker）
-- 装好 `mlflow`、`psutil`、`openai`：`pip install mlflow psutil openai`
-- 本章假设你懂：什么是 LLM trace、什么是 Postgres/S3；不懂 docker-compose 也能跑 `09a` 和 `09c`
-- ⚠️ 不需要真买云服务，`09b` 的 docker-compose 在本地就能起
+| 脚本 | 一句话作用 | 前置 |
+|------|-----------|------|
+| `09_deployment/09a_sampling_redaction.py` | 演示 trace 采样 + PII 脱敏，对比 raw vs redacted 两条 Run | 无 |
+| `09_deployment/09b_prod_infra.sh` | docker-compose 参考配置（Postgres + MinIO + MLflow） | Docker 环境 |
 
----
+## 核心概念（一句话版）
 
-## 核心概念
+- **三层架构**：Client（训练脚本/UI/API）→ Tracking Server（FastAPI，端口 5000）→ Backend Store（Postgres 存元数据）+ Artifact Store（S3/MinIO 存模型权重和 trace）；SQLite 上生产会锁表、本地磁盘存 artifact 容器一重启就丢。
+- **Trace 采样**：不是每个请求都记 trace，按比例抽——调试 100%、一般生产 10-20%、高流量 1-5%；10% 采样省 90% 存储。
+- **PII 脱敏**：在 trace 边界（函数入口第一行）就用正则把邮箱/手机/身份证替换成 `[EMAIL]`/`[PHONE]`/`[ID_CARD]`；一旦进了 trace 存储就等于泄漏，事后洗不干净。
+- **`mlflow models build-docker`**：一条命令把任何 MLflow Model（sklearn / PyTorch / ResponsesAgent）打成自包含 Docker 镜像，`docker run -p 5001:8080` 即可推理。
+- **docker-compose 生产部署**：一份 YAML 起 `postgres`（元数据）+ `minio`（S3 替代，存 artifact）+ `createbuckets`（初始化建 bucket）+ `mlflow server`；客户端设 `MLFLOW_TRACKING_URI=http://localhost:5000` 连接。
 
-### 1.1 三层架构：Client → MLflow Server → Backend + Artifact
+## 🛠️ 动手做
 
-生产环境的 MLflow 不是单机文件，而是一套"三个角色"：
+1. **跑 09a 看 PII 脱敏对比**：
+   - 运行：`cd <project-root> && python 09_deployment/09a_sampling_redaction.py`
+   - 查看：另开终端 `cd <project-root> && mlflow ui --port 5000`，进 experiment `09_sampling_pii`
+   - 验证标准：`raw-no-redaction` 的 trace_inputs 能看到 `zhangsan@example.com`、`13812345678`；`redacted` 同样的输入变成 `[EMAIL]`、`[PHONE]`、`[ID_CARD]`
+   - ⚠️ 运行提示：脚本内部会真实调用一次 DeepSeek，如遇 API 报错，先设 `OPENAI_API_KEY` / `OPENAI_API_BASE` / `DEEPSEEK_MODEL`
 
-```
-┌──────────────────────────────────────────────────┐
-│  Client (训练脚本 / Web UI / API 调用方)           │
-└────────────────┬─────────────────────────────────┘
-                 │ HTTPS
-┌────────────────▼─────────────────────────────────┐
-│  MLflow Tracking Server (FastAPI, 端口 5000)    │
-│  --backend-store-uri  → PostgreSQL (元数据)        │
-│  --default-artifact-root → S3/MinIO (大文件)      │
-└────────────────┬─────────────────────────────────┘
-                 │
-    ┌────────────┴────────────┐
-    │                         │
-┌───▼────────────┐    ┌───────▼────────────┐
-│ Model Server    │    │ Agent Server (3.6+) │
-│ (REST /invocations)│ │  (@invoke/@stream)  │
-└────────────────┘    └────────────────────┘
-```
+2. **读 09b 了解生产 docker-compose 配置**：
+   - 打开 `09_deployment/09b_prod_infra.sh`，把 YAML heredoc 存为 `docker-compose.yml`
+   - 本地起三件套：`cd <project-root> && docker compose up -d`
+   - 验证标准：浏览器 `http://localhost:5000` 打开由 Postgres + MinIO 支撑的 MLflow UI；客户端 `export MLFLOW_TRACKING_URI=http://localhost:5000` 连接
 
-**Backend Store（后端存储）**：存"元数据"——Run 的名字、参数、指标、谁跑了什么。这是**结构化数据**，适合放 Postgres 这种关系型数据库。**绝对不要用 SQLite 上生产**，并发写会锁表。
+## 📖 深入阅读（关键！）
 
-**Artifact Store（构件存储）**：存"大文件"——模型权重、trace JSON、图片、CSV。这是**二进制文件**，适合放 S3（或本地用 MinIO 替代）。**绝对不要存到本地磁盘**，容器一重启就没了。
-
-**类比**：Backend Store 是"图书馆的目录卡"（告诉你每本书在哪），Artifact Store 是"书库本身"（真正放书的地方）。两者职责完全不同，必须分开。
-
-### 1.2 `mlflow models build-docker` 容器化
-
-任何 MLflow Model（sklearn / PyTorch / ResponsesAgent / 自定义 pyfunc）都能用一条命令打成 Docker 镜像：
-
-```bash
-mlflow models build-docker \
-  -m models:/my-model@champion \
-  -n my-model:v1 \
-  --env-manager conda
-
-docker run -p 5001:8080 my-model:v1
-
-# 测试推理
-curl -X POST http://localhost:5001/invocations \
-  -H "Content-Type: application/json" \
-  --data '{"inputs": [{"question": "..."}]}'
-```
-
-**类比**：这相当于把"实验厨房里做好的菜"装进外卖盒，随时可以微波炉加热端给客人。镜像是自包含的，换台机器跑也能跑出同样的结果。
-
-### 1.3 docker-compose：Postgres + MinIO + MLflow 一键起
-
-生产环境的"最小可用三件套"——一份 YAML 就能起：
-
-```yaml
-version: '3.8'
-
-services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: mlflow
-      POSTGRES_PASSWORD: mlflow
-      POSTGRES_DB: mlflow
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
-    volumes:
-      - miniodata:/data
-    ports:
-      - "9000:9000"   # API
-      - "9001:9001"   # Web UI
-
-  createbuckets:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      mc alias set local http://minio:9000 minio minio123;
-      mc mb -p local/mlflow-artifacts;
-      mc anonymous set download local/mlflow-artifacts;
-      exit 0;
-      "
-
-  mlflow:
-    image: ghcr.io/mlflow/mlflow:latest
-    depends_on:
-      - postgres
-      - minio
-    environment:
-      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: minio123
-    command: >
-      mlflow server
-        --host 0.0.0.0
-        --port 5000
-        --backend-store-uri postgresql://mlflow:mlflow@postgres:5432/mlflow
-        --default-artifact-root s3://mlflow-artifacts/
-        --allowed-hosts "*"
-    ports:
-      - "5000:5000"
-
-volumes:
-  pgdata:
-  miniodata:
-```
-
-**关键解读**：
-- `postgres` 存元数据（Run / Metric / Param）
-- `minio` 是 S3 替代品，存模型权重、trace 文件
-- `createbuckets` 是初始化容器，只跑一次建 bucket
-- `mlflow` 服务启动时**必须**同时连上 Postgres 和 MinIO，否则 502
-
-### 1.4 Trace 采样（控制成本）
-
-生产环境最大的隐性成本是 **trace 存储**。每个 trace 平均 ~50KB，1 亿条 = 50TB。100 QPS 全量记 trace 一个月 8.6 亿条，**采样 10% 直接省 90% 存储**。
-
-**核心思路**：不是每个请求都记 trace，而是按比例抽一部分。
-
-| 场景 | 采样率 |
-|------|--------|
-| 调试 / PoC | 100% |
-| 一般生产 | 10-20% |
-| 高流量 (>1k QPS) | 1-5% |
-
-**类比**：餐厅试吃不是每桌都给一整本菜单，只给 1/10 的客人发试吃小碟——成本可控、口味覆盖到了、客人还觉得被重视。
-
-应用层装饰器实现（脚本 `09a` 用法）：
-
-```python
-import random, functools
-
-def sampled_trace(sample_rate: float = 0.1):
-    """只对 sample_rate 比例的调用进行 trace 记录"""
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            if random.random() < sample_rate:
-                return func(*args, **kwargs)
-            return func(*args, **kwargs)
-        return wrapper
-    return decorator
-
-@mlflow.trace(span_type="AGENT")
-@sampled_trace(rate=0.1)
-def my_agent(q):
-    ...
-```
-
-MLflow 3 也提供 OpenTelemetry 风格的 sampler：
-
-```python
-from mlflow.tracing.sampling import TraceIdRatioBased
-```
-
-### 1.5 PII 脱敏（隐私合规）
-
-**PII = Personally Identifiable Information**，个人信息。邮箱、手机、身份证、信用卡、姓名、IP 都算。
-
-**关键原则**：在 **trace 边界**（也就是函数入口）就要把 PII 洗掉，而不是先 trace 再洗——因为一旦进入 trace 存储，**就泄漏了**。
-
-**类比**：快递单上不要写真实手机号，写成 "**** 1234"。同理，trace 里存的应该是 "[EMAIL]"而不是 `zhangsan@example.com`。
-
-可复用的脱敏函数（递归清洗 dict / list / str）：
-
-```python
-import re
-
-def redact_pii(data):
-    """递归脱敏 dict/list/str"""
-    if isinstance(data, dict):
-        return {k: redact_pii(v) for k, v in data.items()}
-    if isinstance(data, list):
-        return [redact_pii(item) for item in data]
-    if isinstance(data, str):
-        data = re.sub(r"[\w\.-]+@[\w\.-]+\.\w+", "[EMAIL]", data)
-        data = re.sub(r"1[3-9]\d{9}", "[PHONE]", data)
-        data = re.sub(r"\d{17}[\dXx]", "[ID_CARD]", data)
-        data = re.sub(r"\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}", "[CARD]", data)
-        data = re.sub(r"我叫[一-龥]{2,4}", "我叫[NAME]", data)
-        return data
-    return data
-```
-
-### 1.6 硬件监控（CPU/内存/磁盘/网络）
-
-MLflow autolog 对 PyTorch/TensorFlow 会自动记 GPU 利用率，但 **CPU/内存的历史曲线它不管**。要补这块，需要用 `psutil` 手动采样，再 `mlflow.log_metric` 写进 Run。
-
-**类比**：做饭时不仅要记"客人点了什么菜"，还要记"厨房的温度和燃气用量"——出问题时要能回溯是哪个环节超载了。
-
-`psutil.cpu_percent()` 有个"坑"：**第一次调用只设基线不返回值**。所以循环外必须先空调一次：
-
-```python
-import psutil, mlflow, time
-
-# 关键：第一次必须空调用一次！
-psutil.cpu_percent(interval=None)
-
-while True:
-    cpu = psutil.cpu_percent(interval=None)
-    mem = psutil.virtual_memory()
-    mlflow.log_metric("cpu_percent", cpu, step=int(time.time()))
-    mlflow.log_metric("mem_percent", mem.percent, step=int(time.time()))
-    time.sleep(1)
-```
-
-可采集的指标：
-- `psutil.cpu_percent()`：CPU 总体利用率
-- `psutil.virtual_memory()`：内存（used / available / percent）
-- `psutil.disk_usage('/')`：磁盘用量
-- `psutil.disk_io_counters()`：磁盘读写字节数
-- `psutil.net_io_counters()`：网络收发字节数
-
-### 1.7 MLflow 3.5+ `--allowed-hosts` 防 DNS rebinding
-
-DNS rebinding 是一种攻击：恶意 DNS 把域名解析到 `127.0.0.1`，诱导浏览器访问本机服务。MLflow 3.5 之前 server 默认接受任意 Host header，3.5+ 必须显式声明 `--allowed-hosts`：
-
-```bash
-mlflow server \
-  --host 0.0.0.0 \
-  --port 5000 \
-  --backend-store-uri postgresql://... \
-  --default-artifact-root s3://... \
-  --allowed-hosts "mlflow.example.com,localhost"
-```
-
-本地开发可以用 `--allowed-hosts "*"`，但生产必须写具体的域名。
-
-### 1.8 Agent Server（MLflow ≥ 3.6.0）
-
-MLflow 3.6 引入了一个新的服务端框架——用装饰器把普通 async 函数变成 HTTP endpoint：
-
-```python
-from mlflow.genai.agent_server import invoke, stream, AgentServer
-
-agent_server = AgentServer()
-
-@invoke()
-async def non_stream_endpoint(request):
-    return await my_agent.run(request)
-
-@stream()
-async def stream_endpoint(request):
-    async for chunk in my_agent.stream(request):
-        yield chunk
-```
-
-**类比**：以前要写 FastAPI 路由把 agent 包成服务，现在加两个装饰器就完事。`@invoke` 给一次性返回，`@stream` 给流式响应（边生成边吐 token）。
-
-### 1.9 MLflow 的边界（什么时候用它、什么时候换工具）
-
-MLflow 不是万能工具。下面这张表告诉你哪些功能它能做、哪些要靠别的工具：
-
-| 需求 | MLflow 能做？ | 推荐工具 |
-|------|--------------|----------|
-| 实验追踪（参数/指标/artifact） | 完美 | MLflow |
-| Trace 记录和回放 | 完美 | MLflow |
-| 模型注册和版本管理 | 完美 | MLflow |
-| 模型部署 | 可以 | MLflow + Docker |
-| 模型服务监控 | 部分 | Prometheus + Grafana |
-| 阈值告警（CPU > 90% 报警） | 不能 | Prometheus Alertmanager |
-| 分布式 tracing（多服务） | 部分 | OpenTelemetry + Jaeger |
-| APM（应用性能管理） | 不能 | Datadog / New Relic |
-
----
-
-## 实战步骤
-
-### 2.1 跑 PII 脱敏 + 采样对比（强烈推荐）
-
-```bash
-# 1. 激活环境
-conda activate mlflow
-
-# 2. 设 API key（脚本要调真实 LLM）
-export OPENAI_API_KEY=sk-xxx
-export OPENAI_API_BASE=https://api.deepseek.com
-export DEEPSEEK_MODEL=deepseek-chat
-
-# 3. 跑脚本
-python 09_deployment/09a_sampling_redaction.py
-```
-
-脚本会跑两遍同一组 5 个客服请求：一次"原始版"（含 PII），一次"脱敏版"。
-
-**在终端会看到**：
-- 第 [A] 段：5 条 trace 的输入里都能看到 `@example.com`、`13812345678` 等
-- 第 [B] 段：同样的 5 条输入被替换成 `[EMAIL]`、`[PHONE]`、`[ID_CARD]`
-
-**在 UI 看**：
-1. `mlflow ui --port 5000`
-2. 选 experiment `09_sampling_pii` → 对比 Run `raw-no-redaction` 和 Run `redacted`
-3. 点开任一 Run → 看 **Traces** 标签
-4. 对比两个 Run 的 `trace_inputs`：
-   - `raw-no-redaction` 应该能看到 `zhangsan@example.com`、`13812345678`、`110101199001011234`
-   - `redacted` 同样的输入会变成 `[EMAIL]`、`[PHONE]`、`[ID_CARD]`
-
-### 2.2 启动生产 MLflow（用 docker-compose）
-
-把 `09b_prod_infra.sh` 里那段 YAML heredoc 单独保存为 `docker-compose.yml`，然后：
-
-```bash
-docker compose up -d
-# 访问 http://localhost:5000
-```
-
-**第一次启动会做的事**：
-1. 启动 Postgres 并初始化 mlflow 数据库
-2. 启动 MinIO 并创建一个叫 `mlflow-artifacts` 的 bucket
-3. 启动 MLflow Tracking Server，连上 Postgres 和 MinIO
-
-**客户端连接**：
-
-```bash
-export MLFLOW_TRACKING_URI=http://localhost:5000
-```
-
-**容器化已有模型**：
-
-```bash
-mlflow models build-docker -m models:/my-model@champion -n my-model:v1
-docker run -p 5001:8080 my-model:v1
-```
-
-### 2.3 跑硬件监控
-
-```bash
-conda activate mlflow
-python 09_deployment/09c_hardware_monitor.py
-```
-
-脚本会后台起采样线程（每秒采一次），同时跑 30 秒"负载剧本"：
-- 0-5s：空闲
-- 5-10s：CPU 密集
-- 10-15s：分配内存
-- 15-20s：CPU 密集
-- 20-25s：分配更多内存
-- 25-30s：空闲
-
-另开终端看曲线：
-
-```bash
-mlflow ui --port 5000
-```
-
-选 experiment `09_hardware_monitor` → Run `hardware-monitor-demo` → **Metrics** 标签看曲线。
-
-应该看到：
-- `cpu_percent` 在 5-10s 期间飙到接近 100%
-- `mem_percent` 在 10-15s 和 20-25s 期间明显上升
-- `disk_read_mb` / `disk_write_mb` 是磁盘读写字节数
-
-### 2.4 （选跑）Agent Server 框架（MLflow ≥ 3.6）
-
-```python
-from mlflow.genai.agent_server import invoke, stream, AgentServer
-
-agent_server = AgentServer()
-
-@invoke()
-async def non_stream_endpoint(request):
-    return await my_agent.run(request)
-
-@stream()
-async def stream_endpoint(request):
-    async for chunk in my_agent.stream(request):
-        yield chunk
-```
-
-### 2.5 故障排查速查
-
-| 现象 | 原因 | 解决 |
-|------|------|------|
-| `mlflow.db is locked` | SQLite 并发写 | 换 Postgres |
-| MinIO bucket 不存在 | 没跑 `createbuckets` | 手动 `mc mb local/mlflow-artifacts` |
-| `mlflow server` 启动后 502 | Postgres 还没起来 | `depends_on` 加 `condition: service_healthy` |
-| Trace 只写一半 | 采样没配置 | 检查 `mlflow.tracing.sampling` 设置 |
-| `psutil.cpu_percent()` 一直返回 0 | 第一次没设基线 | 循环外先空调一次 |
-
----
-
-## 🛠️ 动手做：跑 09a 看 UI 对比
-
-**任务**：跑 `09a_sampling_redaction.py`，然后在 UI 里对比 raw vs redacted 两条 Run 的 trace_inputs。
-
-**步骤**：
-
-1. 准备 API key 环境变量
-2. 跑脚本：`python 09_deployment/09a_sampling_redaction.py`
-3. 终端最后会打印两个 Run 的 trace_inputs 前 120 字符
-4. 启动 UI：`mlflow ui --port 5000`
-5. 浏览器打开 `http://localhost:5000`
-6. 选 experiment `09_sampling_pii`
-7. 对比 Run `raw-no-redaction` 和 Run `redacted`
-8. 点开任一 Run → 切到 **Traces** 标签
-9. 看每条 trace 的 `trace_inputs` 字段
-
-**预期看到**：
-- `raw-no-redaction`：能看到完整邮箱 `zhangsan@example.com`、手机 `13812345678`、身份证 `110101199001011234`
-- `redacted`：同样的输入变成 `[EMAIL]`、`[PHONE]`、`[ID_CARD]`
-
-**思考**：
-- 假如你的同事不小心把生产 trace 备份发到群里，会发生什么？raw Run 是不是就成了"社死现场"？
-- 你能想到哪些 PII 是这个正则漏掉的？（提示：地址、银行卡号段、人名"张三"之外的写法）
-
----
-
-## 避坑清单
-
-- **后端存了 SQLite** → 生产并发写会锁表。换 Postgres：`--backend-store-uri postgresql://...`
-- **构件存在本地磁盘** → 容器重启数据丢失。换 S3/MinIO：`--default-artifact-root s3://...`
-- **PII 进了 trace 才发现要洗** → 已经泄漏，永远清不干净。**在 trace 入口函数第一行就脱敏**
-- **trace 全量 100% 记录** → 100 QPS 一个月 50TB 存储。立刻降到 10-20%
-- **`psutil.cpu_percent()` 第一次返回 0** → 这是 psutil 的"坑"，第一次调用只设基线不返回值。必须先空调一次再进入循环
-- **MLflow 没配 `--allowed-hosts`（< 3.5.0）** → 有 DNS rebinding 漏洞，至少升到 3.5 并显式配置
-- **用 MLflow 当专业监控** → MLflow 没有阈值告警、没有历史回溯，工业标准是 **Prometheus + Grafana**。MLflow 只适合"在 Run 里附带硬件 snapshot"
-- **没有 retention policy** → 数据库和 S3 会无限增长。定期跑 `mlflow gc --backend-store-uri $POSTGRES_URI`
-- **用明文密码写在 docker-compose** → 生产换 Kubernetes Secret 或 Vault
-- **没有 liveness probe** → MLflow server 挂了 K8s 不会重启。要加 `healthcheck`
-
----
-
-## 小结：3-5 个 take-aways
-
-- 生产 MLflow = **Tracking Server + Postgres（后端）+ S3/MinIO（构件）**，缺一不可
-- Trace 成本爆炸靠 **采样** 控制，10% 采样省 90% 存储是高 ROI 操作
-- **PII 必须在 trace 边界（函数入口）就脱敏**，泄漏之后再洗已经晚了
-- MLflow 不是监控工具，要做硬件告警用 **Prometheus + Grafana**，MLflow 只做"实验 Run 内的硬件 snapshot"
-- 任何 MLflow Model（含 sklearn / PyTorch / ResponsesAgent）都能用 `mlflow models build-docker` 一键打成 Docker 镜像
-
----
+> 📚 [`notes/09_deployment.md`](09_deployment.md)（Phase 9：部署与生产可观测性——含完整 docker-compose 模板、生产 Checklist、月度成本估算、Prometheus + Grafana 接入）
 
 ## 📖 下一步
 
-本章是**选学**章节。如果你只是用 MLflow 跑实验、看对比，不用学 docker-compose 也不用管 PII——前面的章节已经够用。
-
-如果你准备把模型推到生产环境（哪怕只是团队内部用），建议你：
-
-1. 跑一遍 `09a`（看 trace 采样 + PII 脱敏的对比）
-2. 在本地用 docker-compose 起一遍 MLflow + Postgres + MinIO（熟悉命令）
-3. 跑一遍 `09c`（看硬件监控的 UI 曲线长什么样）
-4. 把脚本里的 `redact_pii` 函数复制到你的项目里——这是"以后肯定用得上"的代码
-5. **遇到报错时翻 Chapter 13（Debug 指南）**
-
-更详细的生产 Checklist、成本估算、Prometheus 接入等内容在 `notes/09_deployment.md` 里——那篇笔记是本章的"完整版"，覆盖了 6.4 节的月度成本估算和 Prometheus + Grafana 接入细节。
-
----
-
+→ [Chapter 13：Debug 指南——遇到错误自己排查](#chapter-13)
 # Chapter 13：Debug 指南——遇到错误自己排查
 
 > ⏱️ 预计时间：30 分钟
@@ -4469,14 +2322,17 @@ Connection refused
 ### 原因
 
 **情况 A**——端口被占用：
+
 - 另一个 MLflow 进程没关
 - 其他程序（jupyter / docker / IDE）占了 5000
 
 **情况 B**——allowed-hosts 限制：
+
 - MLflow 3.5+ 默认拒绝未知 Host header
 - 你用 IP 或自定义域名访问就报错
 
 **情况 C**——服务没起来：
+
 - 后端依赖（Postgres）没起来 → MLflow 启动后立即崩溃
 - 配置文件写错了
 
@@ -4528,12 +2384,12 @@ docker compose logs --tail=50 mlflow
 
 ### 解决
 
-| 情况 | 解决 |
-|------|------|
-| 端口被占 | 杀掉旧进程 或 `mlflow ui --port 5001` 换端口 |
-| allowed-hosts 报错 | 加 `--allowed-hosts "*"` 或具体域名 |
-| 服务没起来 | 看 docker-compose 依赖顺序（postgres 是否 healthy） |
-| curl 连不上 | 检查防火墙、container 网络、host port 映射 |
+| 情况               | 解决                                                |
+| ------------------ | --------------------------------------------------- |
+| 端口被占           | 杀掉旧进程 或`mlflow ui --port 5001` 换端口       |
+| allowed-hosts 报错 | 加`--allowed-hosts "*"` 或具体域名                |
+| 服务没起来         | 看 docker-compose 依赖顺序（postgres 是否 healthy） |
+| curl 连不上        | 检查防火墙、container 网络、host port 映射          |
 
 ### 预防
 
@@ -4606,12 +2462,12 @@ client.set_terminated(run_id, status="KILLED")
 
 ### 解决
 
-| 场景 | 解决 |
-|------|------|
-| 进程被 kill -9 | 跑 `mlflow runs terminate --run-id <id>` 手动关闭 |
-| 忘了 `with` 块 | 改用 `with mlflow.start_run():` 包起来（自动清理） |
-| 异常退出 | `try / except / finally` 里手动 `mlflow.end_run()` |
-| 网络中断 | 检查 `mlflow server` 是否还活着，重连后跑 `terminate` |
+| 场景            | 解决                                                     |
+| --------------- | -------------------------------------------------------- |
+| 进程被 kill -9  | 跑`mlflow runs terminate --run-id <id>` 手动关闭       |
+| 忘了`with` 块 | 改用`with mlflow.start_run():` 包起来（自动清理）      |
+| 异常退出        | `try / except / finally` 里手动 `mlflow.end_run()`   |
+| 网络中断        | 检查`mlflow server` 是否还活着，重连后跑 `terminate` |
 
 ### 预防
 
@@ -4735,11 +2591,11 @@ mlflow.log_param("learning_rate", 0.001)
 
 **1. 确认 param 是"实验配置"还是"训练过程"**
 
-| 类型 | 例子 | 用 log_param 还是 log_metric |
-|------|------|------------------------------|
-| 实验配置 | learning_rate, batch_size, model_type | `log_param` |
-| 训练过程 | epoch_loss, lr_schedule, step | `log_metric` |
-| 评估指标 | accuracy, f1, auc | `log_metric` |
+| 类型     | 例子                                  | 用 log_param 还是 log_metric |
+| -------- | ------------------------------------- | ---------------------------- |
+| 实验配置 | learning_rate, batch_size, model_type | `log_param`                |
+| 训练过程 | epoch_loss, lr_schedule, step         | `log_metric`               |
+| 评估指标 | accuracy, f1, auc                     | `log_metric`               |
 
 **2. 是不是循环里误调了 log_param？**
 
@@ -4800,8 +2656,11 @@ model = mlflow.pyfunc.load_model("runs:/abc/model")
 python
 import mlflow.pyfunc
 model = mlflow.pyfunc.load_model("models:/WineQualityClassifier@champion")
+
 # 报错：
+
 # MlflowException: Registered Model with name=... not found
+
 ```
 
 ### 原因
@@ -4875,12 +2734,12 @@ mlflow db upgrade postgresql://user:pass@host:5432/mlflow
 
 ### 解决
 
-| 场景 | 解决 |
-|------|------|
-| URI 写错 | 用 `search_registered_models()` 查正确的 version/alias |
+| 场景               | 解决                                                          |
+| ------------------ | ------------------------------------------------------------- |
+| URI 写错           | 用`search_registered_models()` 查正确的 version/alias       |
 | `file://` 不支持 | 换 SQLite：`mlflow.set_tracking_uri("sqlite:///mlflow.db")` |
-| DB schema 旧 | 跑 `mlflow db upgrade <uri>` |
-| artifact 丢了 | 重新 log 模型 + 注册 |
+| DB schema 旧       | 跑`mlflow db upgrade <uri>`                                 |
+| artifact 丢了      | 重新 log 模型 + 注册                                          |
 
 ### 预防
 
@@ -4913,17 +2772,21 @@ with mlflow.start_run():
 ### 原因
 
 **情况 A**——tracking URI 不对：
+
 - trace 默认跟 `MLFLOW_TRACKING_URI`，如果 client 连到 A server，但 UI 看的是 B server
 - 或者 tracking URI 设了 file://，但 Run 用的是 SQLite（两边数据不通）
 
 **情况 B**——autolog 没开：
+
 - LLM 调用（OpenAI / Anthropic）要 `mlflow.openai.autolog()`，不是装饰器
 
 **情况 C**——async flush 没等：
+
 - trace 是异步 flush 的，脚本跑完直接退出 → 最后几条 trace 没写完
 - 大 trace 序列化时阻塞
 
 **情况 D**——experiment 不对：
+
 - trace 写在 experiment A 里，你却去 experiment B 里找
 
 ### 排查步骤
@@ -4977,12 +2840,12 @@ traces = mlflow.search_traces(
 
 ### 解决
 
-| 场景 | 解决 |
-|------|------|
-| URI 不一致 | 显式 `mlflow.set_tracking_uri()` + 重启 UI |
-| autolog 没开 | 加 `mlflow.openai.autolog()` / `mlflow.anthropic.autolog()` |
-| async 没 flush | 脚本结尾 `time.sleep(2)` 或 `mlflow.flush_trace_logging()` |
-| experiment 找错 | 用 `get_experiment_by_name` 拿 ID 后再 search |
+| 场景            | 解决                                                           |
+| --------------- | -------------------------------------------------------------- |
+| URI 不一致      | 显式`mlflow.set_tracking_uri()` + 重启 UI                    |
+| autolog 没开    | 加`mlflow.openai.autolog()` / `mlflow.anthropic.autolog()` |
+| async 没 flush  | 脚本结尾`time.sleep(2)` 或 `mlflow.flush_trace_logging()`  |
+| experiment 找错 | 用`get_experiment_by_name` 拿 ID 后再 search                 |
 
 ### 预防
 
@@ -4995,14 +2858,14 @@ traces = mlflow.search_traces(
 
 ## 调试速查表（打印贴桌边）
 
-| 症状 | 第一反应 |
-|------|---------|
-| 启动报错 | `lsof -i :5000` + `--allowed-hosts "*"` |
-| Run 卡 RUNNING | `mlflow runs terminate --run-id <id>` |
-| register_model 失败 | `mlflow.set_tracking_uri("sqlite:///mlflow.db")` |
-| Changing param 警告 | 改用 `log_metric` |
+| 症状                               | 第一反应                                                   |
+| ---------------------------------- | ---------------------------------------------------------- |
+| 启动报错                           | `lsof -i :5000` + `--allowed-hosts "*"`                |
+| Run 卡 RUNNING                     | `mlflow runs terminate --run-id <id>`                    |
+| register_model 失败                | `mlflow.set_tracking_uri("sqlite:///mlflow.db")`         |
+| Changing param 警告                | 改用`log_metric`                                         |
 | load_model RESOURCE_DOES_NOT_EXIST | `mlflow db upgrade <uri>` + `search_registered_models` |
-| trace 没出现 | `mlflow.search_traces()` + `time.sleep(2)` |
+| trace 没出现                       | `mlflow.search_traces()` + `time.sleep(2)`             |
 
 ---
 
@@ -5019,6 +2882,7 @@ traces = mlflow.search_traces(
 当你遇到本章没列的错误时，去那篇文档搜关键词（建议 Ctrl+F 搜错误信息的最后一行）。
 
 **学完这一章你应该会**：
+
 - 看 stack trace 时**先看最后一行**（不要被中间调用栈吓到）
 - 区分"环境问题"和"代码问题"——环境问题看 `mlflow --version` 和 `get_tracking_uri()`
 - 知道 MLflow 报错最常见三类根因：URI 不对、backend 不支持、版本不匹配
@@ -5213,16 +3077,16 @@ mlflow gc --backend-store-uri sqlite:///mlflow.db
 
 ## 14.8 MLflow 3 破坏性变化速查
 
-| 旧（不要用） | 新（用这个） |
-|---|---|
-| `artifact_path=` | `name=` |
-| `transition_model_version_stage(..., "Production")` | `set_registered_model_alias(..., "champion", version)` |
+| 旧（不要用）                                                      | 新（用这个）                                                                                                                                            |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `artifact_path=`                                                | `name=`                                                                                                                                               |
+| `transition_model_version_stage(..., "Production")`             | `set_registered_model_alias(..., "champion", version)`                                                                                                |
 | `mlflow.evaluate(..., baseline_model=uri, custom_metrics=[fn])` | `mlflow.models.evaluate(..., extra_metrics=[make_metric(eval_fn=fn, ...)])` + `mlflow.validate_evaluation_results(thresholds, candidate, baseline)` |
-| `runs:/<id>/<path>` 加载模型 | `models:/<model_id>` （MLflow 3 LoggedModel）|
-| 模型 URI 含 `runs:/` | `models:/<name>@<alias>` |
-| `Stage`（Staging/Production） | `Alias`（champion/challenger）|
-| `mlflow.evaluate` | `mlflow.models.evaluate`（经典 ML）/ `mlflow.genai.evaluate`（GenAI）|
-| `mlflow.pyfunc.log_model(python_model=class_instance())` | `mlflow.pyfunc.log_model(python_model="path/to/file.py")` + `set_model()` |
+| `runs:/<id>/<path>` 加载模型                                    | `models:/<model_id>` （MLflow 3 LoggedModel）                                                                                                         |
+| 模型 URI 含`runs:/`                                             | `models:/<name>@<alias>`                                                                                                                              |
+| `Stage`（Staging/Production）                                   | `Alias`（champion/challenger）                                                                                                                        |
+| `mlflow.evaluate`                                               | `mlflow.models.evaluate`（经典 ML）/ `mlflow.genai.evaluate`（GenAI）                                                                               |
+| `mlflow.pyfunc.log_model(python_model=class_instance())`        | `mlflow.pyfunc.log_model(python_model="path/to/file.py")` + `set_model()`                                                                           |
 
 ---
 
@@ -5242,20 +3106,20 @@ mlflow gc --backend-store-uri sqlite:///mlflow.db
 
 下表是 `mlflow_skill/` 目录下全部 skill 的速查。每行告诉你：这个 skill 叫什么、它管什么、什么场景要用它、要读哪段 `SKILL.md`。
 
-| # | Skill 名字 | 用途 | 触发场景（你说什么话） | 读哪段 |
-|---|----------|------|-----------------|-------|
-| 1 | `mlflow-onboarding` | 引导上手：判断你要做什么，给出 quickstart | "怎么开始用 MLflow"、"刚装好"、"新手入门" | `mlflow-onboarding/SKILL.md` |
-| 2 | `classical-ml` | 传统 ML 6 步法：tracking → registry → evaluate → deploy → monitor → optimize | "训练 sklearn/xgboost"、"对比 runs"、"注册模型"、"部署模型"、"模型监控"、"调超参" | `mlflow_skill/classical-ml/SKILL.md`（最完整） |
-| 3 | `instrumenting-with-mlflow-tracing` | 给 LLM 代码加 tracing（Python / TypeScript） | "给我的 OpenAI 加 trace"、"给 LangChain 加追踪" | `mlflow_skill/instrumenting-with-mlflow-tracing/SKILL.md` |
-| 4 | `agent-evaluation` | 评估 LLM agent 输出质量（dataset + scorer + evaluate） | "评估我的 agent"、"算准确率"、"用 LLM-as-judge 评分" | `mlflow_skill/agent-evaluation/SKILL.md` |
-| 5 | `querying-mlflow-metrics` | 拉聚合指标（token 用量、延迟、成本、trace 数） | "分析 token 用量"、"看延迟趋势"、"算 LLM 成本" | `mlflow_skill/querying-mlflow-metrics/SKILL.md` |
-| 6 | `retrieving-mlflow-traces` | 搜索 / 过滤 trace | "找失败的 trace"、"查 latency > 5s 的" | `mlflow_skill/retrieving-mlflow-traces/SKILL.md` |
-| 7 | `analyze-mlflow-trace` | debug 单个 trace | "这个 trace 哪里出错了"、"trace ID 是 tr-xxx 帮我看看" | `mlflow_skill/analyze-mlflow-trace/SKILL.md` |
-| 8 | `analyze-mlflow-chat-session` | debug 多轮对话 / session | "看这个 chat session 哪里出问题" | `mlflow_skill/analyze-mlflow-chat-session/SKILL.md` |
-| 9 | `fix-agent-issue` | 改 agent 行为的探索→计划→实现→验证闭环 | "agent 行为不对"、"想加个业务规则" | `mlflow_skill/fix-agent-issue/SKILL.md` |
-| 10 | `mlflow-agent` | 通用 MLflow master dispatcher（不知道用哪个就让它路由） | 任何 MLflow workflow 但你没说要用哪个 skill | `mlflow_skill/mlflow-agent/SKILL.md` |
-| 11 | `searching-mlflow-docs` | 拉官方文档（mlflow.org/docs/latest） | "MLflow 怎么用 X"、"查 MLflow API" | `mlflow_skill/searching-mlflow-docs/SKILL.md` |
-| 12 | `sagemaker-mlflow` | 连 AWS SageMaker Managed MLflow 当后端 | "SageMaker 上装 MLflow" | `mlflow_skill/sagemaker-mlflow/SKILL.md` |
+| #  | Skill 名字                            | 用途                                                                              | 触发场景（你说什么话）                                                            | 读哪段                                                      |
+| -- | ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| 1  | `mlflow-onboarding`                 | 引导上手：判断你要做什么，给出 quickstart                                         | "怎么开始用 MLflow"、"刚装好"、"新手入门"                                         | `mlflow-onboarding/SKILL.md`                              |
+| 2  | `classical-ml`                      | 传统 ML 6 步法：tracking → registry → evaluate → deploy → monitor → optimize | "训练 sklearn/xgboost"、"对比 runs"、"注册模型"、"部署模型"、"模型监控"、"调超参" | `mlflow_skill/classical-ml/SKILL.md`（最完整）            |
+| 3  | `instrumenting-with-mlflow-tracing` | 给 LLM 代码加 tracing（Python / TypeScript）                                      | "给我的 OpenAI 加 trace"、"给 LangChain 加追踪"                                   | `mlflow_skill/instrumenting-with-mlflow-tracing/SKILL.md` |
+| 4  | `agent-evaluation`                  | 评估 LLM agent 输出质量（dataset + scorer + evaluate）                            | "评估我的 agent"、"算准确率"、"用 LLM-as-judge 评分"                              | `mlflow_skill/agent-evaluation/SKILL.md`                  |
+| 5  | `querying-mlflow-metrics`           | 拉聚合指标（token 用量、延迟、成本、trace 数）                                    | "分析 token 用量"、"看延迟趋势"、"算 LLM 成本"                                    | `mlflow_skill/querying-mlflow-metrics/SKILL.md`           |
+| 6  | `retrieving-mlflow-traces`          | 搜索 / 过滤 trace                                                                 | "找失败的 trace"、"查 latency > 5s 的"                                            | `mlflow_skill/retrieving-mlflow-traces/SKILL.md`          |
+| 7  | `analyze-mlflow-trace`              | debug 单个 trace                                                                  | "这个 trace 哪里出错了"、"trace ID 是 tr-xxx 帮我看看"                            | `mlflow_skill/analyze-mlflow-trace/SKILL.md`              |
+| 8  | `analyze-mlflow-chat-session`       | debug 多轮对话 / session                                                          | "看这个 chat session 哪里出问题"                                                  | `mlflow_skill/analyze-mlflow-chat-session/SKILL.md`       |
+| 9  | `fix-agent-issue`                   | 改 agent 行为的探索→计划→实现→验证闭环                                         | "agent 行为不对"、"想加个业务规则"                                                | `mlflow_skill/fix-agent-issue/SKILL.md`                   |
+| 10 | `mlflow-agent`                      | 通用 MLflow master dispatcher（不知道用哪个就让它路由）                           | 任何 MLflow workflow 但你没说要用哪个 skill                                       | `mlflow_skill/mlflow-agent/SKILL.md`                      |
+| 11 | `searching-mlflow-docs`             | 拉官方文档（mlflow.org/docs/latest）                                              | "MLflow 怎么用 X"、"查 MLflow API"                                                | `mlflow_skill/searching-mlflow-docs/SKILL.md`             |
+| 12 | `sagemaker-mlflow`                  | 连 AWS SageMaker Managed MLflow 当后端                                            | "SageMaker 上装 MLflow"                                                           | `mlflow_skill/sagemaker-mlflow/SKILL.md`                  |
 
 > **怎么用上表**：当你遇到一个 MLflow 任务时，先看"触发场景"列有没有匹配的关键词。匹配了就去找对应 skill 的 `SKILL.md` 读。读完不一定要让 AI 帮你做，自己按步骤跑也行。
 
@@ -5265,21 +3129,21 @@ mlflow gc --backend-store-uri sqlite:///mlflow.db
 
 不知道用哪个？按下面这张表对号入座：
 
-| 你想做什么 | 推荐 skill | 读哪段 |
-|----------|----------|-------|
-| **第一次用 MLflow**，不知道怎么开始 | `mlflow-onboarding` | `mlflow-onboarding/SKILL.md` |
-| **训练 sklearn/xgboost/lightgbm** 模型并自动记录 | `classical-ml` | `mlflow-skill/classical-ml/SKILL.md`（Step 1: Tracking） |
-| **对比多个模型** 找最好的 | `classical-ml` | `classical-ml/SKILL.md`（Step 3: Evaluate） |
-| **给 LLM 代码加 trace**（OpenAI / LangChain / Anthropic） | `instrumenting-with-mlflow-tracing` | `instrumenting-with-mlflow-tracing/SKILL.md` |
-| **评估 LLM agent 答得准不准** | `agent-evaluation` | `agent-evaluation/SKILL.md` |
-| **查 token 用量、延迟、成本** | `querying-mlflow-metrics` | `querying-mlflow-metrics/SKILL.md` |
-| **找哪个 trace 失败了** | `retrieving-mlflow-traces` | `retrieving-mlflow-traces/SKILL.md` |
-| **debug 单个 trace 哪里出问题** | `analyze-mlflow-trace` | `analyze-mlflow-trace/SKILL.md` |
-| **debug 多轮对话** | `analyze-mlflow-chat-session` | `analyze-mlflow-chat-session/SKILL.md` |
-| **想改 agent 行为**（业务规则 / 偏好） | `fix-agent-issue` | `fix-agent-issue/SKILL.md` |
-| **不知道用哪个 skill** | `mlflow-agent` | `mlflow-agent/SKILL.md` |
-| **查 MLflow 官方文档** | `searching-mlflow-docs` | `searching-mlflow-docs/SKILL.md` |
-| **在 AWS SageMaker 上部署 MLflow** | `sagemaker-mlflow` | `sagemaker-mlflow/SKILL.md` |
+| 你想做什么                                                      | 推荐 skill                            | 读哪段                                                     |
+| --------------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------- |
+| **第一次用 MLflow**，不知道怎么开始                       | `mlflow-onboarding`                 | `mlflow-onboarding/SKILL.md`                             |
+| **训练 sklearn/xgboost/lightgbm** 模型并自动记录          | `classical-ml`                      | `mlflow-skill/classical-ml/SKILL.md`（Step 1: Tracking） |
+| **对比多个模型** 找最好的                                 | `classical-ml`                      | `classical-ml/SKILL.md`（Step 3: Evaluate）              |
+| **给 LLM 代码加 trace**（OpenAI / LangChain / Anthropic） | `instrumenting-with-mlflow-tracing` | `instrumenting-with-mlflow-tracing/SKILL.md`             |
+| **评估 LLM agent 答得准不准**                             | `agent-evaluation`                  | `agent-evaluation/SKILL.md`                              |
+| **查 token 用量、延迟、成本**                             | `querying-mlflow-metrics`           | `querying-mlflow-metrics/SKILL.md`                       |
+| **找哪个 trace 失败了**                                   | `retrieving-mlflow-traces`          | `retrieving-mlflow-traces/SKILL.md`                      |
+| **debug 单个 trace 哪里出问题**                           | `analyze-mlflow-trace`              | `analyze-mlflow-trace/SKILL.md`                          |
+| **debug 多轮对话**                                        | `analyze-mlflow-chat-session`       | `analyze-mlflow-chat-session/SKILL.md`                   |
+| **想改 agent 行为**（业务规则 / 偏好）                    | `fix-agent-issue`                   | `fix-agent-issue/SKILL.md`                               |
+| **不知道用哪个 skill**                                    | `mlflow-agent`                      | `mlflow-agent/SKILL.md`                                  |
+| **查 MLflow 官方文档**                                    | `searching-mlflow-docs`             | `searching-mlflow-docs/SKILL.md`                         |
+| **在 AWS SageMaker 上部署 MLflow**                        | `sagemaker-mlflow`                  | `sagemaker-mlflow/SKILL.md`                              |
 
 ---
 
