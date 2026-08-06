@@ -1,0 +1,28 @@
+# MLFlowLearning conda 环境
+# 一键创建：conda env create -f environment.yml
+# 激活：conda activate mlflow
+# 验证：mlflow --version（应输出 3.15.x）
+
+name: mlflow
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - numpy>=1.26
+  - pandas>=2.2
+  - scikit-learn>=1.5
+  - matplotlib>=3.9
+  - jupyter>=1.0
+  - pip:
+      # MLflow + LLM 栈
+      - mlflow>=3.15.0
+      - openai>=1.50
+      - anthropic>=0.40
+      - langchain>=0.3
+      - langchain-openai>=0.2
+      - python-dotenv>=1.0
+      # 选学：Phase 10 深度学习用
+      # pip install -r requirements-phase10.txt
+      - gepa>=0.0.26

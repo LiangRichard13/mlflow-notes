@@ -1,0 +1,25 @@
+# MLFlowLearning 主依赖
+# Phase 1-9 + capstone 用这些就够
+# 安装：pip install -r requirements.txt
+# 推荐在 conda 虚拟环境里装（见 environment.yml）
+
+# === MLflow + 数据科学核心 ===
+mlflow>=3.15.0
+scikit-learn>=1.5
+pandas>=2.2
+numpy>=1.26
+
+# === LLM/Agent 工作流（Phase 5+ 用）===
+openai>=1.50
+anthropic>=0.40
+langchain>=0.3
+langchain-openai>=0.2
+python-dotenv>=1.0
+
+# === 可视化 + 交互 ===
+matplotlib>=3.9
+jupyter>=1.0
+ipykernel>=6.0
+
+# === 超参优化（Phase 7 部分脚本可能用）===
+gepa>=0.0.26

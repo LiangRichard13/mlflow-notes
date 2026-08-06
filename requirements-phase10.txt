@@ -1,0 +1,12 @@
+# Phase 10 额外依赖（深度学习图像分类）
+# 装完主依赖后，再装这个：
+#   pip install -r requirements-phase10.txt
+# 国内用户：先 export HF_ENDPOINT=https://hf-mirror.com 加速下载预训练权重
+
+# === 深度学习框架===
+torch>=2.4
+torchvision>=0.19
+
+# === timm 预训练模型库 ===
+# 提供 resnet18/34/50, efficientnet_b0/b1/b2, densenet121/169/201 等
+timm>=1.0
