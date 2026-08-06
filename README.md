@@ -3,6 +3,10 @@
 > 从零开始学 **MLflow 3**（2025-2026 主流版），同时覆盖传统 ML 和 LLM/Agent 工作流
 > 基于官方中文文档站系统性调研：`mlflow.org.cn/docs/latest/ml/` + `mlflow.org.cn/docs/latest/genai/`
 
+## 🎯 新人第一站：**[`notes/00_quickstart.md`](notes/00_quickstart.md)**
+
+如果你刚拿到这个项目不知道从哪开始——**先读 `notes/00_quickstart.md`**。它是一份面向 MLflow 零基础用户的作业指导书，14 章节从环境安装到 vibecoding 集成一气呵成。
+
 ## 目录结构
 
 ```
