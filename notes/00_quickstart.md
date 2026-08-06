@@ -4,7 +4,7 @@
 
 范围：覆盖 MLFlowLearning/ 项目全部 10 个 phase + capstone 毕业项目 + 12 个 mlflow_skills
 
-> **路径约定**：本文档所有命令里的 `<project-root>` 替换为你 clone 项目的实际路径（如 `~/projects/MLFlowLearning`、`/Users/you/code/MLFlowLearning`）。命令格式 `cd <project-root> && <cmd>` 意味着"先切到项目根目录，再执行命令"。
+> **路径约定**：本文档所有命令里的 `<project-root>` 替换为你 clone 项目的实际路径（如 `~/projects/MLFlowLearning`、`/Users/you/code/MLFlowLearning`）。命令格式 `cd <project-root> && <cmd>` 意味着"先切到项目根目录，再执行命令"——**这只是建议**，脚本实际可以从**任何目录**运行（项目根、IDE 当前文件、phase 子目录都行）。每个 phase 脚本顶部都 `import _paths`，自动把 tracking URI 锚定到项目根的 `mlflow.db`——无论你在哪儿跑，UI 里看到的都是同一个数据库。
 
 ## 📖 如何使用本文档
 
@@ -454,7 +454,7 @@ Chapter 2 学会了"记录"，但训练出来的模型本身去哪了？这一�
 - 已完成 Chapter 2，理解 6 个核心对象
 - 需要 API Key：否
 - 已安装 `mlflow`（3.x）、`scikit-learn`、`pandas`
-- **关键环境**：Registry 必须有数据库后端，本项目用 `sqlite:///mlflow.db`（文件系统 `file:./mlruns` 不支持 Registry）；脚本必须在项目根目录运行
+- **关键环境**：Registry 必须有数据库后端，本项目用 `sqlite:///mlflow.db`（文件系统 `file:./mlruns` 不支持 Registry）；脚本可以从任何目录运行（`import _paths` 自动锚定）
 
 ### 必跑脚本清单
 
@@ -643,7 +643,7 @@ cd <project-root> && python scripts/02_registry/02a_log_model.py
 
 预期输出里有 `模型性能: accuracy=1.0000, f1=1.0000`（Wine 数据集很简单，满分正常），还会打印一行 `模型 URI: runs:/<run_id>/wine-classifier`，**把这个 run_id 记下来**。
 
-> ⚠️ **必须确认数据库后端**：02a 里有 `mlflow.set_tracking_uri("sqlite:///mlflow.db")` 这一行。如果你看到 `mlruns/` 目录被创建而不是 `mlflow.db`，说明没连上数据库，**Registry 一会儿会报错**。
+> ⚠️ **必须确认数据库后端**：02a 通过 `import _paths` 自动把 tracking URI 设成 `sqlite:///<project-root>/mlflow.db`（绝对路径，不依赖 cwd）。如果你看到 `mlruns/` 目录被创建到了子目录里而不是项目根，说明 `_paths` 没起作用，**Registry 一会儿会报错**。
 
 ### Step 2 — 注册 + 设别名
 
@@ -793,7 +793,7 @@ else:
 
 ## 避坑清单
 
-- ⚠️ **坑 1：Registry 必须有数据库后端**。用 `file:./mlruns` 时调 `register_model` 会直接报错。本项目统一 `sqlite:///mlflow.db`。**脚本是相对路径打开 sqlite，必须在项目根目录运行**，否则会在别处生成一个空的 `mlflow.db`，然后你会困惑"为什么 UI 里什么都没有"。
+- ⚠️ **坑 1：Registry 必须有数据库后端**。用 `file:./mlruns` 时调 `register_model` 会直接报错。本项目统一 `sqlite:///mlflow.db`。脚本通过 `import _paths` 自动锚定到项目根 db，所以**可以从任何目录运行**，不会在别处生成孤儿 db。
 - ⚠️ **坑 2：Stage 相关 API 全部废弃**。`transition_model_version_stage()`、`stage="Production"` 这类写法不要再用，一律换成 `set_registered_model_alias()`。MLflow 3 的 UI 里也已经看不到 Stage 下拉框了。如果你在网上看到 2024 年之前的教程，全部按"过期"对待。
 - ⚠️ **坑 3：02b 用 `search_runs` 取"最近一次 Run"有隐患**。如果你在跑完 02a 之后又在 `02_model_registry` 这个实验里跑了别的 Run，02b 会注册错的那个。稳妥做法是显式指定 run_id，或者加上 run_name 过滤：
 
@@ -928,7 +928,7 @@ postgresql:// / mysql://（服务数据库）
 MlflowException: No suitable backend store to use for the registry
 ```
 
-或者 `RESOURCE_DOES_NOT_EXIST` 类似的错误。本项目从第 4 章开始统一用 `sqlite:///mlflow.db`，所有脚本第一条都是 `mlflow.set_tracking_uri("sqlite:///mlflow.db")`。**这一行不是装饰，是功能要求。**
+或者 `RESOURCE_DOES_NOT_EXIST` 类似的错误。本项目从第 4 章开始统一用 `sqlite:///mlflow.db`（通过 `scripts/_paths.py` 锚定到项目根）。所有脚本顶部都是 `import _paths`，不需要在脚本里手写 `set_tracking_uri`。**这一行不是装饰，是功能要求。**
 
 ### 4. 数据集血缘：给训练数据发"身份证"
 

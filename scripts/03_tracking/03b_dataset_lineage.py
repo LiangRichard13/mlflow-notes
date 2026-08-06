@@ -14,6 +14,11 @@
 ⚠️ 需要 mlflow.db 后端（sqlite 即可），不需要远程 server。
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import pandas as pd
 import tempfile
@@ -26,7 +31,6 @@ from sklearn.metrics import accuracy_score
 
 def main():
     # 本地 sqlite 后端（不需要启 server）
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("03_dataset_lineage")
 
     # ============ 1. 准备数据集 ============

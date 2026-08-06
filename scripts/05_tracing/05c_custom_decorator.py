@@ -13,6 +13,11 @@
 """
 
 import env_bootstrap
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 from mlflow.entities.span import SpanType
 import os
@@ -96,7 +101,6 @@ def rag_chain(question: str, model: str) -> dict:
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("05_custom_tracing")
 
     # autolog 同时启用（这样 generate_answer 内部的 OpenAI 调用也会被追踪）

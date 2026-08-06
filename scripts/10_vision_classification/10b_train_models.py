@@ -19,6 +19,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import numpy as np
 import torch
@@ -117,7 +122,6 @@ def train_and_log_one(model_name, train_ds, test_ds, class_names,
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("10_vision_classification")
     mlflow.set_tags({"phase": "10", "dataset": "cifar10"})
     exp = mlflow.get_experiment_by_name("10_vision_classification")

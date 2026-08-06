@@ -12,6 +12,11 @@
   python scripts/02_registry/02c_load_predict.py
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import pandas as pd
 from sklearn.datasets import load_wine
@@ -22,8 +27,6 @@ REGISTERED_NAME = "WineQualityClassifier"
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
-
     # ============ 1. 用别名加载 ============
     model_uri = f"models:/{REGISTERED_NAME}@champion"
     print(f"加载模型: {model_uri}")

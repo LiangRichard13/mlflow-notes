@@ -20,6 +20,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import os
 import glob
@@ -254,7 +259,6 @@ def compute_ensemble(preds_per_model, y_true):
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     exp = mlflow.get_experiment_by_name("10_vision_classification")
 
     # 1. 加载 9 个模型的预测

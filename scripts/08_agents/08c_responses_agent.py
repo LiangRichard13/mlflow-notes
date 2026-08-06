@@ -18,6 +18,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "05_tracing"))
 import env_bootstrap
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 
 import mlflow
 from mlflow.types.responses import ResponsesAgentRequest
@@ -25,7 +30,6 @@ from simple_qa_agent import SimpleQAAgent
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("08_responses_agent")
     mlflow.openai.autolog()
 

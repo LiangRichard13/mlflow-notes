@@ -22,6 +22,11 @@
   # 应该看到 cpu_percent / mem_percent / disk_io / net_io 等曲线
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import psutil
 import threading
@@ -88,7 +93,6 @@ def collect_metrics(stop_event: threading.Event, interval: float = 1.0):
 # 3. 主流程
 # ============================================================
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("09_hardware_monitor")
     mlflow.openai.autolog(disable=True)   # 关闭 autolog（这次不用 LLM）
 

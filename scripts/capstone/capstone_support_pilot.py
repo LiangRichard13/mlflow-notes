@@ -32,6 +32,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "05_tracing"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "08_agents"))
 import env_bootstrap
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 
 import mlflow
 import os
@@ -105,8 +110,6 @@ TRAIN_DATA.columns = ["text", "intent"]
 
 def train_intent_classifier():
     """训练 sklearn 意图分类器"""
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
-
     X = TRAIN_DATA["text"]
     y = TRAIN_DATA["intent"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
@@ -315,7 +318,6 @@ def was_rejected_for_oos(inputs: dict, outputs: str) -> bool:
 # ============================================================
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("capstone_support_pilot")
     mlflow.openai.autolog()
 

@@ -14,6 +14,11 @@
   python scripts/03_tracking/03c_search_logged_models.py
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
@@ -43,7 +48,6 @@ def train_and_log(name, model, params, X_train, X_test, y_train, y_test):
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("03_search_demo")
 
     # 加载数据

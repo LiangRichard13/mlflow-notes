@@ -18,6 +18,11 @@
   python scripts/02_registry/02b_register_alias.py
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 from mlflow import MlflowClient
 
@@ -26,7 +31,6 @@ REGISTERED_NAME = "WineQualityClassifier"
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("02_model_registry")
 
     client = MlflowClient()

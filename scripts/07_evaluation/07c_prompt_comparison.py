@@ -16,6 +16,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "05_tracing"))
 import env_bootstrap
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 
 import mlflow
 import os
@@ -101,7 +106,6 @@ EVAL_DATA = pd.DataFrame([
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("07_prompt_ab")
     mlflow.openai.autolog()
 

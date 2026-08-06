@@ -12,6 +12,11 @@
   python scripts/04_evaluate/04b_evaluate_custom.py
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 from mlflow.metrics import make_metric, EvaluationMetric
 import pandas as pd
@@ -23,7 +28,6 @@ from sklearn.linear_model import LogisticRegression
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("04_evaluate_custom")
 
     wine = load_wine()

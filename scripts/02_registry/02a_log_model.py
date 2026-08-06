@@ -13,6 +13,11 @@
   python scripts/02_registry/02a_log_model.py
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 from mlflow.models import infer_signature
 from sklearn.datasets import load_wine
@@ -26,7 +31,6 @@ import numpy as np
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("02_model_registry")
 
     # 加载数据（Wine：178 样本 / 13 特征 / 3 类）

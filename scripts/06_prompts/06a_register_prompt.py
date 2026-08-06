@@ -16,6 +16,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "05_tracing"))
 import env_bootstrap
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 
 
@@ -23,7 +28,6 @@ PROMPT_NAME = "customer-support-qa"
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("06_prompt_registry")
 
     # ============ 1. 注册 v1：简洁版 ============

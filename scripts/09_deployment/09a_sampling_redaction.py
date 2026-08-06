@@ -19,6 +19,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "05_tracing"))
 import env_bootstrap
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 
 import mlflow
 import os
@@ -122,7 +127,6 @@ def handle_request_pii_safe(user_message: str, user_id: str) -> str:
 
 
 # ============ 4. 跑模拟流量 ============
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
 mlflow.set_experiment("09_sampling_pii")
 mlflow.openai.autolog()
 

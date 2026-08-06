@@ -76,6 +76,11 @@ MLFlowLearning/
 **约定**：每个 phase 一个目录，一个脚本目录对应一个同名笔记（`notes/<NN>_<name>.md`）。
 不直接对应脚本的参考文档放 `notes/appendix/`。
 
+**运行约定**：脚本可以从**任何目录**直接运行（项目根、IDE 当前文件、phase 子目录都行）。
+每个 phase 脚本顶部都 `import _paths`，自动把 tracking URI 锚定到项目根的 `mlflow.db`——
+无论你在哪儿跑，UI 里看到的都是同一个数据库。db 文件 = `<project-root>/mlflow.db`，
+artifact 目录 = `<project-root>/mlruns/`。
+
 ---
 
 ## 10 阶段速览

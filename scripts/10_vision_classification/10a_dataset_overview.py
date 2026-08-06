@@ -20,6 +20,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import pandas as pd
 import numpy as np
@@ -34,7 +39,6 @@ from shared import (
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("10_vision_classification")
 
     with mlflow.start_run(run_name="dataset_overview_cifar10") as run:

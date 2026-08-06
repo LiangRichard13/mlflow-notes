@@ -18,6 +18,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import pandas as pd
 
@@ -30,7 +35,6 @@ from shared import MODEL_NAMES, load_cifar10, CLASS_NAMES
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("10_vision_classification")
 
     # 1. 找到 10b 跑出来的所有 Run

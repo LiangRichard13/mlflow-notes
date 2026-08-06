@@ -12,6 +12,11 @@
   python scripts/04_evaluate/04a_evaluate_basics.py
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import _paths
+
 import mlflow
 import pandas as pd
 from sklearn.datasets import load_wine
@@ -21,7 +26,6 @@ from sklearn.metrics import accuracy_score
 
 
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("04_evaluate")
 
     # 准备数据
