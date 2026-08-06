@@ -1,6 +1,6 @@
 # 阶段 3 学习笔记：追踪服务器与数据集血缘
 
-> 对应脚本：`03_tracking/03a_start_server.sh`、`03_tracking/03b_dataset_lineage.py`、`03_tracking/03c_search_logged_models.py`
+> 对应脚本：`scripts/03_tracking/03a_start_server.sh`、`scripts/03_tracking/03b_dataset_lineage.py`、`scripts/03_tracking/03c_search_logged_models.py`
 
 ## 🎯 这篇笔记做什么
 
@@ -147,8 +147,8 @@ loaded = mlflow.sklearn.load_model(f"models:/{best.model_id}")
 
 ```bash
 conda activate mlflow
-cd /home/sstl/lcd/MLFlowLearning
-bash 03_tracking/03a_start_server.sh
+cd <project-root>
+bash scripts/03_tracking/03a_start_server.sh
 ```
 
 它会在当前目录建两个东西：`mlflow.db`（SQLite 数据库）和 `mlruns/`（artifact 文件夹）。看到 `Listening at: http://0.0.0.0:5000` 就 OK。
@@ -160,7 +160,7 @@ bash 03_tracking/03a_start_server.sh
 ```bash
 conda activate mlflow
 export MLFLOW_TRACKING_URI=http://localhost:5000
-cd /home/sstl/lcd/MLFlowLearning
+cd <project-root>
 ```
 
 不设这个变量，脚本会默认写本地 `./mlruns`，跟 server 不通。
@@ -168,7 +168,7 @@ cd /home/sstl/lcd/MLFlowLearning
 ### Step 3：跑数据集血缘脚本
 
 ```bash
-python 03_tracking/03b_dataset_lineage.py
+python scripts/03_tracking/03b_dataset_lineage.py
 ```
 
 它用本地 sqlite（不依赖 server），跑完你会看到：
@@ -178,7 +178,7 @@ python 03_tracking/03b_dataset_lineage.py
 ### Step 4：跑搜索 LoggedModel 脚本
 
 ```bash
-python 03_tracking/03c_search_logged_models.py
+python scripts/03_tracking/03c_search_logged_models.py
 ```
 
 它训练 5 个不同模型（不同 C、深度），然后用 `search_logged_models` 筛三种条件。控制台会打印三张表，对应"accuracy > 0.95"、"name 含 classifier"、"n_estimators=50"。

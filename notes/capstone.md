@@ -1,6 +1,6 @@
 # 阶段 10 学习笔记：SupportPilot 端到端客服 Copilot（毕业项目）
 
-> 对应脚本：`capstone/capstone_support_pilot.py`
+> 对应脚本：`scripts/capstone/capstone_support_pilot.py`
 > 需要 API Key：是（DeepSeek / OpenAI 兼容接口）
 
 ## 🎯 这篇笔记做什么
@@ -28,7 +28,7 @@
 
 | 脚本 | 一句话作用 | 是否必跑 | 前置 |
 |------|-----------|---------|------|
-| `capstone/capstone_support_pilot.py` | 端到端：sklearn gate + LangChain RAG + Prompt Registry + GenAI eval | ✓ 必跑 | Phase 1-7 全部完成 |
+| `scripts/capstone/capstone_support_pilot.py` | 端到端：sklearn gate + LangChain RAG + Prompt Registry + GenAI eval | ✓ 必跑 | Phase 1-7 全部完成 |
 
 ### 前置知识
 
@@ -252,7 +252,7 @@ export DEEPSEEK_MODEL="deepseek-chat"
 ```bash
 cd /path/to/MLFlowLearning
 conda activate mlflow
-python capstone/capstone_support_pilot.py
+python scripts/capstone/capstone_support_pilot.py
 ```
 
 预期输出（节选）：
@@ -330,9 +330,9 @@ mlflow ui --port 5000
 1. **gate 数据增强**：现在只有 21 条训练数据，收集 100+ 真实用户 query 重新训练 IntentGate。
 2. **KB 检索升级**：从关键词检索换成向量检索（FAISS / Chroma / pgvector），retriever 性能提升明显。
 3. **Prompt A/B 对比**：注册 v3 prompt（更详细的指令），用 `mlflow.validate_evaluation_results` 对比 v2 vs v3，选 winner。
-4. **加 trace 采样 + PII 脱敏**：参考 `09_deployment/09a_sampling_redaction.py`，生产环境必备。
-5. **改成 ResponsesAgent + `mlflow.pyfunc.log_model`**：把整套 pipeline 包成一个 pyfunc 模型上线（参考 `08_agents/08c_responses_agent.py`）。
-6. **用 `mlflow.genai.optimize_prompts` 自动优化 prompt**：参考 `08_agents/08b_prompt_optimize.py`，让 MLflow 自动找最佳 prompt。
+4. **加 trace 采样 + PII 脱敏**：参考 `scripts/09_deployment/09a_sampling_redaction.py`，生产环境必备。
+5. **改成 ResponsesAgent + `mlflow.pyfunc.log_model`**：把整套 pipeline 包成一个 pyfunc 模型上线（参考 `scripts/08_agents/08c_responses_agent.py`）。
+6. **用 `mlflow.genai.optimize_prompts` 自动优化 prompt**：参考 `scripts/08_agents/08b_prompt_optimize.py`，让 MLflow 自动找最佳 prompt。
 7. **加 LLM judge 评估 gate 决策**：自定义 scorer 检查"out_of_scope 是否被正确拒绝"（capstone 里 `was_rejected_for_oos` 已经写了示例）。
 
 ---

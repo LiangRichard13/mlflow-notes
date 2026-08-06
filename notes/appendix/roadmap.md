@@ -22,7 +22,7 @@ Phase 1 ─→ 2 ─→ 3 ─→ 4       ── 传统 ML 基础（无需 API ke
 
 | # | 中文 | 英文 | 时长 | API Key | 目录 |
 |---|------|------|------|---------|------|
-| 1 | 入门与追踪基础 | Onboarding & Tracking Fundamentals | 2-3h | ❌ | `01_basics/` |
+| 1 | 入门与追踪基础 | Onboarding & Tracking Fundamentals | 2-3h | ❌ | `scripts/01_basics/` |
 | 2 | 模型格式与注册表 | Model Format & Registry | 2-3h | ❌ | `02_tracking/03_registry/` |
 | 3 | 追踪服务器与数据集血缘 | Tracking Server & Dataset Lineage | 2-3h | ❌ | `02_tracking/` |
 | 4 | 评估、服务与经典 ML 验证 | Evaluation, Serving & Classic ML Validation | 2-3h | ❌ | `02_tracking/04_serving/` |
@@ -65,7 +65,7 @@ with mlflow.start_run() as run:
 
 **动手任务**：用 sklearn 在 Iris 数据集上训练两个 LogisticRegression 模型（不同 C 值），用 `mlflow.sklearn.autolog()` 记录，启 UI 对比 accuracy。
 
-**当前进度**：✅ 已完成（见 `01_basics/01_hello_mlflow.py` 和 `01b_sklearn_basics.py`）
+**当前进度**：✅ 已完成（见 `scripts/01_basics/01_hello_mlflow.py` 和 `01b_sklearn_basics.py`）
 
 ---
 

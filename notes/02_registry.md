@@ -1,6 +1,6 @@
 # 阶段 2 学习笔记：模型格式与注册表
 
-> 对应脚本：`02_registry/02a_log_model.py`、`02b_register_alias.py`、`02c_load_predict.py`
+> 对应脚本：`scripts/02_registry/02a_log_model.py`、`02b_register_alias.py`、`02c_load_predict.py`
 > 需要 API Key：否
 
 ## 🎯 这篇笔记做什么
@@ -273,13 +273,13 @@ preds = model.predict(X_test.head(5))
 
 ```bash
 conda activate mlflow
-cd /home/sstl/lcd/MLFlowLearning
+cd <project-root>
 ```
 
 **Step 1 — 训练并记录模型**
 
 ```bash
-python 02_registry/02a_log_model.py
+python scripts/02_registry/02a_log_model.py
 ```
 
 预期输出里有 `模型性能: accuracy=1.0000, f1=1.0000`（Wine 数据集很简单，满分正常）和一行 `模型 URI: runs:/<run_id>/wine-classifier`。
@@ -287,7 +287,7 @@ python 02_registry/02a_log_model.py
 **Step 2 — 注册并设别名**
 
 ```bash
-python 02_registry/02b_register_alias.py
+python scripts/02_registry/02b_register_alias.py
 ```
 
 预期看到 `✓ 已注册为 WineQualityClassifier v1` 和 `✓ 已设置 champion alias → v1`，最后打印出版本列表和别名映射。
@@ -295,7 +295,7 @@ python 02_registry/02b_register_alias.py
 **Step 3 — 用别名加载并推理**
 
 ```bash
-python 02_registry/02c_load_predict.py
+python scripts/02_registry/02c_load_predict.py
 ```
 
 预期看到 `Pipeline steps: ['scaler', 'clf']`，以及 5 个预测标签和真实标签的对比。
@@ -345,7 +345,7 @@ MlflowClient().set_registered_model_alias("WineQualityClassifier", "champion", v
 
 7. **别名区分大小写，且不能用作纯数字**。`Champion` 和 `champion` 是两个不同的别名；别名也不能起成 `1`、`2` 这种，会和版本号语法冲突。
 
-8. **02b/02c 的文件头注释里写的是 `python 03_registry/...`，这是笔误**，正确目录是 `02_registry/`。
+8. **02b/02c 的文件头注释里写的是 `python 03_registry/...`，这是笔误**，正确目录是 `scripts/02_registry/`。
 
 9. **签名太严格也会咬人**。如果推断签名时用的是 DataFrame（有列名），那推理时也必须传 DataFrame，传 numpy 数组会因为缺列名而校验失败。保持训练和推理的数据形态一致。
 

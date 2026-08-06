@@ -1,6 +1,6 @@
 # 阶段 1 学习笔记：入门与追踪基础
 
-> 对应脚本：`01_basics/01_hello_mlflow.py`、`01_basics/01b_sklearn_basics.py`
+> 对应脚本：`scripts/01_basics/01_hello_mlflow.py`、`scripts/01_basics/01b_sklearn_basics.py`
 > 需要 API Key：否
 
 ## 🎯 这篇笔记做什么
@@ -163,13 +163,13 @@ mlflow.set_tag("notes", "第一次试做，lr 太大")
 ```bash
 conda activate mlflow          # 或你的虚拟环境
 pip install mlflow scikit-learn
-cd /home/sstl/lcd/MLFlowLearning
+cd <project-root>
 ```
 
 ### Step 2：跑第一个 demo（手动记录）
 
 ```bash
-python 01_basics/01_hello_mlflow.py
+python scripts/01_basics/01_hello_mlflow.py
 ```
 
 这个脚本会：
@@ -183,7 +183,7 @@ python 01_basics/01_hello_mlflow.py
 ### Step 3：跑第二个 demo（autolog + 真实 sklearn）
 
 ```bash
-python 01_basics/01b_sklearn_basics.py
+python scripts/01_basics/01b_sklearn_basics.py
 ```
 
 这个脚本会：
@@ -196,7 +196,7 @@ python 01_basics/01b_sklearn_basics.py
 另开一个终端：
 
 ```bash
-cd /home/sstl/lcd/MLFlowLearning
+cd <project-root>
 mlflow ui --port 5000
 ```
 

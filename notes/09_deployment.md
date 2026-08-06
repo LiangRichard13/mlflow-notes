@@ -1,6 +1,6 @@
 # 阶段 9 学习笔记：部署到云与生产可观测性
 
-> 对应脚本：`09_deployment/09a_sampling_redaction.py`、`09b_prod_infra.sh`、`09c_hardware_monitor.py`
+> 对应脚本：`scripts/09_deployment/09a_sampling_redaction.py`、`09b_prod_infra.sh`、`09c_hardware_monitor.py`
 > 需要 API Key：是（仅 `09a` 需要；`09b`、`09c` 不需要）
 
 ## 🎯 这篇笔记做什么
@@ -303,7 +303,7 @@ export OPENAI_API_BASE=https://api.deepseek.com
 export DEEPSEEK_MODEL=deepseek-chat
 
 # 3. 跑脚本
-python 09_deployment/09a_sampling_redaction.py
+python scripts/09_deployment/09a_sampling_redaction.py
 ```
 
 脚本会跑两遍同一组 5 个客服请求：一次"原始版"（含 PII），一次"脱敏版"。脚本最后会打印每个 trace 的 `trace_inputs` 前 80 字符，并标出是否还残留邮箱/手机/身份证/信用卡。
@@ -343,7 +343,7 @@ docker run -p 5001:8080 my-model:v1
 
 ```bash
 conda activate mlflow
-python 09_deployment/09c_hardware_monitor.py
+python scripts/09_deployment/09c_hardware_monitor.py
 ```
 
 脚本会后台起采样线程（每秒采一次），同时跑 30 秒"负载剧本"：0-5s 空闲、5-10s CPU 密集、10-15s 分配内存、15-20s CPU 密集、20-25s 分配更多内存、25-30s 空闲。

@@ -1,6 +1,6 @@
 # 阶段 6 学习笔记：Prompt Registry 与框架 Flavors
 
-> 对应脚本：`06_prompts/06a_register_prompt.py`、`06b_alias_lifecycle.py`、`06c_langchain.py`
+> 对应脚本：`scripts/06_prompts/06a_register_prompt.py`、`06b_alias_lifecycle.py`、`06c_langchain.py`
 
 ## 🎯 这篇笔记做什么
 
@@ -177,8 +177,8 @@ mlflow ui --port 5000   # 另开终端
 ### Step 1：注册三个版本
 
 ```bash
-cd /home/sstl/lcd/MLFlowLearning
-python 06_prompts/06a_register_prompt.py
+cd <project-root>
+python scripts/06_prompts/06a_register_prompt.py
 ```
 
 预期输出：`✓ customer-support-qa v1 / v2 / v3`，并列出全部版本。
@@ -186,7 +186,7 @@ python 06_prompts/06a_register_prompt.py
 ### Step 2：设 alias + 真实推理
 
 ```bash
-python 06_prompts/06b_alias_lifecycle.py
+python scripts/06_prompts/06b_alias_lifecycle.py
 ```
 
 预期输出：
@@ -197,7 +197,7 @@ python 06_prompts/06b_alias_lifecycle.py
 ### Step 3：LangChain autolog
 
 ```bash
-python 06_prompts/06c_langchain.py
+python scripts/06_prompts/06c_langchain.py
 ```
 
 预期输出：

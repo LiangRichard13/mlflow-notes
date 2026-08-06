@@ -1,6 +1,6 @@
 # 阶段 8 学习笔记：版本追踪、提示词优化与 ResponsesAgent
 
-> 对应脚本：`08_agents/08a_active_model.py`、`08b_prompt_optimize.py`、`08c_responses_agent.py`、`simple_qa_agent.py`
+> 对应脚本：`scripts/08_agents/08a_active_model.py`、`08b_prompt_optimize.py`、`08c_responses_agent.py`、`simple_qa_agent.py`
 
 ## 🎯 这篇笔记做什么
 
@@ -234,8 +234,8 @@ echo $DEEPSEEK_MODEL
 ### 第 2 步：跑版本追踪（08a）
 
 ```bash
-cd /home/sstl/lcd/MLFlowLearning
-python 08_agents/08a_active_model.py
+cd <project-root>
+python scripts/08_agents/08a_active_model.py
 ```
 
 输出会显示：
@@ -246,7 +246,7 @@ python 08_agents/08a_active_model.py
 ### 第 3 步：跑 prompt 优化（08b）
 
 ```bash
-python 08_agents/08b_prompt_optimize.py
+python scripts/08_agents/08b_prompt_optimize.py
 ```
 
 可能会两种结果：
@@ -256,7 +256,7 @@ python 08_agents/08b_prompt_optimize.py
 ### 第 4 步：跑 ResponsesAgent 打包（08c）
 
 ```bash
-python 08_agents/08c_responses_agent.py
+python scripts/08_agents/08c_responses_agent.py
 ```
 
 输出会显示：

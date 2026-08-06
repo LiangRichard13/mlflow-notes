@@ -1,6 +1,6 @@
 # 阶段 4 学习笔记：评估、服务与经典 ML 验证
 
-> 对应脚本：`04_evaluate/04a_evaluate_basics.py`、`04b_evaluate_custom.py`、`04c_models_serve.sh`
+> 对应脚本：`scripts/04_evaluate/04a_evaluate_basics.py`、`04b_evaluate_custom.py`、`04c_models_serve.sh`
 > 需要 API Key：否
 > 阶段定位：Phase 1-3 你已经会"训练 + 记录 + 注册模型"了；这一阶段回答两个问题——**这个模型好不好？** 以及 **怎么把它跑起来给别人用？**
 
@@ -299,7 +299,7 @@ curl -X POST http://127.0.0.1:5001/invocations \
 ### Step 1：跑 `04a_evaluate_basics.py`
 
 ```bash
-python 04_evaluate/04a_evaluate_basics.py
+python scripts/04_evaluate/04a_evaluate_basics.py
 ```
 
 你会看到：训练完一个 RandomForest，对它跑一遍 `mlflow.models.evaluate`，打印一坨指标和图的名字。
@@ -313,7 +313,7 @@ python 04_evaluate/04a_evaluate_basics.py
 ### Step 2：跑 `04b_evaluate_custom.py`
 
 ```bash
-python 04_evaluate/04b_evaluate_custom.py
+python scripts/04_evaluate/04b_evaluate_custom.py
 ```
 
 这一脚本做了 5 件事：
@@ -333,7 +333,7 @@ python 04_evaluate/04b_evaluate_custom.py
 
 **终端 A**（启动 MLflow server）：
 ```bash
-bash 04_evaluate/04c_models_serve.sh   # 或手动复制里面的命令
+bash scripts/04_evaluate/04c_models_serve.sh   # 或手动复制里面的命令
 # 或者：把 04c 拆开,先跑 terminal 1 的 server 部分
 ```
 

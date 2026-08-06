@@ -2,7 +2,7 @@
 
 目标：1-2 天内从环境安装到跑通第一个实验，再到用 coding agent 在 vibecoding 场景下用 MLflow
 
-范围：覆盖 MLFlowLearning/ 项目全部 10 个 phase + capstone 毕业项目 + 12 个 mlflow_skill
+范围：覆盖 MLFlowLearning/ 项目全部 10 个 phase + capstone 毕业项目 + 12 个 mlflow_skills
 
 > **路径约定**：本文档所有命令里的 `<project-root>` 替换为你 clone 项目的实际路径（如 `~/projects/MLFlowLearning`、`/Users/you/code/MLFlowLearning`）。命令格式 `cd <project-root> && <cmd>` 意味着"先切到项目根目录，再执行命令"。
 
@@ -68,7 +68,7 @@
 - [Chapter 12：生产级部署（选学）](#chapter-12)
 - [Chapter 13：常见错误 Debug 指南](#chapter-13)
 - [Chapter 14：参考速查](#chapter-14)
-- [Skill 段：12 个 mlflow_skill 介绍](#skill-段)
+- [Skill 段：12 个 mlflow_skills 介绍](#skill-段)
 
 ---
 
@@ -145,7 +145,7 @@ Experiment: awesome-model
 - ✅ 用 `mlflow.evaluate()` 自动算指标 + 出图（混淆矩阵、ROC）
 - ✅ 用 `mlflow models serve` 部署模型为 REST API
 - ✅ 用 `mlflow.genai.evaluate()` 系统化评估 LLM agent
-- ✅ 用 coding agent（vibecoding）通过 mlflow_skill 自动化 MLflow 操作
+- ✅ 用 coding agent（vibecoding）通过 mlflow_skills 自动化 MLflow 操作
 
 ## 0.4 学习路径
 
@@ -297,18 +297,18 @@ MLFlowLearning/
 ├── README.md                      ← 项目概览
 ├── .env.example                   ← API Key 模板
 ├── notes/00_quickstart.md         ← 你正在读的文件
-├── 01_basics/                     ← Phase 1 脚本：传统 ML 基础
-├── 02_registry/                   ← Phase 2：模型注册
-├── 03_tracking/                   ← Phase 3：Tracking Server
-├── 04_evaluate/                   ← Phase 4：评估与部署
-├── 05_tracing/                    ← Phase 5：GenAI 追踪
-├── 06_prompts/                    ← Phase 6：Prompt Registry
-├── 07_evaluation/                 ← Phase 7：GenAI 评估
-├── 08_agents/                     ← Phase 8：Agent + 版本化
-├── 09_deployment/                 ← Phase 9：生产部署
-├── 10_vision_classification/      ← Phase 10：图像分类（深度学习）
-├── capstone/                      ← 毕业项目 SupportPilot
-├── mlflow_skill/                  ← 12 个 MLflow skill（vibecoding 用）
+├── scripts/01_basics/                     ← Phase 1 脚本：传统 ML 基础
+├── scripts/02_registry/                   ← Phase 2：模型注册
+├── scripts/03_tracking/                   ← Phase 3：Tracking Server
+├── scripts/04_evaluate/                   ← Phase 4：评估与部署
+├── scripts/05_tracing/                    ← Phase 5：GenAI 追踪
+├── scripts/06_prompts/                    ← Phase 6：Prompt Registry
+├── scripts/07_evaluation/                 ← Phase 7：GenAI 评估
+├── scripts/08_agents/                     ← Phase 8：Agent + 版本化
+├── scripts/09_deployment/                 ← Phase 9：生产部署
+├── scripts/10_vision_classification/      ← Phase 10：图像分类（深度学习）
+├── scripts/capstone/                      ← 毕业项目 SupportPilot
+├── mlflow_skills/                  ← 12 个 MLflow skill（vibecoding 用）
 └── notes/                         ← 学习笔记（11 个 phase + 3 个 appendix）
     ├── 01_basics.md
     ├── ...
@@ -341,7 +341,7 @@ $ pip install timm
 3. **跑通项目第一个脚本**（热身，为 Chapter 2 做准备）：
    ```bash
    $ cd <project-root>
-   $ conda run -n mlflow python 01_basics/01_hello_mlflow.py
+   $ conda run -n mlflow python scripts/01_basics/01_hello_mlflow.py
    ```
 
    应该看到 3 个 Run 创建（experiment 叫 `01_basics_demo`）
@@ -384,8 +384,8 @@ UI 装好 + 第一个脚本跑通后 → [Chapter 2：核心对象与实验追�
 
 | 脚本 | 一句话作用 | 前置 |
 |------|-----------|------|
-| `01_basics/01_hello_mlflow.py` | 纯手动 log，演示 6 个核心对象 | 无 |
-| `01_basics/01b_sklearn_basics.py` | 用 autolog 记录 4 个真实 sklearn 模型 | 建议先跑 01 |
+| `scripts/01_basics/01_hello_mlflow.py` | 纯手动 log，演示 6 个核心对象 | 无 |
+| `scripts/01_basics/01b_sklearn_basics.py` | 用 autolog 记录 4 个真实 sklearn 模型 | 建议先跑 01 |
 
 ## 核心概念（一句话版）
 
@@ -404,17 +404,17 @@ UI 装好 + 第一个脚本跑通后 → [Chapter 2：核心对象与实验追�
 1. **跑两个必跑脚本并进 UI 复盘**。依次执行：
 
 ```bash
-cd <project-root> && python 01_basics/01_hello_mlflow.py
-cd <project-root> && python 01_basics/01b_sklearn_basics.py
+cd <project-root> && python scripts/01_basics/01_hello_mlflow.py
+cd <project-root> && python scripts/01_basics/01b_sklearn_basics.py
 cd <project-root> && mlflow ui --port 5000
 ```
 
 浏览器打开 `http://localhost:5000`，进 `01_sklearn_iris`，勾选全部 4 个 Run，点 **Compare**，看不同超参（C / max_depth / n_estimators）下 accuracy、f1 的差异。验证：能看到 4 个 Run 的并排对比表，差异列被高亮。
 
-2. **改超参重跑对比**。把 `01_basics/01b_sklearn_basics.py` 里第 103 行附近的 `{"n_estimators": 200, ...}` 改成 `{"n_estimators": 50, ...}`，重新跑：
+2. **改超参重跑对比**。把 `scripts/01_basics/01b_sklearn_basics.py` 里第 103 行附近的 `{"n_estimators": 200, ...}` 改成 `{"n_estimators": 50, ...}`，重新跑：
 
 ```bash
-cd <project-root> && python 01_basics/01b_sklearn_basics.py
+cd <project-root> && python scripts/01_basics/01b_sklearn_basics.py
 ```
 
 再进 UI Compare 新老两个 `rf_deep` Run。验证：`01_sklearn_iris` 里出现 5 个 Run，Compare 视图下 `n_estimators` 列被高亮为差异列。
@@ -460,7 +460,7 @@ Chapter 2 学会了"记录"，但训练出来的模型本身去哪了？这一�
 
 | 脚本 | 一句话作用 | 前置 |
 |------|-----------|------|
-| `02_registry/02a_log_model.py` | 训练 Pipeline，推断签名 + input_example，用 `name=` 记录模型 | Chapter 2 |
+| `scripts/02_registry/02a_log_model.py` | 训练 Pipeline，推断签名 + input_example，用 `name=` 记录模型 | Chapter 2 |
 
 ## 核心概念（一句话版）
 
@@ -474,7 +474,7 @@ Chapter 2 学会了"记录"，但训练出来的模型本身去哪了？这一�
 1. **跑 02a 记录带签名的模型**：
 
 ```bash
-cd <project-root> && python 02_registry/02a_log_model.py
+cd <project-root> && python scripts/02_registry/02a_log_model.py
 ```
 
 验证：输出含 `模型性能: accuracy=1.0000, f1=1.0000` 和一行 `模型 URI: runs:/<run_id>/wine-classifier`。
@@ -638,7 +638,7 @@ model = mlflow.sklearn.load_model("models:/WineQualityClassifier@champion")
 
 ```bash
 conda activate mlflow
-cd <project-root> && python 02_registry/02a_log_model.py
+cd <project-root> && python scripts/02_registry/02a_log_model.py
 ```
 
 预期输出里有 `模型性能: accuracy=1.0000, f1=1.0000`（Wine 数据集很简单，满分正常），还会打印一行 `模型 URI: runs:/<run_id>/wine-classifier`，**把这个 run_id 记下来**。
@@ -648,7 +648,7 @@ cd <project-root> && python 02_registry/02a_log_model.py
 ### Step 2 — 注册 + 设别名
 
 ```bash
-cd <project-root> && python 02_registry/02b_register_alias.py
+cd <project-root> && python scripts/02_registry/02b_register_alias.py
 ```
 
 预期看到两行关键输出：
@@ -689,7 +689,7 @@ client.update_model_version(
 ### Step 3 — 用别名加载并推理
 
 ```bash
-cd <project-root> && python 02_registry/02c_load_predict.py
+cd <project-root> && python scripts/02_registry/02c_load_predict.py
 ```
 
 预期看到 `Pipeline steps: ['scaler', 'clf']`，以及 5 个预测标签和真实标签的对比（Wine 简单，应该全对）。
@@ -729,9 +729,9 @@ cd <project-root> && mlflow ui --backend-store-uri sqlite:///mlflow.db --port 50
 ```bash
 conda activate mlflow
 # 用 sed 改 02a 里的 n_estimators: 200 → 50
-cd <project-root> && sed -i 's/n_estimators=200/n_estimators=50/' 02_registry/02a_log_model.py
-cd <project-root> && python 02_registry/02a_log_model.py
-cd <project-root> && python 02_registry/02b_register_alias.py
+cd <project-root> && sed -i 's/n_estimators=200/n_estimators=50/' scripts/02_registry/02a_log_model.py
+cd <project-root> && python scripts/02_registry/02a_log_model.py
+cd <project-root> && python scripts/02_registry/02b_register_alias.py
 ```
 
 预期看到：
@@ -760,7 +760,7 @@ print('已回滚: champion → v1')
 **Step 3：跑 02c，看预测用的是哪个版本**
 
 ```bash
-cd <project-root> && python 02_registry/02c_load_predict.py
+cd <project-root> && python scripts/02_registry/02c_load_predict.py
 ```
 
 代码里的 `models:/WineQualityClassifier@champion` **完全没改**，但自动加载到了 v1。再跑一次 Step 2 把 champion 改回 v2，02c 又会加载 v2。
@@ -813,7 +813,7 @@ else:
   ```bash
   cd <project-root> && mlflow db upgrade sqlite:///mlflow.db
   ```
-- ⚠️ **坑 8：02b/02c 文件头注释里写的是 `python 03_registry/...`，这是笔误**，正确目录是 `02_registry/`。脚本本身能跑，但别照抄错路径。
+- ⚠️ **坑 8：02b/02c 文件头注释里写的是 `python 03_registry/...`，这是笔误**，正确目录是 `scripts/02_registry/`。脚本本身能跑，但别照抄错路径。
 
 ---
 
@@ -980,7 +980,7 @@ MLflow 2 里，模型是 Run 下的一个 artifact（`runs:/<run_id>/model`）�
 
 ```bash
 conda activate mlflow
-cd <project-root> && bash 03_tracking/03a_start_server.sh
+cd <project-root> && bash scripts/03_tracking/03a_start_server.sh
 ```
 
 脚本会执行：
@@ -1027,7 +1027,7 @@ cd <project-root>
 回到有 `MLFLOW_TRACKING_URI` 的终端：
 
 ```bash
-cd <project-root> && python 03_tracking/03b_dataset_lineage.py
+cd <project-root> && python scripts/03_tracking/03b_dataset_lineage.py
 ```
 
 控制台会打印：
@@ -1051,7 +1051,7 @@ cd <project-root> && python 03_tracking/03b_dataset_lineage.py
 ### Step 4：跑搜索 LoggedModel 脚本
 
 ```bash
-cd <project-root> && python 03_tracking/03c_search_logged_models.py
+cd <project-root> && python scripts/03_tracking/03c_search_logged_models.py
 ```
 
 它训练 5 个不同模型（不同 C、深度），然后用 `search_logged_models` 筛三种条件。控制台会打印三张表，对应：
@@ -1082,7 +1082,7 @@ cd <project-root> && python 03_tracking/03c_search_logged_models.py
 **Step 1：跑 03b，看 digest**
 
 ```bash
-cd <project-root> && python 03_tracking/03b_dataset_lineage.py
+cd <project-root> && python scripts/03_tracking/03b_dataset_lineage.py
 ```
 
 记下控制台输出的 `dataset.digest` 一长串哈希（比如 `a3f5e8d2c9b1...`）。
@@ -1111,7 +1111,7 @@ df["alcohol"] = df["alcohol"] + 0.0001   # 偷偷改一列
 重新跑：
 
 ```bash
-cd <project-root> && python 03_tracking/03b_dataset_lineage.py
+cd <project-root> && python scripts/03_tracking/03b_dataset_lineage.py
 ```
 
 **digest 大概率变了**（除非你幸运地没改到哈希敏感的字段，但基本不可能）。这就是"防偷偷换数据"的硬证据——审计部只要对一下两个版本的 digest，立刻知道你改了数据。
@@ -1179,7 +1179,7 @@ MLflow 的 **Tracing（追踪）** 就是为了解决这个问题的。它能把
 
 ### 对应脚本清单
 
-这一章对应 `05_tracing/` 目录下的 4 个脚本：
+这一章对应 `scripts/05_tracing/` 目录下的 4 个脚本：
 
 | 脚本                        | 一句话作用                                                 | 是否必跑                 | 前置               |
 | --------------------------- | ---------------------------------------------------------- | ------------------------ | ------------------ |
@@ -1451,7 +1451,7 @@ mlflow ui --port 5000
 
 这一章你学会的是"怎么把 LLM 调用记下来、看 trace、查 trace"。但 LLM 应用真正的痛点是**怎么评估输出质量**——一段对话生成了，是好还是坏？谁来评？——这就要靠 Chapter 7 之后的评估章节。
 
-但 Chapter 7 不是评估。Chapter 7 是这一份学习作业的**彩蛋**：你可能注意到，整个项目里有个目录叫 `mlflow_skill/`，里面装了一堆 `SKILL.md` 文件——那是给 AI 编程助手（Claude Code、Cursor 等）读的。我们下一章就来学这些 skill 怎么用。
+但 Chapter 7 不是评估。Chapter 7 是这一份学习作业的**彩蛋**：你可能注意到，整个项目里有个目录叫 `mlflow_skills/`，里面装了一堆 `SKILL.md` 文件——那是给 AI 编程助手（Claude Code、Cursor 等）读的。我们下一章就来学这些 skill 怎么用。
 
 更深入的学习可以看 `notes/05_tracing.md`——本文就是这份笔记的"轻量化版"，那份笔记里有更多边界情况讨论、UI 截图、每个 Span 字段的含义解释。
 
@@ -1465,17 +1465,17 @@ mlflow ui --port 5000
 
 ## 🎯 这章做什么
 
-你可能已经注意到，项目里有个目录叫 `mlflow_skill/`，里面装了一堆 `SKILL.md` 文件——**那是给 AI 编程助手（Claude Code、Cursor、Copilot 等）读的"指令手册"**。这一章教你：
+你可能已经注意到，项目里有个目录叫 `mlflow_skills/`，里面装了一堆 `SKILL.md` 文件——**那是给 AI 编程助手（Claude Code、Cursor、Copilot 等）读的"指令手册"**。这一章教你：
 
-1. `mlflow_skill` 是什么、里面有什么
+1. `mlflow_skills` 是什么、里面有什么
 2. 在 vibecoding（对话式编程）场景下，怎么让 AI 助手帮你操作 MLflow
 3. 遇到不懂的 MLflow 操作时，怎么让 AI 助手去查 skill 再帮你做
 
-> 💡 **核心洞察**：你不必精通 MLflow 的每一个 API。只要 AI 助手能读到 `mlflow_skill/` 里的 SKILL.md，它就会按手册帮你做对——而你要做的只是**学会怎么让它用这些手册**。
+> 💡 **核心洞察**：你不必精通 MLflow 的每一个 API。只要 AI 助手能读到 `mlflow_skills/` 里的 SKILL.md，它就会按手册帮你做对——而你要做的只是**学会怎么让它用这些手册**。
 
 ### 你会学到什么
 
-- 知道 `mlflow_skill/` 里 12 个 skill 各自管什么
+- 知道 `mlflow_skills/` 里 12 个 skill 各自管什么
 - 知道 AI 助手是怎么用这些 skill 的（读 SKILL.md → 按步骤执行）
 - 能自己用一句话让 AI 助手加追踪 / 评估 / 对比 / 部署
 - 能验证 AI 助手干的对不对（去 UI 看结果）
@@ -1489,12 +1489,12 @@ mlflow ui --port 5000
 
 ---
 
-## 一、什么是 mlflow_skill？
+## 一、什么是 mlflow_skills？
 
-`mlflow_skill/` 是一组**给 AI 助手看的 Markdown 指令手册**。每个 skill 是一个目录，里面有一个 `SKILL.md`（手册正文）+ `references/`（深度参考）+ `scripts/`（可执行工具脚本）。
+`mlflow_skills/` 是一组**给 AI 助手看的 Markdown 指令手册**。每个 skill 是一个目录，里面有一个 `SKILL.md`（手册正文）+ `references/`（深度参考）+ `scripts/`（可执行工具脚本）。
 
 ```
-mlflow_skill/
+mlflow_skills/
 ├── mlflow-onboarding/          ← 引导上手
 ├── classical-ml/               ← 传统 ML 6 步法
 ├── instrumenting-with-mlflow-tracing/  ← 给代码加追踪
@@ -1529,7 +1529,7 @@ description: |
 
 1. 你发一句话（比如"帮我给这个 sklearn 训练加追踪"）
 2. AI 助手判断这个话题匹配 `classical-ml` 的 description
-3. 它打开 `mlflow_skill/classical-ml/SKILL.md` 读步骤
+3. 它打开 `mlflow_skills/classical-ml/SKILL.md` 读步骤
 4. 按步骤帮你改代码 / 跑命令
 5. 你验证结果（看 UI）
 
@@ -1627,18 +1627,18 @@ $ mlflow ui --port 5000
 
 **你说**：
 
-> 这个报错了，帮我查 `mlflow_skill/` 里对应的 skill，看正确写法是什么。
+> 这个报错了，帮我查 `mlflow_skills/` 里对应的 skill，看正确写法是什么。
 
 或者更具体：
 
-> 我用 `mlflow.sklearn.log_model(model, artifact_path="m")` 报错了。查一下 `mlflow_skill/classical-ml/SKILL.md`，MLflow 3 应该怎么写？
+> 我用 `mlflow.sklearn.log_model(model, artifact_path="m")` 报错了。查一下 `mlflow_skills/classical-ml/SKILL.md`，MLflow 3 应该怎么写？
 
 **为什么有效**：skill 里的 SKILL.md 明确写了 MLflow 3 vs 2 的破坏性变化（`artifact_path=` → `name=` 等）。AI 助手读到后就不会再用旧写法。
 
 **通用话术**（任何 AI 工具都能用）：
 
-- "查 `mlflow_skill/` 里有没有相关的 skill"
-- "按 `mlflow_skill/classical-ml/SKILL.md` 的步骤做"
+- "查 `mlflow_skills/` 里有没有相关的 skill"
+- "按 `mlflow_skills/classical-ml/SKILL.md` 的步骤做"
 - "这个 MLflow API 报错了，帮我看看 skill 里 MLflow 3 的写法"
 
 ---
@@ -1649,7 +1649,7 @@ $ mlflow ui --port 5000
 
 **最简单的方式（所有工具通用，零配置）**：不装任何东西，直接在对话里让 AI 助手读文件：
 
-> 先读 `<project-root>/mlflow_skill/classical-ml/SKILL.md`，然后按里面 Step 1 帮我做。
+> 先读 `<project-root>/mlflow_skills/classical-ml/SKILL.md`，然后按里面 Step 1 帮我做。
 
 这样 AI 助手每轮对话都会参考那个手册。想在更长远的会话里也自动生效，就按你所用 AI 工具的 rules / skills 配置机制，把这个目录加进去。
 
@@ -1659,7 +1659,7 @@ $ mlflow ui --port 5000
 
 ## 五、关键 Take-aways
 
-- **`mlflow_skill/` 是给 AI 助手的"指令手册"**，不是给你读的教程（但你读也有帮助）
+- **`mlflow_skills/` 是给 AI 助手的"指令手册"**，不是给你读的教程（但你读也有帮助）
 - **不装 skill 也能用**：一句话让 AI 助手"读 SKILL.md 再做事"就行
 - **AI 助手按 skill 做的是"建议"，不会擅自改代码**——都要你确认
 - **验证永远是去 UI 看**：Experiments / Models / Traces / Prompts 四个 tab
@@ -1820,7 +1820,7 @@ mlflow ui --port 5000   # 另开一个终端
 
 ```bash
 cd <project-root>
-python 06_prompts/06a_register_prompt.py
+python scripts/06_prompts/06a_register_prompt.py
 ```
 
 脚本会做三件事：
@@ -1846,7 +1846,7 @@ python 06_prompts/06a_register_prompt.py
 ### Step 2：设 alias + 真实推理（`06b_alias_lifecycle.py`）
 
 ```bash
-python 06_prompts/06b_alias_lifecycle.py
+python scripts/06_prompts/06b_alias_lifecycle.py
 ```
 
 脚本会做：
@@ -2018,8 +2018,8 @@ python /tmp/my_prompt_registry.py
 ### 必跑脚本清单
 | 脚本 | 一句话作用 | 前置 |
 |------|-----------|------|
-| `07_evaluation/07a_basic_evaluate.py` | 5 行题库 + 3 个内置 scorer 跑基础评估 | Chapter 4-5 |
-| `07_evaluation/07b_custom_scorer.py` | 组合 `@scorer` + `make_judge` 共 6 个 scorer | 跑过 07a |
+| `scripts/07_evaluation/07a_basic_evaluate.py` | 5 行题库 + 3 个内置 scorer 跑基础评估 | Chapter 4-5 |
+| `scripts/07_evaluation/07b_custom_scorer.py` | 组合 `@scorer` + `make_judge` 共 6 个 scorer | 跑过 07a |
 
 ## 核心概念（一句话版）
 - **`mlflow.genai.evaluate()`**：GenAI 的「考试系统」——给题库（`data`）+ 考生（`predict_fn`）+ 评分卡（`scorers`），自动调 LLM 拿答案再打分：
@@ -2043,13 +2043,13 @@ python /tmp/my_prompt_registry.py
 
 **练习 1：跑基础评估（07a）**
 ```bash
-cd <project-root> && python 07_evaluation/07a_basic_evaluate.py
+cd <project-root> && python scripts/07_evaluation/07a_basic_evaluate.py
 ```
 ✅ 验证标准：终端打印 `judge_model = openai:/deepseek-v4-flash` 以及 `correctness/mean`、`safety/mean`、`relevance_to_query/mean` 等聚合分；UI 的 `07_evaluate` experiment 下出现新 Run，逐行打分在 Evaluation 标签或 `Artifacts/eval/`。
 
 **练习 2：跑自定义 scorer（07b）**
 ```bash
-python 07_evaluation/07b_custom_scorer.py
+python scripts/07_evaluation/07b_custom_scorer.py
 ```
 ✅ 验证标准：聚合指标里多出 `has_citation/mean`、`is_concise/mean`、`mentions_mlflow/mean`、`brand_tone/mean`——对比 07a 只有内置 3 个，体会「内置 / @scorer / make_judge」三类 scorer 的分工（07b 的 `Correctness()`/`Safety()` 未传 expectations 跑得宽松，真正调 judge 的是 `brand_tone`）。
 
@@ -2084,9 +2084,9 @@ python 07_evaluation/07b_custom_scorer.py
 ### 必跑脚本清单
 | 脚本 | 一句话作用 | 前置 |
 |------|-----------|------|
-| `04_evaluate/04a_evaluate_basics.py` | 对 RandomForest 跑 `mlflow.models.evaluate`，自动算内置指标 + 生成混淆矩阵/ROC 图 | Chapter 6 |
-| `04_evaluate/04b_evaluate_custom.py` | 写「高价值客户加权」自定义指标，对比 RF vs LR，验证 B 是否达标 | 跑过 04a |
-| `04_evaluate/04c_models_serve.sh` | `mlflow models serve` 起本地 REST API，`curl` 调 `/invocations` 推理 | 跑过 04b + 有 champion 模型 |
+| `scripts/04_evaluate/04a_evaluate_basics.py` | 对 RandomForest 跑 `mlflow.models.evaluate`，自动算内置指标 + 生成混淆矩阵/ROC 图 | Chapter 6 |
+| `scripts/04_evaluate/04b_evaluate_custom.py` | 写「高价值客户加权」自定义指标，对比 RF vs LR，验证 B 是否达标 | 跑过 04a |
+| `scripts/04_evaluate/04c_models_serve.sh` | `mlflow models serve` 起本地 REST API，`curl` 调 `/invocations` 推理 | 跑过 04b + 有 champion 模型 |
 
 ## 核心概念（一句话版）
 - **`mlflow.models.evaluate()`**：全自动评估 + 自动作图 + 自动写回 MLflow 的整合入口——指模型（`runs:/xxx/model` 或 `models:/xxx@champion`）+ 含 label 的数据 + `model_type="classifier"`，吐全套内置指标和图（写入 `Artifacts/eval/`）：
@@ -2103,13 +2103,13 @@ python 07_evaluation/07b_custom_scorer.py
 
 **练习 1：跑基础评估（04a）**
 ```bash
-cd <project-root> && python 04_evaluate/04a_evaluate_basics.py
+cd <project-root> && python scripts/04_evaluate/04a_evaluate_basics.py
 ```
 ✅ 验证标准：UI → `04_evaluate` → Run `evaluate-baseline`：Metrics 标签有 `accuracy_score`/`f1_score`/`roc_auc`；Artifacts → eval/ 有 `confusion_matrix.png`、`roc_curve_plot.png`（不用自己写 matplotlib）。
 
 **练习 2：跑自定义指标（04b）**
 ```bash
-python 04_evaluate/04b_evaluate_custom.py
+python scripts/04_evaluate/04b_evaluate_custom.py
 ```
 ✅ 验证标准：`04_evaluate_custom` 下两个 Run（model-A-RF / model-B-LR）的 Metrics 里都有 `weighted_accuracy_v1`；脚本末尾打印「✓ 模型 B 通过验证」或「✗ 验证失败」。
 
@@ -2159,9 +2159,9 @@ LLM 应用跑起来后要推向生产，会遇到三个问题：线上跑的是�
 
 | 脚本 | 一句话作用 | 前置 |
 |------|-----------|------|
-| `08_agents/08a_active_model.py` | 用 `set_active_model` 把两个 Agent 版本关联到不同 LoggedModel | Chapter 6 |
-| `08_agents/08c_responses_agent.py` | 用 Models-from-code 打包 ResponsesAgent 到 Registry | 跑过 08a |
-| `08_agents/simple_qa_agent.py` | `SimpleQAAgent` 类定义（被 08c import，非独立脚本） | — |
+| `scripts/08_agents/08a_active_model.py` | 用 `set_active_model` 把两个 Agent 版本关联到不同 LoggedModel | Chapter 6 |
+| `scripts/08_agents/08c_responses_agent.py` | 用 Models-from-code 打包 ResponsesAgent 到 Registry | 跑过 08a |
+| `scripts/08_agents/simple_qa_agent.py` | `SimpleQAAgent` 类定义（被 08c import，非独立脚本） | — |
 
 ## 核心概念（一句话版）
 
@@ -2180,8 +2180,8 @@ LLM 应用跑起来后要推向生产，会遇到三个问题：线上跑的是�
 
 ## 🛠️ 动手做
 
-1. **跑版本追踪并看 UI**：`cd <project-root> && python 08_agents/08a_active_model.py`，另开终端 `cd <project-root> && mlflow ui --port 5000`。验证标准：左侧菜单 **Logged Models** 看到 `agent-v1`、`agent-v2` 两个实体；点开任一个，**Traces** 标签下各挂 3 条 trace。
-2. **打包 ResponsesAgent**：`cd <project-root> && python 08_agents/08c_responses_agent.py`，记录打印出的 `model_info.model_id`（形如 `m-xxxxxxxx`）。验证标准：experiment `08_responses_agent` 下出现 Run `agent-packaging`，其 **Artifacts** 里能看到 `MLmodel`、`requirements.txt` 和 `simple_qa_agent.py` 源码副本。
+1. **跑版本追踪并看 UI**：`cd <project-root> && python scripts/08_agents/08a_active_model.py`，另开终端 `cd <project-root> && mlflow ui --port 5000`。验证标准：左侧菜单 **Logged Models** 看到 `agent-v1`、`agent-v2` 两个实体；点开任一个，**Traces** 标签下各挂 3 条 trace。
+2. **打包 ResponsesAgent**：`cd <project-root> && python scripts/08_agents/08c_responses_agent.py`，记录打印出的 `model_info.model_id`（形如 `m-xxxxxxxx`）。验证标准：experiment `08_responses_agent` 下出现 Run `agent-packaging`，其 **Artifacts** 里能看到 `MLmodel`、`requirements.txt` 和 `simple_qa_agent.py` 源码副本。
 
 ## 📖 深入阅读（关键！）
 
@@ -2223,8 +2223,8 @@ LLM 应用跑起来后要推向生产，会遇到三个问题：线上跑的是�
 
 | 脚本 | 一句话作用 | 前置 |
 |------|-----------|------|
-| `09_deployment/09a_sampling_redaction.py` | 演示 trace 采样 + PII 脱敏，对比 raw vs redacted 两条 Run | 无 |
-| `09_deployment/09b_prod_infra.sh` | docker-compose 参考配置（Postgres + MinIO + MLflow） | Docker 环境 |
+| `scripts/09_deployment/09a_sampling_redaction.py` | 演示 trace 采样 + PII 脱敏，对比 raw vs redacted 两条 Run | 无 |
+| `scripts/09_deployment/09b_prod_infra.sh` | docker-compose 参考配置（Postgres + MinIO + MLflow） | Docker 环境 |
 
 ## 核心概念（一句话版）
 
@@ -2237,13 +2237,13 @@ LLM 应用跑起来后要推向生产，会遇到三个问题：线上跑的是�
 ## 🛠️ 动手做
 
 1. **跑 09a 看 PII 脱敏对比**：
-   - 运行：`cd <project-root> && python 09_deployment/09a_sampling_redaction.py`
+   - 运行：`cd <project-root> && python scripts/09_deployment/09a_sampling_redaction.py`
    - 查看：另开终端 `cd <project-root> && mlflow ui --port 5000`，进 experiment `09_sampling_pii`
    - 验证标准：`raw-no-redaction` 的 trace_inputs 能看到 `zhangsan@example.com`、`13812345678`；`redacted` 同样的输入变成 `[EMAIL]`、`[PHONE]`、`[ID_CARD]`
    - ⚠️ 运行提示：脚本内部会真实调用一次 DeepSeek，如遇 API 报错，先设 `OPENAI_API_KEY` / `OPENAI_API_BASE` / `DEEPSEEK_MODEL`
 
 2. **读 09b 了解生产 docker-compose 配置**：
-   - 打开 `09_deployment/09b_prod_infra.sh`，把 YAML heredoc 存为 `docker-compose.yml`
+   - 打开 `scripts/09_deployment/09b_prod_infra.sh`，把 YAML heredoc 存为 `docker-compose.yml`
    - 本地起三件套：`cd <project-root> && docker compose up -d`
    - 验证标准：浏览器 `http://localhost:5000` 打开由 Postgres + MinIO 支撑的 MLflow UI；客户端 `export MLFLOW_TRACKING_URI=http://localhost:5000` 连接
 
@@ -2873,7 +2873,7 @@ traces = mlflow.search_traces(
 
 这一章是工具书——遇到报错随时翻，不需要从头读到尾。
 
-**更全的错误信息**：完整的错误信息、stack trace 示例、CLI 命令清单见 `mlflow_skill/classical-ml/references/troubleshooting.md`。那篇文档是 MLflow Debug 的"完整版"，包含：
+**更全的错误信息**：完整的错误信息、stack trace 示例、CLI 命令清单见 `mlflow_skills/classical-ml/references/troubleshooting.md`。那篇文档是 MLflow Debug 的"完整版"，包含：
 
 - 六层 Debug 工作流的每个命令详解
 - 每个层的常见错误 + 修复命令
@@ -3096,7 +3096,7 @@ mlflow gc --backend-store-uri sqlite:///mlflow.db
 
 # Skill 段：12 个 MLflow Skill 介绍
 
-> 本段面向所有读者：项目 `mlflow_skill/` 目录里有 12 个 `SKILL.md` 文件——它们是给 AI 编程助手读的"操作手册"（比如 Claude Code、Cursor 等）。本段不教你怎么让 AI 启用这些 skill（每个 AI 助手配置不同），而是告诉你**这 12 个 skill 各自管什么、什么场景需要用、用的时候看哪段**。
+> 本段面向所有读者：项目 `mlflow_skills/` 目录里有 12 个 `SKILL.md` 文件——它们是给 AI 编程助手读的"操作手册"（比如 Claude Code、Cursor 等）。本段不教你怎么让 AI 启用这些 skill（每个 AI 助手配置不同），而是告诉你**这 12 个 skill 各自管什么、什么场景需要用、用的时候看哪段**。
 >
 > 即使你不用 AI 助手，看 `SKILL.md` 本身也是学习 MLflow 最佳实践的好材料。
 
@@ -3104,22 +3104,22 @@ mlflow gc --backend-store-uri sqlite:///mlflow.db
 
 ## 一、12 个 Skill 总览
 
-下表是 `mlflow_skill/` 目录下全部 skill 的速查。每行告诉你：这个 skill 叫什么、它管什么、什么场景要用它、要读哪段 `SKILL.md`。
+下表是 `mlflow_skills/` 目录下全部 skill 的速查。每行告诉你：这个 skill 叫什么、它管什么、什么场景要用它、要读哪段 `SKILL.md`。
 
 | #  | Skill 名字                            | 用途                                                                              | 触发场景（你说什么话）                                                            | 读哪段                                                      |
 | -- | ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | 1  | `mlflow-onboarding`                 | 引导上手：判断你要做什么，给出 quickstart                                         | "怎么开始用 MLflow"、"刚装好"、"新手入门"                                         | `mlflow-onboarding/SKILL.md`                              |
-| 2  | `classical-ml`                      | 传统 ML 6 步法：tracking → registry → evaluate → deploy → monitor → optimize | "训练 sklearn/xgboost"、"对比 runs"、"注册模型"、"部署模型"、"模型监控"、"调超参" | `mlflow_skill/classical-ml/SKILL.md`（最完整）            |
-| 3  | `instrumenting-with-mlflow-tracing` | 给 LLM 代码加 tracing（Python / TypeScript）                                      | "给我的 OpenAI 加 trace"、"给 LangChain 加追踪"                                   | `mlflow_skill/instrumenting-with-mlflow-tracing/SKILL.md` |
-| 4  | `agent-evaluation`                  | 评估 LLM agent 输出质量（dataset + scorer + evaluate）                            | "评估我的 agent"、"算准确率"、"用 LLM-as-judge 评分"                              | `mlflow_skill/agent-evaluation/SKILL.md`                  |
-| 5  | `querying-mlflow-metrics`           | 拉聚合指标（token 用量、延迟、成本、trace 数）                                    | "分析 token 用量"、"看延迟趋势"、"算 LLM 成本"                                    | `mlflow_skill/querying-mlflow-metrics/SKILL.md`           |
-| 6  | `retrieving-mlflow-traces`          | 搜索 / 过滤 trace                                                                 | "找失败的 trace"、"查 latency > 5s 的"                                            | `mlflow_skill/retrieving-mlflow-traces/SKILL.md`          |
-| 7  | `analyze-mlflow-trace`              | debug 单个 trace                                                                  | "这个 trace 哪里出错了"、"trace ID 是 tr-xxx 帮我看看"                            | `mlflow_skill/analyze-mlflow-trace/SKILL.md`              |
-| 8  | `analyze-mlflow-chat-session`       | debug 多轮对话 / session                                                          | "看这个 chat session 哪里出问题"                                                  | `mlflow_skill/analyze-mlflow-chat-session/SKILL.md`       |
-| 9  | `fix-agent-issue`                   | 改 agent 行为的探索→计划→实现→验证闭环                                         | "agent 行为不对"、"想加个业务规则"                                                | `mlflow_skill/fix-agent-issue/SKILL.md`                   |
-| 10 | `mlflow-agent`                      | 通用 MLflow master dispatcher（不知道用哪个就让它路由）                           | 任何 MLflow workflow 但你没说要用哪个 skill                                       | `mlflow_skill/mlflow-agent/SKILL.md`                      |
-| 11 | `searching-mlflow-docs`             | 拉官方文档（mlflow.org/docs/latest）                                              | "MLflow 怎么用 X"、"查 MLflow API"                                                | `mlflow_skill/searching-mlflow-docs/SKILL.md`             |
-| 12 | `sagemaker-mlflow`                  | 连 AWS SageMaker Managed MLflow 当后端                                            | "SageMaker 上装 MLflow"                                                           | `mlflow_skill/sagemaker-mlflow/SKILL.md`                  |
+| 2  | `classical-ml`                      | 传统 ML 6 步法：tracking → registry → evaluate → deploy → monitor → optimize | "训练 sklearn/xgboost"、"对比 runs"、"注册模型"、"部署模型"、"模型监控"、"调超参" | `mlflow_skills/classical-ml/SKILL.md`（最完整）            |
+| 3  | `instrumenting-with-mlflow-tracing` | 给 LLM 代码加 tracing（Python / TypeScript）                                      | "给我的 OpenAI 加 trace"、"给 LangChain 加追踪"                                   | `mlflow_skills/instrumenting-with-mlflow-tracing/SKILL.md` |
+| 4  | `agent-evaluation`                  | 评估 LLM agent 输出质量（dataset + scorer + evaluate）                            | "评估我的 agent"、"算准确率"、"用 LLM-as-judge 评分"                              | `mlflow_skills/agent-evaluation/SKILL.md`                  |
+| 5  | `querying-mlflow-metrics`           | 拉聚合指标（token 用量、延迟、成本、trace 数）                                    | "分析 token 用量"、"看延迟趋势"、"算 LLM 成本"                                    | `mlflow_skills/querying-mlflow-metrics/SKILL.md`           |
+| 6  | `retrieving-mlflow-traces`          | 搜索 / 过滤 trace                                                                 | "找失败的 trace"、"查 latency > 5s 的"                                            | `mlflow_skills/retrieving-mlflow-traces/SKILL.md`          |
+| 7  | `analyze-mlflow-trace`              | debug 单个 trace                                                                  | "这个 trace 哪里出错了"、"trace ID 是 tr-xxx 帮我看看"                            | `mlflow_skills/analyze-mlflow-trace/SKILL.md`              |
+| 8  | `analyze-mlflow-chat-session`       | debug 多轮对话 / session                                                          | "看这个 chat session 哪里出问题"                                                  | `mlflow_skills/analyze-mlflow-chat-session/SKILL.md`       |
+| 9  | `fix-agent-issue`                   | 改 agent 行为的探索→计划→实现→验证闭环                                         | "agent 行为不对"、"想加个业务规则"                                                | `mlflow_skills/fix-agent-issue/SKILL.md`                   |
+| 10 | `mlflow-agent`                      | 通用 MLflow master dispatcher（不知道用哪个就让它路由）                           | 任何 MLflow workflow 但你没说要用哪个 skill                                       | `mlflow_skills/mlflow-agent/SKILL.md`                      |
+| 11 | `searching-mlflow-docs`             | 拉官方文档（mlflow.org/docs/latest）                                              | "MLflow 怎么用 X"、"查 MLflow API"                                                | `mlflow_skills/searching-mlflow-docs/SKILL.md`             |
+| 12 | `sagemaker-mlflow`                  | 连 AWS SageMaker Managed MLflow 当后端                                            | "SageMaker 上装 MLflow"                                                           | `mlflow_skills/sagemaker-mlflow/SKILL.md`                  |
 
 > **怎么用上表**：当你遇到一个 MLflow 任务时，先看"触发场景"列有没有匹配的关键词。匹配了就去找对应 skill 的 `SKILL.md` 读。读完不一定要让 AI 帮你做，自己按步骤跑也行。
 

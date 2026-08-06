@@ -1,6 +1,6 @@
 # 阶段 7 学习笔记：GenAI 评估与自定义 Scorer
 
-> 对应脚本：`07_evaluation/07a_basic_evaluate.py`、`07b_custom_scorer.py`、`07c_prompt_comparison.py`
+> 对应脚本：`scripts/07_evaluation/07a_basic_evaluate.py`、`07b_custom_scorer.py`、`07c_prompt_comparison.py`
 > 需要 API Key：是
 
 ## 🎯 这篇笔记做什么
@@ -257,9 +257,9 @@ with mlflow.start_run(run_name="staging"):
 ### 步骤 1：跑 07a（基础评估）
 
 ```bash
-cd /home/sstl/lcd/MLFlowLearning
+cd <project-root>
 conda activate mlflow
-python 07_evaluation/07a_basic_evaluate.py
+python scripts/07_evaluation/07a_basic_evaluate.py
 ```
 
 跑完看终端输出：会打印所有 scorer 的聚合分数（如 `correctness/mean: 0.800`）。
@@ -279,7 +279,7 @@ mlflow ui --port 5000
 ### 步骤 3：跑 07b（自定义 Scorer）
 
 ```bash
-python 07_evaluation/07b_custom_scorer.py
+python scripts/07_evaluation/07b_custom_scorer.py
 ```
 
 会一次性跑 6 个 scorer（3 个内置 + 3 个自定义）：
@@ -294,7 +294,7 @@ python 07_evaluation/07b_custom_scorer.py
 **前置**：确保你在 Phase 6 注册过 `customer-support-qa` 这个 prompt，并且有 `production` 和 `staging` 两个 alias。
 
 ```bash
-python 07_evaluation/07c_prompt_comparison.py
+python scripts/07_evaluation/07c_prompt_comparison.py
 ```
 
 会做：

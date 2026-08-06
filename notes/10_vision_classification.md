@@ -1,6 +1,6 @@
 # 阶段 10 学习笔记：图像分类深度学习对比实验
 
-> 对应脚本：`10_vision_classification/10a_dataset_overview.py`、`10b_train_models.py`、`10c_compare_and_evaluate.py`、`10d_failure_analysis.py`
+> 对应脚本：`scripts/10_vision_classification/10a_dataset_overview.py`、`10b_train_models.py`、`10c_compare_and_evaluate.py`、`10d_failure_analysis.py`
 > 需要 API Key：否（纯本地训练）
 > 需要环境变量：可选 `HF_ENDPOINT=https://hf-mirror.com`（国内加速 huggingface 权重下载）
 
@@ -209,7 +209,7 @@ conda run -n mlflow pip install timm
 ### Step 1：跑数据概览
 
 ```bash
-python 10_vision_classification/10a_dataset_overview.py
+python scripts/10_vision_classification/10a_dataset_overview.py
 ```
 
 会下载 CIFAR-10（~170MB），生成 `dataset_overview_cifar10` Run。
@@ -217,7 +217,7 @@ python 10_vision_classification/10a_dataset_overview.py
 ### Step 2：训练 9 个模型（最耗时，30-50 分钟）
 
 ```bash
-python 10_vision_classification/10b_train_models.py
+python scripts/10_vision_classification/10b_train_models.py
 ```
 
 **想先快速测试**：打开 10b 顶部 `MODEL_NAMES` 列表，临时注释掉大部分，只留 `resnet18`，`epochs` 改成 `1`。
@@ -225,13 +225,13 @@ python 10_vision_classification/10b_train_models.py
 ### Step 3：跨模型对比
 
 ```bash
-python 10_vision_classification/10c_compare_and_evaluate.py
+python scripts/10_vision_classification/10c_compare_and_evaluate.py
 ```
 
 ### Step 4：失败案例分析
 
 ```bash
-python 10_vision_classification/10d_failure_analysis.py
+python scripts/10_vision_classification/10d_failure_analysis.py
 ```
 
 ### Step 5：UI 看效果

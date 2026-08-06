@@ -19,9 +19,9 @@
    | Ch 7 | **Vibecoding 集成**（用 AI 助手操作 MLflow）| ✓ |
    | Ch 8-12 | Prompt / 评估 / 部署 / Agent / 生产（选学）| △ |
    | Ch 13-14 | Debug 指南 + 速查表 | ✓ |
-   | Skill 段 | 12 个 mlflow_skill 介绍 | ✓ |
+   | Skill 段 | 12 个 mlflow_skills 介绍 | ✓ |
 
-2. 📌 **[`mlflow_skill/README.md`](mlflow_skill/README.md)** — **MLflow Skills 官方合集**
+2. 📌 **[`mlflow_skills/README.md`](mlflow_skills/README.md)** — **MLflow Skills 官方合集**
    12 个给 AI 编程助手用的 skill（tracing / evaluation / debugging / classical-ml），配合 vibecoding 使用。
 
 3. 📌 **[`notes/appendix/roadmap.md`](notes/appendix/roadmap.md)** — 9 阶段完整学习路线图
@@ -39,38 +39,38 @@ MLFlowLearning/
 ├── .env.example                  API Key 模板（DeepSeek）
 ├── notes/                        学习笔记
 │   ├── 00_quickstart.md          ← 作业指导书（新人第一站）
-│   ├── 01_basics.md              ↔ 01_basics/        （Phase 1）
-│   ├── 02_registry.md            ↔ 02_registry/      （Phase 2）
-│   ├── 03_tracking.md            ↔ 03_tracking/      （Phase 3）
-│   ├── 04_evaluate.md            ↔ 04_evaluate/      （Phase 4）
-│   ├── 05_tracing.md             ↔ 05_tracing/       （Phase 5）
-│   ├── 06_prompts.md             ↔ 06_prompts/       （Phase 6）
-│   ├── 07_evaluation.md          ↔ 07_evaluation/    （Phase 7）
-│   ├── 08_agents.md              ↔ 08_agents/        （Phase 8）
-│   ├── 09_deployment.md          ↔ 09_deployment/    （Phase 9）
-│   ├── 10_vision_classification.md  ↔ 10_vision_classification/  （Phase 10：图像分类）
-│   ├── capstone.md               ↔ capstone/         （毕业项目）
+│   ├── 01_basics.md              ↔ scripts/01_basics/        （Phase 1）
+│   ├── 02_registry.md            ↔ scripts/02_registry/      （Phase 2）
+│   ├── 03_tracking.md            ↔ scripts/03_tracking/      （Phase 3）
+│   ├── 04_evaluate.md            ↔ scripts/04_evaluate/      （Phase 4）
+│   ├── 05_tracing.md             ↔ scripts/05_tracing/       （Phase 5）
+│   ├── 06_prompts.md             ↔ scripts/06_prompts/       （Phase 6）
+│   ├── 07_evaluation.md          ↔ scripts/07_evaluation/    （Phase 7）
+│   ├── 08_agents.md              ↔ scripts/08_agents/        （Phase 8）
+│   ├── 09_deployment.md          ↔ scripts/09_deployment/    （Phase 9）
+│   ├── 10_vision_classification.md  ↔ scripts/10_vision_classification/  （Phase 10：图像分类）
+│   ├── capstone.md               ↔ scripts/capstone/         （毕业项目）
 │   └── appendix/                 不直接对应脚本的参考文档
 │       ├── roadmap.md              9 阶段路线图
 │       ├── api_cheatsheet.md       MLflow 3 API 速查
 │       └── mlflow3_breaking_changes.md  MLflow 3 vs 2 关键变化
-├── mlflow_skill/                 12 个 MLflow skill（给 AI 编程助手用）
+├── mlflow_skills/                 12 个 MLflow skill（给 AI 编程助手用）
 │   ├── README.md                 skill 总览 + 安装说明
 │   ├── instrumenting-with-mlflow-tracing/   给代码加追踪
 │   ├── agent-evaluation/         评估 LLM agent
 │   ├── classical-ml/             传统 ML 6 步法
 │   └── ...（共 12 个）
-├── 01_basics/                Phase 1 脚本：入门与追踪基础
-├── 02_registry/              Phase 2 脚本：模型格式与注册表
-├── 03_tracking/              Phase 3 脚本：追踪服务器与数据集血缘
-├── 04_evaluate/              Phase 4 脚本：评估、服务与经典 ML 验证
-├── 05_tracing/               Phase 5 脚本：GenAI 追踪（含 env_bootstrap.py）
-├── 06_prompts/               Phase 6 脚本：Prompt Registry
-├── 07_evaluation/            Phase 7 脚本：GenAI 评估
-├── 08_agents/                Phase 8 脚本：版本追踪 + ResponsesAgent
-├── 09_deployment/            Phase 9 脚本：部署与生产可观测性
-├── 10_vision_classification/  Phase 10 脚本：图像分类深度学习对比（9 个 timm CNN）
-└── capstone/                 毕业项目 SupportPilot
+├── scripts/01_basics/                Phase 1 脚本：入门与追踪基础
+├── scripts/02_registry/              Phase 2 脚本：模型格式与注册表
+├── scripts/03_tracking/              Phase 3 脚本：追踪服务器与数据集血缘
+├── scripts/04_evaluate/              Phase 4 脚本：评估、服务与经典 ML 验证
+├── scripts/05_tracing/               Phase 5 脚本：GenAI 追踪（含 env_bootstrap.py）
+├── scripts/06_prompts/               Phase 6 脚本：Prompt Registry
+├── scripts/07_evaluation/            Phase 7 脚本：GenAI 评估
+├── scripts/08_agents/                Phase 8 脚本：版本追踪 + ResponsesAgent
+├── scripts/09_deployment/            Phase 9 脚本：部署与生产可观测性
+├── scripts/10_vision_classification/  Phase 10 脚本：图像分类深度学习对比（9 个 timm CNN）
+└── scripts/capstone/                 毕业项目 SupportPilot
 ```
 
 **约定**：每个 phase 一个目录，一个脚本目录对应一个同名笔记（`notes/<NN>_<name>.md`）。
@@ -82,25 +82,25 @@ MLFlowLearning/
 
 | # | 主题 | 关键能力 | 脚本目录 | 笔记 | API Key |
 |---|------|----------|---------|------|---------|
-| 1 | 入门与追踪基础 | Experiment/Run/Autolog | `01_basics/` | [01_basics](notes/01_basics.md) | ❌ |
-| 2 | 模型格式与注册表 | MLmodel + 签名 + Registry + Aliases | `02_registry/` | [02_registry](notes/02_registry.md) | ❌ |
-| 3 | 追踪服务器与数据集血缘 | sqlite backend + `mlflow.data` + `search_logged_models` | `03_tracking/` | [03_tracking](notes/03_tracking.md) | ❌ |
-| 4 | 评估、服务与 ML 验证 | `mlflow.models.evaluate` + `validate_evaluation_results` + `models serve` | `04_evaluate/` | [04_evaluate](notes/04_evaluate.md) | ❌ |
-| 5 | **GenAI 追踪**（重点） | OpenAI/Anthropic autolog + `@mlflow.trace` + 元数据 | `05_tracing/` | [05_tracing](notes/05_tracing.md) | ✅ |
-| 6 | Prompt Registry + Flavors | 注册/版本化 + alias + LangChain autolog | `06_prompts/` | [06_prompts](notes/06_prompts.md) | ✅ |
-| 7 | GenAI 评估 + 自定义 Scorer | `mlflow.genai.evaluate` + `@scorer` + `make_judge` | `07_evaluation/` | [07_evaluation](notes/07_evaluation.md) | ✅ |
-| 8 | 版本追踪 + 提示词优化 + ResponsesAgent | `set_active_model` + GepaOptimizer + ResponsesAgent | `08_agents/` | [08_agents](notes/08_agents.md) | ✅ |
-| 9 | 部署 + 生产可观测性 | trace 采样 + PII 脱敏 + 生产部署参考 | `09_deployment/` | [09_deployment](notes/09_deployment.md) | ✅ |
-| 10 | **图像分类深度学习对比** | timm 9 个 CNN + CIFAR-10 + 失败案例分析 | `10_vision_classification/` | [10_vision_classification](notes/10_vision_classification.md) | ❌（但需 torch/timm） |
-| 🎓 | **SupportPilot** 毕业项目 | sklearn gate + LangChain RAG + Prompt Registry + GenAI eval | `capstone/` | [capstone](notes/capstone.md) | ✅ |
+| 1 | 入门与追踪基础 | Experiment/Run/Autolog | `scripts/01_basics/` | [01_basics](notes/01_basics.md) | ❌ |
+| 2 | 模型格式与注册表 | MLmodel + 签名 + Registry + Aliases | `scripts/02_registry/` | [02_registry](notes/02_registry.md) | ❌ |
+| 3 | 追踪服务器与数据集血缘 | sqlite backend + `mlflow.data` + `search_logged_models` | `scripts/03_tracking/` | [03_tracking](notes/03_tracking.md) | ❌ |
+| 4 | 评估、服务与 ML 验证 | `mlflow.models.evaluate` + `validate_evaluation_results` + `models serve` | `scripts/04_evaluate/` | [04_evaluate](notes/04_evaluate.md) | ❌ |
+| 5 | **GenAI 追踪**（重点） | OpenAI/Anthropic autolog + `@mlflow.trace` + 元数据 | `scripts/05_tracing/` | [05_tracing](notes/05_tracing.md) | ✅ |
+| 6 | Prompt Registry + Flavors | 注册/版本化 + alias + LangChain autolog | `scripts/06_prompts/` | [06_prompts](notes/06_prompts.md) | ✅ |
+| 7 | GenAI 评估 + 自定义 Scorer | `mlflow.genai.evaluate` + `@scorer` + `make_judge` | `scripts/07_evaluation/` | [07_evaluation](notes/07_evaluation.md) | ✅ |
+| 8 | 版本追踪 + 提示词优化 + ResponsesAgent | `set_active_model` + GepaOptimizer + ResponsesAgent | `scripts/08_agents/` | [08_agents](notes/08_agents.md) | ✅ |
+| 9 | 部署 + 生产可观测性 | trace 采样 + PII 脱敏 + 生产部署参考 | `scripts/09_deployment/` | [09_deployment](notes/09_deployment.md) | ✅ |
+| 10 | **图像分类深度学习对比** | timm 9 个 CNN + CIFAR-10 + 失败案例分析 | `scripts/10_vision_classification/` | [10_vision_classification](notes/10_vision_classification.md) | ❌（但需 torch/timm） |
+| 🎓 | **SupportPilot** 毕业项目 | sklearn gate + LangChain RAG + Prompt Registry + GenAI eval | `scripts/capstone/` | [capstone](notes/capstone.md) | ✅ |
 
 **设计理念**：先用 scikit-learn（无需 API key）跑通 MLflow 核心概念 → 再用同一套概念套到 LLM/Agent → 毕业项目串联全能力。
 
 ---
 
-## mlflow_skill：12 个 skill 总览
+## mlflow_skills：12 个 skill 总览
 
-`mlflow_skill/` 是 [MLflow Skills](https://github.com/mlflow/skills) 官方合集，给 AI 编程助手（Claude Code / Cursor / Codex / Gemini CLI / OpenCode 等）用的"指令手册"。配合 **vibecoding**（对话式编程），你不需要精通 MLflow API，让 AI 助手读这些手册帮你操作即可。
+`mlflow_skills/` 是 [MLflow Skills](https://github.com/mlflow/skills) 官方合集，给 AI 编程助手（Claude Code / Cursor / Codex / Gemini CLI / OpenCode 等）用的"指令手册"。配合 **vibecoding**（对话式编程），你不需要精通 MLflow API，让 AI 助手读这些手册帮你操作即可。
 
 ### 四大类 skill
 
@@ -122,11 +122,11 @@ MLFlowLearning/
 ### 怎么用
 
 **最简单（所有 AI 助手通用）**：直接让 AI 助手读 SKILL.md 再做事：
-> 先读 `mlflow_skill/classical-ml/SKILL.md`，然后按里面 Step 1 帮我给这个 sklearn 训练加追踪。
+> 先读 `mlflow_skills/classical-ml/SKILL.md`，然后按里面 Step 1 帮我给这个 sklearn 训练加追踪。
 
-**配置自动触发**：按你所用 AI 助手的 rules / skills 机制，把对应 skill 目录加进去。详见 [`mlflow_skill/README.md`](mlflow_skill/README.md)。
+**配置自动触发**：按你所用 AI 助手的 rules / skills 机制，把对应 skill 目录加进去。详见 [`mlflow_skills/README.md`](mlflow_skills/README.md)。
 
-**可选 Auto-Suggestion Hook**：`mlflow_skill/hooks/` 里有 `UserPromptSubmit` hook，自动检测你的 prompt 匹配哪个 skill 并提示。安装方法见 [`mlflow_skill/hooks/README.md`](mlflow_skill/hooks/README.md)。
+**可选 Auto-Suggestion Hook**：`mlflow_skills/hooks/` 里有 `UserPromptSubmit` hook，自动检测你的 prompt 匹配哪个 skill 并提示。安装方法见 [`mlflow_skills/hooks/README.md`](mlflow_skills/hooks/README.md)。
 
 > 💡 完整 vibecoding 教程见 [`notes/00_quickstart.md`](notes/00_quickstart.md) 的 **Chapter 7** 和 **Skill 段**。
 
@@ -137,12 +137,12 @@ MLFlowLearning/
 1. 📌 **[`notes/00_quickstart.md`](notes/00_quickstart.md)** — 作业指导书（新人第一站）
 2. 📌 **[`notes/appendix/mlflow3_breaking_changes.md`](notes/appendix/mlflow3_breaking_changes.md)** — MLflow 3 vs 2 关键变化（必读，影响所有示例代码）
 3. 按 phase 顺序跑脚本 + 看对应笔记：
-   - 跑 `01_basics/01_hello_mlflow.py` → 看 [notes/01_basics.md](notes/01_basics.md)
-   - 跑 `02_registry/02a_log_model.py` → 看 [notes/02_registry.md](notes/02_registry.md)
+   - 跑 `scripts/01_basics/01_hello_mlflow.py` → 看 [notes/01_basics.md](notes/01_basics.md)
+   - 跑 `scripts/02_registry/02a_log_model.py` → 看 [notes/02_registry.md](notes/02_registry.md)
    - ...以此类推
 4. 跑完前 4 阶段后填 `.env`（参考下方"API Key 配置"），继续 5-9 阶段
 5. **[notes/appendix/api_cheatsheet.md](notes/appendix/api_cheatsheet.md)** — 用到 API 时速查
-6. 🎓 跑 `capstone/capstone_support_pilot.py` → 看 [notes/capstone.md](notes/capstone.md)
+6. 🎓 跑 `scripts/capstone/capstone_support_pilot.py` → 看 [notes/capstone.md](notes/capstone.md)
 
 ---
 
@@ -199,7 +199,7 @@ cp .env.example .env
 
 `.env.example` 提供 DeepSeek 模板（推荐国内直连）。也支持智谱 GLM、阿里云百炼、Moonshot、零一万物（都兼容 OpenAI 协议），或 OpenAI/Anthropic 官方。
 
-`05_tracing/env_bootstrap.py` 会自动把国内服务商的 key 桥接到 `OPENAI_API_KEY` / `OPENAI_API_BASE`，让 `mlflow.openai.autolog()` 直接可用。
+`scripts/05_tracing/env_bootstrap.py` 会自动把国内服务商的 key 桥接到 `OPENAI_API_KEY` / `OPENAI_API_BASE`，让 `mlflow.openai.autolog()` 直接可用。
 
 ---
 
@@ -246,4 +246,4 @@ mlflow db upgrade sqlite:///mlflow.db
 - 跑完脚本必看 UI 效果
 - 遇到 API 不一致：先查 [notes/appendix/mlflow3_breaking_changes.md](notes/appendix/mlflow3_breaking_changes.md)
 - 找 API 用法：查 [notes/appendix/api_cheatsheet.md](notes/appendix/api_cheatsheet.md)
-- vibecoding 时：让 AI 助手读 `mlflow_skill/<name>/SKILL.md` 再操作
+- vibecoding 时：让 AI 助手读 `mlflow_skills/<name>/SKILL.md` 再操作
