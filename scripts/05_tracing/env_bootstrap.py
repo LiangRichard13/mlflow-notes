@@ -36,6 +36,23 @@ PROVIDERS = {
 }
 
 
+def _ensure_v1_suffix(url: str) -> str:
+    """
+    规范化 base URL：如果 URL 不以 /v1 结尾，自动补上。
+
+    为什么需要：DeepSeek / 智谱 / 通义千问 / 月之暗面 等国内服务商的
+    OpenAI 兼容协议路径都带 /v1 前缀（例如 https://api.deepseek.com/v1/chat/completions）。
+    用户在 .env 里写 https://api.deepseek.com 时，OpenAI SDK 会请求
+    https://api.deepseek.com/chat/completions → Connection refused（路径不存在）。
+
+    自动补 /v1 后用户拿到正确 URL，避免踩坑。
+    """
+    url = url.rstrip("/")  # 去尾部斜杠避免 //v1
+    if not url.endswith("/v1"):
+        url = url + "/v1"
+    return url
+
+
 def setup_env() -> None:
     """从 .env 加载 + 桥接国内服务商 → OPENAI_*"""
 
@@ -49,7 +66,16 @@ def setup_env() -> None:
     # 2) 如果 OPENAI_API_KEY 已设，直接返回
     if os.getenv("OPENAI_API_KEY"):
         # 但确保 OPENAI_API_BASE 也对
-        if not os.getenv("OPENAI_API_BASE"):
+        existing_base = os.getenv("OPENAI_API_BASE")
+        if existing_base:
+            # 即使 OPENAI_API_BASE 是用户自己设的，也走规范化（防漏 /v1）
+            normalized = _ensure_v1_suffix(existing_base)
+            if normalized != existing_base:
+                print(f"⚠️  OPENAI_API_BASE 末尾缺 /v1，已自动修正：")
+                print(f"    原值: {existing_base}")
+                print(f"    修正: {normalized}")
+                os.environ["OPENAI_API_BASE"] = normalized
+        else:
             print("⚠️ OPENAI_API_KEY 已设，但缺 OPENAI_API_BASE，MLflow 会用官方端点")
         return
 
@@ -57,11 +83,14 @@ def setup_env() -> None:
     for provider_name, (key_env, base_env, default_base) in PROVIDERS.items():
         api_key = os.getenv(key_env)
         if api_key:
-            base_url = os.getenv(base_env, default_base)
+            raw_url = os.getenv(base_env, default_base)
+            base_url = _ensure_v1_suffix(raw_url)
             os.environ["OPENAI_API_KEY"] = api_key
             os.environ["OPENAI_API_BASE"] = base_url
             print(f"✓ 桥接 {provider_name} → OPENAI_API_KEY / OPENAI_API_BASE")
             print(f"  base: {base_url}")
+            if raw_url != base_url:
+                print(f"  ℹ️  .env 里的 {base_env} 没带 /v1，已自动补上")
             return
 
     print("⚠️ 没找到任何 LLM API key，请检查 .env")

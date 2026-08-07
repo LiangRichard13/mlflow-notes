@@ -18,7 +18,7 @@ def main():
     print("=" * 60)
     print("环境检查")
     print("=" * 60)
-    print(f"  OPENAI_API_KEY:    {'已设置 (' + OPENAI_API_KEY[:4] + '...)' if (OPENAI_API_KEY := os.getenv('OPENAI_API_KEY')) else '✗ 未设置'}")
+    print(f"  OPENAI_API_KEY:    {'已设置 (' + OPENAI_API_KEY[:10] + '...)' if (OPENAI_API_KEY := os.getenv('OPENAI_API_KEY')) else '✗ 未设置'}")
     print(f"  OPENAI_API_BASE:   {os.getenv('OPENAI_API_BASE', '未设置（将走 OpenAI 官方）')}")
     print(f"  DEEPSEEK_MODEL:    {os.getenv('DEEPSEEK_MODEL', '未设置')}")
     print()
